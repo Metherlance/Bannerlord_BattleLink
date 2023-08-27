@@ -1,0 +1,33 @@
+ServerName zzz2
+AdminPassword toto
+GameType BattleLink
+add_map_to_automated_battle_pool mp_sergeant_map_007
+add_map_to_automated_battle_pool mp_sergeant_map_008
+add_map_to_automated_battle_pool mp_sergeant_map_018
+add_map_to_automated_battle_pool mp_sergeant_map_009
+add_map_to_automated_battle_pool mp_sergeant_map_011
+add_map_to_automated_battle_pool mp_sergeant_map_013
+CultureTeam1 khuzait
+CultureTeam2 empire
+RespawnPeriodTeam1 3
+RespawnPeriodTeam2 3
+RoundPreparationTimeLimit 20
+MaxNumberOfPlayers 12
+AllowPollsToKickPlayers True
+FriendlyFireDamageMeleeFriendPercent 75
+FriendlyFireDamageMeleeSelfPercent 25
+FriendlyFireDamageRangedFriendPercent 75
+FriendlyFireDamageRangedSelfPercent 25
+MinNumberOfPlayersForMatchStart 1
+NumberOfBotsTeam1 6
+NumberOfBotsTeam2 7
+RoundTotal 1
+MapTimeLimit 60
+RoundTimeLimit 600
+WarmupTimeLimit 1
+AutoTeamBalanceThreshold 1
+NumberOfBotsPerFormation 75
+SingleSpawn true
+set_automated_battle_count 50
+start_game
+enable_automated_battle_switching

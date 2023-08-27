@@ -1,0 +1,18 @@
+﻿<Module>
+	<Name value="Realms Battle"/>
+	<Id value="BattleLink"/>
+	<Version value="v1.0.0.0"/>
+	<ModuleCategory value="Multiplayer"/>
+	<DependedModules>
+		<DependedModule Id="Native" DependentVersion="v1.0.0" Optional="false" />
+	</DependedModules>
+	<SubModules>
+		<SubModule>
+			<Name value="Realms Battle"/>
+			<DLLName value="BattleLink.Server.dll"/>
+			<SubModuleClassType value="BattleLink.Server.SubModule"/>
+			<Tags />
+		</SubModule>
+	</SubModules>
+	<Xmls/>
+</Module>

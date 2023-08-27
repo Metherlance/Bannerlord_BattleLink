@@ -1,0 +1,44 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32112.339
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BattleLink.Common", "BattleLink.Common\BattleLink.Common.csproj", "{1D9F084C-B59A-49D9-8AD1-C2D62422EF8F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BattleLink.Multiplayer", "BattleLink.Multiplayer\BattleLink.Multiplayer.csproj", "{0D391AB9-BA30-427B-B67E-B4E469E41AE3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1D9F084C-B59A-49D9-8AD1-C2D62422EF8F} = {1D9F084C-B59A-49D9-8AD1-C2D62422EF8F}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1D9F084C-B59A-49D9-8AD1-C2D62422EF8F}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{1D9F084C-B59A-49D9-8AD1-C2D62422EF8F}.Debug|Any CPU.Build.0 = Debug|x64
+		{1D9F084C-B59A-49D9-8AD1-C2D62422EF8F}.Debug|x64.ActiveCfg = Debug|x64
+		{1D9F084C-B59A-49D9-8AD1-C2D62422EF8F}.Debug|x64.Build.0 = Debug|x64
+		{1D9F084C-B59A-49D9-8AD1-C2D62422EF8F}.Release|Any CPU.ActiveCfg = Release|x64
+		{1D9F084C-B59A-49D9-8AD1-C2D62422EF8F}.Release|Any CPU.Build.0 = Release|x64
+		{1D9F084C-B59A-49D9-8AD1-C2D62422EF8F}.Release|x64.ActiveCfg = Release|x64
+		{1D9F084C-B59A-49D9-8AD1-C2D62422EF8F}.Release|x64.Build.0 = Release|x64
+		{0D391AB9-BA30-427B-B67E-B4E469E41AE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D391AB9-BA30-427B-B67E-B4E469E41AE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D391AB9-BA30-427B-B67E-B4E469E41AE3}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{0D391AB9-BA30-427B-B67E-B4E469E41AE3}.Debug|x64.Build.0 = Debug|Any CPU
+		{0D391AB9-BA30-427B-B67E-B4E469E41AE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D391AB9-BA30-427B-B67E-B4E469E41AE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D391AB9-BA30-427B-B67E-B4E469E41AE3}.Release|x64.ActiveCfg = Release|Any CPU
+		{0D391AB9-BA30-427B-B67E-B4E469E41AE3}.Release|x64.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F67C2D23-5D9D-4B26-8AF8-A240708F0CDE}
+	EndGlobalSection
+EndGlobal

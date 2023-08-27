@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33502.453
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BattleLink.Singleplayer", "BattleLink.Singleplayer\BattleLink.Singleplayer.csproj", "{0D391AB9-BA30-427B-B67E-B4E469E41AE3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BattleLink.Common", "BattleLink.Common\BattleLink.Common.csproj", "{DFF0AE2E-B310-41E7-80A7-BA149C2A8ADA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0D391AB9-BA30-427B-B67E-B4E469E41AE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D391AB9-BA30-427B-B67E-B4E469E41AE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D391AB9-BA30-427B-B67E-B4E469E41AE3}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{0D391AB9-BA30-427B-B67E-B4E469E41AE3}.Debug|x64.Build.0 = Debug|Any CPU
+		{0D391AB9-BA30-427B-B67E-B4E469E41AE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D391AB9-BA30-427B-B67E-B4E469E41AE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D391AB9-BA30-427B-B67E-B4E469E41AE3}.Release|x64.ActiveCfg = Release|x64
+		{0D391AB9-BA30-427B-B67E-B4E469E41AE3}.Release|x64.Build.0 = Release|x64
+		{DFF0AE2E-B310-41E7-80A7-BA149C2A8ADA}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{DFF0AE2E-B310-41E7-80A7-BA149C2A8ADA}.Debug|Any CPU.Build.0 = Debug|x64
+		{DFF0AE2E-B310-41E7-80A7-BA149C2A8ADA}.Debug|x64.ActiveCfg = Debug|x64
+		{DFF0AE2E-B310-41E7-80A7-BA149C2A8ADA}.Debug|x64.Build.0 = Debug|x64
+		{DFF0AE2E-B310-41E7-80A7-BA149C2A8ADA}.Release|Any CPU.ActiveCfg = Release|x64
+		{DFF0AE2E-B310-41E7-80A7-BA149C2A8ADA}.Release|Any CPU.Build.0 = Release|x64
+		{DFF0AE2E-B310-41E7-80A7-BA149C2A8ADA}.Release|x64.ActiveCfg = Release|x64
+		{DFF0AE2E-B310-41E7-80A7-BA149C2A8ADA}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5FA338F8-F259-4B02-BF8C-3CD8A76FC285}
+	EndGlobalSection
+EndGlobal

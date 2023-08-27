@@ -1,0 +1,11 @@
+﻿<Prefab>
+
+	<Window>
+		<Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent">
+			<!--<Children>
+				--><!--<Standard.Background />--><!--
+			</Children>-->
+		</Widget>
+	</Window>
+	
+</Prefab>
