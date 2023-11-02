@@ -280,8 +280,12 @@
   </ItemGroup>
   <!-- Files & Classes -->
   <ItemGroup>
+    <Compile Include="Behavior\RbBehaviorClient.cs" />
+    <Compile Include="Behavior\RBDeploymentMissionView.cs" />
     <Compile Include="SubModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Widgets\LobbyLeftBtn.cs" />
+    <Compile Include="Widgets\VBox.cs" />
     <Content Include="Resources\GUI\Prefabs\Dummy.xml" />
     <Content Include="Resources\ModuleData\multiplayer_strings.xml" />
     <Content Include="Resources\SubModule.xml" />

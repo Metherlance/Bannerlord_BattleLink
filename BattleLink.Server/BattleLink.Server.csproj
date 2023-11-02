@@ -133,6 +133,7 @@
   </ItemGroup>
 	
   <ItemGroup>
+    <Folder Include="Behavior\" />
     <Folder Include="Resources\ModuleData\" />
   </ItemGroup>
 	
@@ -141,7 +142,7 @@
   </ItemGroup>
 	
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy /d /y /s /e /h /c /i &quot;$(MSBuildProjectDirectory)\Resources&quot; &quot;..\..\..\..\games\Steam\steamapps\common\Mount &amp; Blade II Dedicated Server\Modules\BattleLink&quot;&#xD;&#xA;" />
+    <Exec Command="xcopy /d /y /s /e /h /c /i &quot;$(MSBuildProjectDirectory)\Resources&quot; &quot;..\..\..\..\games\Steam\steamapps\common\Mount &amp; Blade II Dedicated Server\Modules\BattleLink&quot;&#xD;&#xA;xcopy /d /y /s /e /h /c /i &quot;$(MSBuildProjectDirectory)\Resources\battlelink-config.txt&quot; &quot;..\..\..\..\games\Steam\steamapps\common\Mount &amp; Blade II Dedicated Server\Modules\Native&quot;&#xD;&#xA;&#xD;&#xA;" />
   </Target>
 	
   <ProjectExtensions><VisualStudio><UserProperties properties_4launchsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>

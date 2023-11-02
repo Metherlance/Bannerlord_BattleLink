@@ -3,7 +3,7 @@
     "Bannerlord": {
       "commandName": "Executable",
       "executablePath": "$(GameFolder)\\bin\\Win64_Shipping_Server\\DedicatedCustomServer.Starter.exe",
-      "commandLineArgs": ".\\DedicatedCustomServer.Starter.exe /dedicatedcustomserverconfigfile battle-config.txt _MODULES_*Native*Multiplayer*BattleLink*_MODULES_ /LogOutputPath RealmBattleLog",
+      "commandLineArgs": ".\\DedicatedCustomServer.Starter.exe /dedicatedcustomserverconfigfile battlelink-config.txt _MODULES_*Native*Multiplayer*MPLocal*BattleLink*_MODULES_ /LogOutputPath BattleLinkLog",
       "workingDirectory": "$(GameFolder)\\bin\\Win64_Shipping_Server",
       "nativeDebugging": true
     }

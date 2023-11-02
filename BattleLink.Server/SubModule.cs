@@ -14,6 +14,8 @@ using static TaleWorlds.Library.Debug;
 using Module = TaleWorlds.MountAndBlade.Module;
 using TaleWorlds.MountAndBlade.Source.Missions;
 using BattleLink.Common;
+using RealmsBattle.Common;
+using RealmsBattle.Common.Behavior;
 
 namespace BattleLink.Server
 {
@@ -23,6 +25,39 @@ namespace BattleLink.Server
         {
             MBDebug.Print("BattleLink - OnSubModuleLoad");
             base.OnSubModuleLoad();
+
+            //Module.CurrentModule.AddMultiplayerGameMode(new BattleLinkGameMode(
+            //    (Mission) => {
+            //        return new MissionBehavior[]{
+            //                                      (MissionBehavior) MissionLobbyComponent.CreateBehavior(),
+            //                                      (MissionBehavior) new RBMissionMpGameMode(MissionLobbyComponent.MultiplayerGameType.Captain),//MissionMultiplayerFlagDomination
+            //                                      (MissionBehavior) new MultiplayerRoundController(),//RB
+            //                                      (MissionBehavior) new RBMultiplayerWarmupComponent(),
+            //                                      (MissionBehavior) new MissionMultiplayerGameModeFlagDominationClient(),
+            //                                      (MissionBehavior) new MultiplayerTimerComponent(),
+            //                                      (MissionBehavior) new MultiplayerMissionAgentVisualSpawnComponent(),
+            //                                      (MissionBehavior) new ConsoleMatchStartEndHandler(),
+            //                                      (MissionBehavior) new SpawnComponent(new FlagDominationSpawnFrameBehavior(), new RBFlagDominationSpawningBehavior()),
+            //                                      (MissionBehavior) new MissionLobbyEquipmentNetworkComponent(),
+            //                                      (MissionBehavior) new MultiplayerTeamSelectComponent(),
+            //                                      (MissionBehavior) new MissionHardBorderPlacer(),
+            //                                      (MissionBehavior) new MissionBoundaryPlacer(),
+            //                                      (MissionBehavior) new AgentVictoryLogic(),
+            //                                      (MissionBehavior) new AgentHumanAILogic(),
+            //                                      (MissionBehavior) new MissionAgentPanicHandler(),
+            //                                      (MissionBehavior) new MissionBoundaryCrossingHandler(),
+            //                                      (MissionBehavior) new MultiplayerPollComponent(),
+            //                                      (MissionBehavior) new MultiplayerAdminComponent(),
+            //                                      (MissionBehavior) new MultiplayerGameNotificationsComponent(),
+            //                                      (MissionBehavior) new MissionOptionsComponent(),
+            //                                      (MissionBehavior) new MissionScoreboardComponent((IScoreboardData) new CaptainScoreboardData()),
+            //                                      (MissionBehavior) new EquipmentControllerLeaveLogic(),
+            //                                      (MissionBehavior) new MultiplayerPreloadHelper()
+            //         };
+            //    }
+            //));
+
+
 
             MBDebug.Print("BattleLink - OnSubModuleLoad - End", 0, DebugColor.Green);
         }
