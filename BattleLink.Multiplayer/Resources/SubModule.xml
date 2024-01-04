@@ -1,5 +1,5 @@
 ﻿<Module>
-	<Name value="Realms Battle"/>
+	<Name value="BattleLink"/>
 	<Id value="BattleLink"/>
 	<Version value="v1.0.0.0"/>
 	<ModuleCategory value="Multiplayer"/>
@@ -7,8 +7,9 @@
 		<DependedModule Id="Native" DependentVersion="v1.0.0" Optional="false" />
 	</DependedModules>
 	<SubModules>
+	
 		<SubModule>
-			<Name value="Realms Battle"/>
+			<Name value="BattleLink"/>
 			<DLLName value="BattleLink.dll"/>
 			<SubModuleClassType value="BattleLink.Multiplayer.SubModule"/>
 			<Tags />

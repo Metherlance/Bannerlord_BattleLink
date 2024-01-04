@@ -5,6 +5,7 @@ using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.Source.Missions;
+using TaleWorlds.MountAndBlade.Multiplayer;
 using static TaleWorlds.Library.Debug;
 
 namespace RealmsBattle.Common
@@ -23,8 +24,8 @@ namespace RealmsBattle.Common
         {
             MBDebug.Print("BattleLinkGameMode - StartMultiplayerGame - " + _scene, 0, DebugColor.Green);
 
-            MissionState.OpenNew("BattleLink", new MissionInitializerRecord(_scene), behaviors);
-            //MissionState.OpenNew("RealmsBattle", new MissionInitializerRecord("battle_terrain_f"), behaviors);
+            //MissionState.OpenNew("BattleLink", new MissionInitializerRecord(_scene), behaviors);
+            MissionState.OpenNew("RealmsBattle", new MissionInitializerRecord("battle_terrain_f"), behaviors);
         }
 
         

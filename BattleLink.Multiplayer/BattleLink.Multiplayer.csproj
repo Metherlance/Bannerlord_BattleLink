@@ -60,10 +60,6 @@
       <HintPath>C:\games\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.ActivitySystem.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="C:\games\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.BattlEye.Client.dll">
-      <HintPath>C:\games\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.BattlEye.Client.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="C:\games\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.CampaignSystem.dll">
       <HintPath>C:\games\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.CampaignSystem.dll</HintPath>
       <Private>False</Private>
@@ -224,20 +220,12 @@
       <HintPath>C:\games\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.PlayerServices.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="C:\games\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.PowerText.dll">
-      <HintPath>C:\games\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.PowerText.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="C:\games\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.PSAI.dll">
       <HintPath>C:\games\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.PSAI.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="C:\games\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.SaveSystem.dll">
       <HintPath>C:\games\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.SaveSystem.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="C:\games\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Starter.DotNetCore.dll">
-      <HintPath>C:\games\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Starter.DotNetCore.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="C:\games\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Starter.Library.dll">
@@ -274,6 +262,9 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Xml" />
+    <Reference Include="TaleWorlds.MountAndBlade.Multiplayer">
+      <HintPath>..\..\..\..\games\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\Multiplayer\bin\Win64_Shipping_Client\TaleWorlds.MountAndBlade.Multiplayer.dll</HintPath>
+    </Reference>
     <Reference Include="TaleWorlds.ScreenSystem">
       <HintPath>..\..\..\..\games\Steam\steamapps\common\Mount &amp; Blade II Dedicated Server\bin\Win64_Shipping_Server\TaleWorlds.ScreenSystem.dll</HintPath>
     </Reference>

@@ -2,7 +2,7 @@
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <RemoteDebugEnabled>false</RemoteDebugEnabled>
-    <StartArguments>/multiplayer _MODULES_%2aNative%2aMultiplayer%2aDedicatedCustomServerHelper%2aMPLocal%2aBattleLink%2a_MODULES_</StartArguments>
+    <StartArguments>/multiplayer _MODULES_%2aNative%2aMultiplayer%2aBattleLink%2a_MODULES_</StartArguments>
     <EnableUnmanagedDebugging>true</EnableUnmanagedDebugging>
   </PropertyGroup>
 </Project>

@@ -1,6 +1,6 @@
 ServerName ztest
 AdminPassword toto
-GameType Captain
+GameType BattleLink
 add_map_to_automated_battle_pool mp_sergeant_map_007
 add_map_to_automated_battle_pool mp_sergeant_map_008
 add_map_to_automated_battle_pool mp_sergeant_map_018

@@ -10,8 +10,6 @@ using TaleWorlds.MountAndBlade.Source.Missions;
 using static TaleWorlds.Library.Debug;
 using TaleWorlds.MountAndBlade.View.MissionViews.Singleplayer;
 using TaleWorlds.InputSystem;
-using TaleWorlds.MountAndBlade.ViewModelCollection.Multiplayer.Lobby.CustomGame;
-using static TaleWorlds.MountAndBlade.ViewModelCollection.Multiplayer.Lobby.CustomGame.MPCustomGameVM;
 using Messages.FromLobbyServer.ToClient;
 using TaleWorlds.MountAndBlade.Diamond;
 using System.Collections.Generic;
@@ -20,6 +18,11 @@ using Messages.FromClient.ToLobbyServer;
 using TaleWorlds.Diamond;
 using System.Runtime;
 using System.Reflection;
+using RealmsBattle.Common;
+using Module = TaleWorlds.MountAndBlade.Module;
+using RealmsBattle.Common.Behavior;
+using RealmsBattle.Client.Behavior;
+using TaleWorlds.MountAndBlade.Multiplayer;
 
 namespace BattleLink.Multiplayer
 {
@@ -35,6 +38,38 @@ namespace BattleLink.Multiplayer
                 // patch methods
                 var harmony = new Harmony("bannerlord.mplocal");
                 harmony.PatchAll();
+
+            Module.CurrentModule.AddMultiplayerGameMode(new BattleLinkGameMode(
+                (Mission) => new MissionBehavior[]{
+
+                          (MissionBehavior) MissionLobbyComponent.CreateBehavior(),
+                          (MissionBehavior) new MultiplayerAchievementComponent(),
+                          (MissionBehavior) new RBMultiplayerWarmupComponent(),
+                          (MissionBehavior) new MissionMultiplayerGameModeFlagDominationClient(),
+                          (MissionBehavior) new MultiplayerRoundComponent(),
+                          (MissionBehavior) new MultiplayerTimerComponent(),
+                          (MissionBehavior) new MultiplayerMissionAgentVisualSpawnComponent(),
+                          (MissionBehavior) new ConsoleMatchStartEndHandler(),
+                          (MissionBehavior) new MissionLobbyEquipmentNetworkComponent(),
+                          (MissionBehavior) new MultiplayerTeamSelectComponent(),
+                          (MissionBehavior) new MissionHardBorderPlacer(),
+                          (MissionBehavior) new MissionBoundaryPlacer(),
+                          (MissionBehavior) new AgentVictoryLogic(),
+                          (MissionBehavior) new MissionBoundaryCrossingHandler(),
+                          (MissionBehavior) new MultiplayerPollComponent(),
+                          (MissionBehavior) new MultiplayerGameNotificationsComponent(),
+                          (MissionBehavior) new MissionOptionsComponent(),
+                          (MissionBehavior) new MissionScoreboardComponent((IScoreboardData) new CaptainScoreboardData()),
+                          (MissionBehavior) MissionMatchHistoryComponent.CreateIfConditionsAreMet(),
+                          (MissionBehavior) new EquipmentControllerLeaveLogic(),
+                          (MissionBehavior) new MissionRecentPlayersComponent(),
+                          (MissionBehavior) new MultiplayerPreloadHelper(),
+                            new RbBehaviorClient()
+                          ,new RBDebugMissionLogic()
+                          ,new RBDebugMissionBehavior()
+                          ,new RBDeploymentMissionView()
+
+                }));
 
 
         }
