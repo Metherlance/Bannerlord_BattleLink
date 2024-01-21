@@ -1,28 +1,18 @@
-﻿using TaleWorlds.MountAndBlade;
-using HarmonyLib;
-using TaleWorlds.Core;
-using TaleWorlds.Library;
-using System;
-using System.IO;
-using TaleWorlds.Engine;
-using BattleLink.Common;
-using TaleWorlds.MountAndBlade.Source.Missions;
-using static TaleWorlds.Library.Debug;
-using TaleWorlds.MountAndBlade.View.MissionViews.Singleplayer;
-using TaleWorlds.InputSystem;
-using Messages.FromLobbyServer.ToClient;
-using TaleWorlds.MountAndBlade.Diamond;
+﻿using BattleLink.Common.Model;
+using BattleLink.Handler;
+using NetworkMessages.FromServer;
+using RealmsBattle.Multiplayer;
 using System.Collections.Generic;
-using TaleWorlds.PlayerServices;
-using Messages.FromClient.ToLobbyServer;
-using TaleWorlds.Diamond;
-using System.Runtime;
 using System.Reflection;
-using RealmsBattle.Common;
+using TaleWorlds.Core;
+using TaleWorlds.Engine;
+using TaleWorlds.Library;
+using TaleWorlds.MountAndBlade;
+using TaleWorlds.MountAndBlade.Network.Messages;
+using TaleWorlds.ObjectSystem;
+using static TaleWorlds.Library.Debug;
 using Module = TaleWorlds.MountAndBlade.Module;
-using RealmsBattle.Common.Behavior;
-using RealmsBattle.Client.Behavior;
-using TaleWorlds.MountAndBlade.Multiplayer;
+
 
 namespace BattleLink.Multiplayer
 {
@@ -30,164 +20,145 @@ namespace BattleLink.Multiplayer
     {
         private static readonly Color green = Color.FromUint(0x008000);
 
+        //public override void OnInitialState()
+        //{
+
+        //    base.OnInitialState();
+
+        //    InformationManager.DisplayMessage(new InformationMessage("BattleLink - OnSubModuleLoad", green));
+        //}
+        //public override void OnMissionBehaviorInitialize(Mission mission)
+        //{
+        //    InformationManager.DisplayMessage(new InformationMessage("BattleLink - OnMissionBehaviorInitialize", green));//2
+        //}
+
+        //public override void OnBeforeMissionBehaviorInitialize(Mission mission)
+        //{
+        //    InformationManager.DisplayMessage(new InformationMessage("BattleLink - OnBeforeMissionBehaviorInitialize", green)); //1
+        //}
         protected override void OnSubModuleLoad()
         {
             base.OnSubModuleLoad();
             InformationManager.DisplayMessage(new InformationMessage("BattleLink - OnSubModuleLoad", green));
 
-                // patch methods
-                var harmony = new Harmony("bannerlord.mplocal");
-                harmony.PatchAll();
+            Module.CurrentModule.AddMultiplayerGameMode(new BattleLinkGameMode());
 
-            Module.CurrentModule.AddMultiplayerGameMode(new BattleLinkGameMode(
-                (Mission) => new MissionBehavior[]{
-
-                          (MissionBehavior) MissionLobbyComponent.CreateBehavior(),
-                          (MissionBehavior) new MultiplayerAchievementComponent(),
-                          (MissionBehavior) new RBMultiplayerWarmupComponent(),
-                          (MissionBehavior) new MissionMultiplayerGameModeFlagDominationClient(),
-                          (MissionBehavior) new MultiplayerRoundComponent(),
-                          (MissionBehavior) new MultiplayerTimerComponent(),
-                          (MissionBehavior) new MultiplayerMissionAgentVisualSpawnComponent(),
-                          (MissionBehavior) new ConsoleMatchStartEndHandler(),
-                          (MissionBehavior) new MissionLobbyEquipmentNetworkComponent(),
-                          (MissionBehavior) new MultiplayerTeamSelectComponent(),
-                          (MissionBehavior) new MissionHardBorderPlacer(),
-                          (MissionBehavior) new MissionBoundaryPlacer(),
-                          (MissionBehavior) new AgentVictoryLogic(),
-                          (MissionBehavior) new MissionBoundaryCrossingHandler(),
-                          (MissionBehavior) new MultiplayerPollComponent(),
-                          (MissionBehavior) new MultiplayerGameNotificationsComponent(),
-                          (MissionBehavior) new MissionOptionsComponent(),
-                          (MissionBehavior) new MissionScoreboardComponent((IScoreboardData) new CaptainScoreboardData()),
-                          (MissionBehavior) MissionMatchHistoryComponent.CreateIfConditionsAreMet(),
-                          (MissionBehavior) new EquipmentControllerLeaveLogic(),
-                          (MissionBehavior) new MissionRecentPlayersComponent(),
-                          (MissionBehavior) new MultiplayerPreloadHelper(),
-                            new RbBehaviorClient()
-                          ,new RBDebugMissionLogic()
-                          ,new RBDebugMissionBehavior()
-                          ,new RBDeploymentMissionView()
-
-                }));
-
+            InformationManager.DisplayMessage(new InformationMessage("BattleLink - OnSubModuleLoad", green));
 
         }
+
+
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
         {
+            addReferentialHandler();
+
             base.OnBeforeInitialModuleScreenSetAsRoot();
 
-            InformationManager.DisplayMessage(new InformationMessage("BattleLink - OnBeforeInitialModuleScreenSetAsRoot", green));
+            InformationManager.DisplayMessage(new InformationMessage("BattleLink | loaded", green));
         }
 
         protected override void InitializeGameStarter(Game game, IGameStarter starterObject)
         {
+
             MBDebug.Print("BattleLink - InitializeGameStarter");
             base.InitializeGameStarter(game, starterObject);
+
             game.GameTextManager.LoadGameTexts();
+
+
+            // GameModelsManager part du dernier élement
+            starterObject.AddModel(new BLAgentStatCalculateModel());
+
+            {
+                var xmlDocument = MBObjectManager.GetMergedXmlForManaged("CraftingPieces", false, false, "MultiplayerGame");
+                MBObjectManager.Instance.LoadXml(xmlDocument);
+            }
+            {
+                // MBCharacterSkills
+                var xmlDocument = MBObjectManager.GetMergedXmlForManaged("SkillSets", false, false, "MultiplayerGame");
+                MBObjectManager.Instance.LoadXml(xmlDocument);
+            }
+
+            {
+                var xmlDocument = MBObjectManager.GetMergedXmlForManaged("EquipmentRosters", false, false, "MultiplayerGame");
+                MBObjectManager.Instance.RegisterType<MBEquipmentRoster>("EquipmentRoster", "EquipmentRosters", 51U, true, false);
+                MBObjectManager.Instance.LoadXml(xmlDocument);
+            }
+
+            MBObjectManager.Instance.RegisterType<BLCharacterObject>("BLCharacter", "BLCharacters", 60U, true, true);
+
             MBDebug.Print("BattleLink - InitializeGameStarter - End", 0, DebugColor.Green);
         }
 
-        protected override void OnApplicationTick(float dt)
+        //public override void OnGameInitializationFinished(Game game)
+        //{
+        //    MBDebug.Print("BattleLink - OnGameInitializationFinished");
+        //    base.OnGameInitializationFinished(game);
+
+        //    MBDebug.Print("BattleLink - OnGameInitializationFinished - End");
+        //}
+
+
+
+        //public override void OnAfterGameInitializationFinished(Game game, object starterObject)
+        //{
+        //    MBDebug.Print("BattleLink - OnAfterGameInitializationFinished - End");
+        //}
+
+
+        //protected override void OnApplicationTick(float dt)
+        //{
+
+        //}
+
+        private void addReferentialHandler()
         {
-            //if (InputKey.Numpad1.IsPressed())
-            //{
-            //    InformationManager.DisplayMessage(new InformationMessage("MPLocal - Join", green));
-            //    var lobbyClient = NetworkMain.GameClient;
-            //    //lobbyClient.Game
+            var fieldIndexContainer = typeof(GameNetwork).GetField("_gameNetworkMessageTypesFromServer", BindingFlags.NonPublic | BindingFlags.Static);
+            var fieldContainer = typeof(GameNetwork).GetField("_fromServerBaseMessageHandlers", BindingFlags.NonPublic | BindingFlags.Static);
 
-            //   // MPCustomGameVM a = new MPCustomGameVM(null, CustomGameMode.CustomServer);
+            {
 
-            //   // new RequestCustomGameServerListMessage();
-            //   // Client<LobbyClient> a;
+                var oDicIndexType = fieldIndexContainer.GetValue(null);
+                Dictionary<System.Type, int> dicIndexType = (Dictionary<System.Type, int>)oDicIndexType;
+                int indexType = dicIndexType.TryGetValue(typeof(BLInitCultureMessage), out indexType) ? indexType : -1;
 
-            //   // var lobbyClient = new LobbyClient(null, null);
+                var valu = fieldContainer.GetValue(null);
+                Dictionary<int, List<GameNetworkMessage.ServerMessageHandlerDelegate<GameNetworkMessage>>> value = (Dictionary<int, List<GameNetworkMessage.ServerMessageHandlerDelegate<GameNetworkMessage>>>)valu;
+                var listCultureHandler = value[indexType];
+                listCultureHandler.Clear();
+                listCultureHandler.Add(BLInitCultureHandler.HandleServerEventInitCultureMessage);
+               // InformationManager.DisplayMessage(new InformationMessage("BLInitCultureMessage Handler"));
 
-            //   //CustomGameServerListResponse customGameServerListResponse = lobbyClient.CallFunction<CustomGameServerListResponse>(new RequestCustomGameServerListMessage());
-            //   // AvailableCustomGames avai = customGameServerListResponse.AvailableCustomGames;
-            //   // a.RefreshCustomGameServerList(avai);
+            }
 
-            //   // var ba = a.GameList;
+            {
+                var oDicIndexType = fieldIndexContainer.GetValue(null);
+                Dictionary<System.Type, int> dicIndexType = (Dictionary<System.Type, int>)oDicIndexType;
+                int indexType = dicIndexType.TryGetValue(typeof(BLInitCharactersMessage), out indexType) ? indexType : -1;
 
-            //   // var bb = a.GameList.Count;
-            //    var lobbyState = new LobbyState();
-            //    //var gameVM = new MPCustomGameVM(lobbyState, CustomGameMode.CustomServer);
+                var valu = fieldContainer.GetValue(null);
+                Dictionary<int, List<GameNetworkMessage.ServerMessageHandlerDelegate<GameNetworkMessage>>> value = (Dictionary<int, List<GameNetworkMessage.ServerMessageHandlerDelegate<GameNetworkMessage>>>)valu;
+                var listCharacterHandler = value[indexType];
+                listCharacterHandler.Clear();
+                listCharacterHandler.Add(BLInitCharactersHandler.HandleServerEventInitCharactersMessage);
+              //  InformationManager.DisplayMessage(new InformationMessage("BLInitCharactersMessage Handler"));
+            }
 
-            //    //var lobbyClient = new LobbyClient(gameVM, LobbyClient.LobbyServerPort);
+            {
 
+                var oDicIndexType = fieldIndexContainer.GetValue(null);
+                Dictionary<System.Type, int> dicIndexType = (Dictionary<System.Type, int>)oDicIndexType;
+                int indexType = dicIndexType.TryGetValue(typeof(CreateAgent), out indexType) ? indexType : -1;
 
-            //    string name = "";
-            //    string address = "127.0.0.1";
-            //    int port = 7896;
-            //    string region = "";
-            //    string gameModule = "";
-            //    string gameType = "";
-            //    string map = "";
-            //    string uniqueMapId = "";
-            //    string gamePassword = "";
-            //    string adminPassword = "";
-            //    int maxPlayerCount = 4;
-            //    bool isOfficial = false;
-            //    bool byOfficialProvider = false;
-            //    bool crossplayEnabled = true;
-            //    PlayerId hostId = PlayerId.Empty;
-            //    string hostName = "";
-            //    List<ModuleInfoModel> loadedModules = new List<ModuleInfoModel>();
-            //    bool allowsOptionalModules = true;
-            //    int permission = 0;
-
-            //    GameServerProperties gameServerProperties = new GameServerProperties(name, address, port, region, gameModule, gameType, map, uniqueMapId, gamePassword, adminPassword, maxPlayerCount, isOfficial, byOfficialProvider, crossplayEnabled, hostId, hostName, loadedModules, allowsOptionalModules, permission);
-            //    JoinGameData joinGameData = new JoinGameData(gameServerProperties, 0, 0);
-            //    TaleWorlds.MountAndBlade.Module.CurrentModule.GetMultiplayerGameMode(joinGameData.GameServerProperties.GameType).JoinCustomGame(joinGameData);
-            //}
+                var valu = fieldContainer.GetValue(null);
+                Dictionary<int, List<GameNetworkMessage.ServerMessageHandlerDelegate<GameNetworkMessage>>> value = (Dictionary<int, List<GameNetworkMessage.ServerMessageHandlerDelegate<GameNetworkMessage>>>)valu;
+                var listCreateAgentHandler = value[indexType];
+                listCreateAgentHandler.Clear();
+                listCreateAgentHandler.Add(BLCreateAgentHandler.HandleServerEventCreateAgent);
+                //InformationManager.DisplayMessage(new InformationMessage("CreateAgent Handler"));
+            }
         }
     }
-
-
-    //[HarmonyPatch(typeof(MissionBasedMultiplayerGameMode))]
-    //class MissionBasedMultiplayerGameModePatch
-    //{
-    //    [HarmonyPrefix]
-    //    [HarmonyPatch("JoinCustomGame")]
-    //    static bool JoinCustomGame(MissionBasedMultiplayerGameMode __instance, ref JoinGameData joinGameData)
-    //    {
-    //            InformationManager.DisplayMessage(new InformationMessage("MPLocal - JoinCustomGame", Color.FromUint(0x008000)));
-    //             return true;
-    //    }
-    //}
-
-    //[HarmonyPatch(typeof(MPCustomGameVM))]
-    //class MPCustomGameVMPatch
-    //{
-    //    [HarmonyPrefix]
-    //    [HarmonyPatch("JoinCustomGame")]
-    //    static bool JoinCustomGame(MPCustomGameVMPatch __instance, ref GameServerEntry selectedServer, ref string passwordInput)
-    //    {
-    //        InformationManager.DisplayMessage(new InformationMessage("MPLocal - JoinCustomGame", Color.FromUint(0x008000)));
-    //        return true;
-    //    }
-    //}
-
-    //[HarmonyPatch(typeof(LobbyClient))]
-    //class MLobbyClientPatch
-    //{
-    //    [HarmonyPrefix]
-    //    [HarmonyPatch("OnJoinCustomGameResultMessage")]
-    //    static bool OnJoinCustomGameResultMessage(MPCustomGameVMPatch __instance, ref JoinCustomGameResultMessage message)
-    //    {
-    //        //InformationManager.DisplayMessage(new InformationMessage("MPLocal - OnJoinCustomGameResultMessage", Color.FromUint(0x008000)));
-    //        if (message.Success)
-    //        {
-    //            GameServerProperties gameServerProperties = message.JoinGameData.GameServerProperties;
-
-    //            //easyier that add address in DiamondClientApplication.ProxyAddressMap
-    //            FieldInfo fieldInfo = typeof(GameServerProperties).GetField("<Address>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance);
-    //            fieldInfo.SetValue(gameServerProperties, "127.0.0.1");
-    //        }
-    //        return true;
-    //    }
-    //}
-    
 
 }
 

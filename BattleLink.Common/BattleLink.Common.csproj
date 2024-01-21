@@ -11,6 +11,7 @@
     <GameFolder>C:\games\Steam\steamapps\common\Mount &amp; Blade II Dedicated Server</GameFolder>
 	<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 	<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+	<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 
   </PropertyGroup>
 
@@ -106,6 +107,9 @@
     </Reference>
     <Reference Include="TaleWorlds.MountAndBlade.View">
       <HintPath>..\..\..\..\games\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\Native\bin\Win64_Shipping_Client\TaleWorlds.MountAndBlade.View.dll</HintPath>
+    </Reference>
+    <Reference Include="TaleWorlds.MountAndBlade.ViewModelCollection">
+      <HintPath>..\..\..\..\games\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.MountAndBlade.ViewModelCollection.dll</HintPath>
     </Reference>
     <Reference Include="TaleWorlds.Network">
       <HintPath>..\..\..\..\games\Steam\steamapps\common\Mount &amp; Blade II Dedicated Server\bin\Win64_Shipping_Server\TaleWorlds.Network.dll</HintPath>

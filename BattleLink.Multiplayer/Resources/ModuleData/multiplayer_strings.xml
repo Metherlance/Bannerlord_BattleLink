@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <strings>
-  <string id="str_multiplayer_official_game_type_name.BattleLink" text="{=*}Realms Battle" />
-  <string id="str_multiplayer_official_game_type_explainer.BattleLink" text="{=*}TODO" />
-  <string id="str_multiplayer_game_type.BattleLink" text="{=*}Realms Battle" />
+  <string id="str_multiplayer_official_game_type_name.BattleLink" text="{=*}BattleLink - Battle" />
+  <string id="str_multiplayer_official_game_type_explainer.BattleLink" text="{=*}Engage in epic battles with or against your friends to determine the fate of the singleplayer campaign" />
+  <string id="str_multiplayer_game_type.BattleLink" text="{=*}Battle Link" />
 </strings>

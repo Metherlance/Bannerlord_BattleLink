@@ -1,13 +1,18 @@
 ﻿<Module>
 	<Name value="BattleLink"/>
 	<Id value="BattleLink"/>
-	<Version value="v1.0.0.0"/>
+	<Version value="v1.2.9.0"/>
 	<ModuleCategory value="Multiplayer"/>
 	<DependedModules>
-		<DependedModule Id="Native" DependentVersion="v1.0.0" Optional="false" />
+		<DependedModule Id="Native" DependentVersion="v1.2.9" Optional="false" />
 	</DependedModules>
 	<SubModules>
-	
+		<SubModule>
+			<Name value="BattleLink"/>
+			<DLLName value="BattleLink.Common.dll"/>
+			<SubModuleClassType value="BattleLink.Common.SubModule"/>
+			<Tags />
+		</SubModule>
 		<SubModule>
 			<Name value="BattleLink"/>
 			<DLLName value="BattleLink.dll"/>

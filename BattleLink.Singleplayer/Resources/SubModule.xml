@@ -3,7 +3,7 @@
         xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/BUTR/Bannerlord.XmlSchemas/master/SubModule.xsd" >
 	<Id value="BattleLink.Singleplayer" />
 	<Name value="Battle Link Singleplayer" />
-	<Version value="v1.2.3" />
+	<Version value="v1.2.9.0" />
 	<Official value="false" />
 	<DefaultModule value="false" />
 
@@ -17,8 +17,7 @@
 		<DependedModule Id="StoryMode" />
 		<DependedModule Id="CustomBattle" />
 	</DependedModules>
-	<!-- Community Dependency Metadata -->
-	<!-- https://github.com/BUTR/Bannerlord.BUTRLoader#for-modders -->
+
 	<DependedModuleMetadatas>
 		<DependedModuleMetadata id="Bannerlord.Harmony" order="LoadBeforeThis" />
 		<DependedModuleMetadata id="Native" order="LoadBeforeThis" />
@@ -27,7 +26,7 @@
 		<DependedModuleMetadata id="StoryMode" order="LoadBeforeThis" />
 		<DependedModuleMetadata id="CustomBattle" order="LoadBeforeThis" />
 	</DependedModuleMetadatas>
-	<!-- Community Dependency Metadata -->
+	
 	<SubModules>
 		<SubModule>
 			<Name value="Battle Link Singleplayer" />
@@ -37,9 +36,6 @@
 		</SubModule>
 	</SubModules>
 	<Xmls>
-		<XmlNode>
-			<XmlName id="GameText" path="multiplayer_strings"/>
-		</XmlNode>
 	</Xmls>
 
 </Module>

@@ -1,5 +1,5 @@
 ServerName ztest
-AdminPassword toto
+#AdminPassword
 GameType BattleLink
 add_map_to_automated_battle_pool mp_sergeant_map_007
 add_map_to_automated_battle_pool mp_sergeant_map_008
@@ -19,15 +19,15 @@ FriendlyFireDamageMeleeSelfPercent 25
 FriendlyFireDamageRangedFriendPercent 75
 FriendlyFireDamageRangedSelfPercent 25
 MinNumberOfPlayersForMatchStart 1
-NumberOfBotsTeam1 6
-NumberOfBotsTeam2 7
+NumberOfBotsTeam1 1
+NumberOfBotsTeam2 1
 RoundTotal 1
 MapTimeLimit 60
-RoundTimeLimit 600
-WarmupTimeLimit 1
+RoundTimeLimit 1800
+WarmupTimeLimit 3
 AutoTeamBalanceThreshold 1
 NumberOfBotsPerFormation 75
 SingleSpawn true
 set_automated_battle_count 50
-start_game
+start_game_and_mission
 enable_automated_battle_switching
