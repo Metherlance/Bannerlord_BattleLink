@@ -1,7 +1,7 @@
 ﻿using BattleLink.Common.Model;
 using BattleLink.Handler;
 using NetworkMessages.FromServer;
-using RealmsBattle.Multiplayer;
+using BattleLink.Multiplayer;
 using System.Collections.Generic;
 using System.Reflection;
 using TaleWorlds.Core;

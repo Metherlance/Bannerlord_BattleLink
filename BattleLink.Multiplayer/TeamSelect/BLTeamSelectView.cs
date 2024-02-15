@@ -1,24 +1,20 @@
-﻿using System;
+﻿using BattleLink.TeamSelect;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TaleWorlds.Core;
 using TaleWorlds.Engine.GauntletUI;
 using TaleWorlds.Library;
+using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.Multiplayer.GauntletUI.Mission;
-using TaleWorlds.MountAndBlade.Multiplayer.View.MissionViews;
 using TaleWorlds.MountAndBlade.View.MissionViews;
 using TaleWorlds.MountAndBlade.View.Screens;
-using TaleWorlds.MountAndBlade.View;
-using TaleWorlds.MountAndBlade;
 using TaleWorlds.ObjectSystem;
 using TaleWorlds.TwoDimension;
-using BattleLink.TeamSelect;
 
 namespace BattleLink.Views
 {
-   // [OverrideView(typeof(MultiplayerTeamSelectUIHandler))]
+    // [OverrideView(typeof(MultiplayerTeamSelectUIHandler))]
     public class BLTeamSelectView : MissionView
     {
         private GauntletLayer _gauntletLayer;
@@ -162,7 +158,7 @@ namespace BattleLink.Views
                 // Update culture selected in SpawnTroopModel
                 BasicCultureObject culture1 = MBObjectManager.Instance.GetObject<BasicCultureObject>(MultiplayerOptions.OptionType.CultureTeam1.GetStrValue(MultiplayerOptions.MultiplayerOptionsAccessMode.CurrentMapOptions));
                 BasicCultureObject culture2 = MBObjectManager.Instance.GetObject<BasicCultureObject>(MultiplayerOptions.OptionType.CultureTeam2.GetStrValue(MultiplayerOptions.MultiplayerOptionsAccessMode.CurrentMapOptions));
-              //  SpawnTroopsModel.Instance.SelectedFaction = player.Team?.Side == BattleSideEnum.Attacker ? culture1 : culture2;
+                //  SpawnTroopsModel.Instance.SelectedFaction = player.Team?.Side == BattleSideEnum.Attacker ? culture1 : culture2;
                 // TODO : Bug seems to be : you switch team, your agent dies but stays as the owner of the controller,
                 // yet by dying he is not in a team anymore, so team returns null and it crashes
                 // Try to assign a valid agent as the controller owner

@@ -1,6 +1,7 @@
 ﻿using BattleLink.Common;
 using BattleLink.Common.Behavior;
 using BattleLink.Common.DtoSpSv;
+using BattleLink.Common.Utils;
 using NetworkMessages.FromClient;
 using NetworkMessages.FromServer;
 using System;
@@ -100,14 +101,18 @@ namespace BattleLink.Server
         {
             base.OnEndMission();
 
-            //move init file
-            string filenameInit = BLReferentialHolder.initializerFilename;
-            string pathServerFileInitializerFinished = System.IO.Path.Combine(BasePath.Name, "Modules", "BattleLink", "Battles", "Finished", filenameInit);
-            if (File.Exists(pathServerFileInitializerFinished))
+            if (BLReferentialHolder.currentBattleInitializerPending)
             {
-                File.Delete(pathServerFileInitializerFinished);
-            }
-            // for test File.Move(System.IO.Path.Combine(BasePath.Name, "Modules", "BattleLink", "Battles", "Pending", filenameInit), pathServerFileInitializerFinished);
+                //move init file
+                string filenameInit = BLReferentialHolder.initializerFilename;
+                string pathServerFileInitializerFinished = System.IO.Path.Combine(BasePath.Name, "Modules", "BattleLink", "Battles", "Finished", filenameInit);
+                if (File.Exists(pathServerFileInitializerFinished))
+                {
+                    File.Delete(pathServerFileInitializerFinished);
+                }
+                //
+                File.Move(System.IO.Path.Combine(BasePath.Name, "Modules", "BattleLink", "Battles", "Pending", filenameInit), pathServerFileInitializerFinished);
+            }            
 
             // load next init file
             setNextBLMap();
@@ -115,38 +120,103 @@ namespace BattleLink.Server
             MBDebug.Print("BLMissionMDomination - OnEndMission", 0, DebugColor.Green);
         }
 
+
         public static void setNextBLMap()
         {
+            // Check pending state first
             FileInfo[] fileEntries = new DirectoryInfo(System.IO.Path.Combine(BasePath.Name, "Modules", "BattleLink", "Battles", "Pending"))
                         .GetFiles("BL_MPBattle_*_Initializer.xml")
                         .OrderBy(f => f.CreationTime)
                         .ToArray();
-
             if (fileEntries.Length > 0)
             {
+                FileInfo fileEntrie = fileEntries[0];
+
                 MultiplayerIntermissionVotingManager.Instance.IsCultureVoteEnabled = false;
                 MultiplayerIntermissionVotingManager.Instance.IsMapVoteEnabled = false;
 
                 XmlSerializer serializer = new XmlSerializer(typeof(MPBattleInitializer));
                 MPBattleInitializer battleInitializerNext = null;
-                using (Stream reader = new FileStream(fileEntries[0].FullName, FileMode.Open))
+                using (Stream reader = new FileStream(fileEntrie.FullName, FileMode.Open))
                 {
                     // Call the Deserialize method to restore the object's state.
                     battleInitializerNext = (MPBattleInitializer)serializer.Deserialize(reader);
                 }
 
-                MultiplayerOptions.Instance.GetOptionFromOptionType(OptionType.Map, MultiplayerOptionsAccessMode.NextMapOptions).UpdateValue(battleInitializerNext.MissionInitializerRecord.SceneName);
+                BLReferentialHolder.nextBattleInitializerFilePath = fileEntrie.FullName;
+                BLReferentialHolder.nextBattleInitializerPending = true;
+
+                MultiplayerOptions.Instance.GetOptionFromOptionType(OptionType.Map,      MultiplayerOptionsAccessMode.NextMapOptions).UpdateValue(battleInitializerNext.MissionInitializerRecord.SceneName);
                 MultiplayerOptions.Instance.GetOptionFromOptionType(OptionType.GameType, MultiplayerOptionsAccessMode.NextMapOptions).UpdateValue("BattleLink");
 
-                MBDebug.Print("BLMissionMDomination - setNextBLMap scene:" + battleInitializerNext.MissionInitializerRecord.SceneName, 0, DebugColor.Green);
+                //if (BattleSideEnum.Attacker.ToString().Equals(battleInitializerNext.Teams[0].BattleSide))
+                //{
+                //    MultiplayerOptions.Instance.GetOptionFromOptionType(OptionType.CultureTeam1, MultiplayerOptionsAccessMode.NextMapOptions).UpdateValue(battleInitializerNext.Teams[0].Culture);
+                //    MultiplayerOptions.Instance.GetOptionFromOptionType(OptionType.CultureTeam2, MultiplayerOptionsAccessMode.NextMapOptions).UpdateValue(battleInitializerNext.Teams[1].Culture);
+                //}
+                //else
+                //{
+                //    MultiplayerOptions.Instance.GetOptionFromOptionType(OptionType.CultureTeam1, MultiplayerOptionsAccessMode.NextMapOptions).UpdateValue(battleInitializerNext.Teams[1].Culture);
+                //    MultiplayerOptions.Instance.GetOptionFromOptionType(OptionType.CultureTeam2, MultiplayerOptionsAccessMode.NextMapOptions).UpdateValue(battleInitializerNext.Teams[0].Culture);
+                //}
+
+                MBDebug.Print("BLMissionMDomination - setNextBLMap pending scene:" + battleInitializerNext.MissionInitializerRecord.SceneName, 0, DebugColor.Green);
+            
+                return;
             }
-            else
+
+            // pick random initializer from finished
+            fileEntries = new DirectoryInfo(System.IO.Path.Combine(BasePath.Name, "Modules", "BattleLink", "Battles", "Finished"))
+                .GetFiles("BL_MPBattle_*_Initializer.xml")
+                .ToArray();
+            if (fileEntries.Length > 0)
             {
+                FileInfo fileEntrie = fileEntries[new Random().Next(fileEntries.Length)];
+
+                MultiplayerIntermissionVotingManager.Instance.IsCultureVoteEnabled = false;
+                MultiplayerIntermissionVotingManager.Instance.IsMapVoteEnabled = false;
+
+                XmlSerializer serializer = new XmlSerializer(typeof(MPBattleInitializer));
+                MPBattleInitializer battleInitializerNext = null;
+                using (Stream reader = new FileStream(fileEntrie.FullName, FileMode.Open))
+                {
+                    // Call the Deserialize method to restore the object's state.
+                    battleInitializerNext = (MPBattleInitializer)serializer.Deserialize(reader);
+                }
+
+                BLReferentialHolder.nextBattleInitializerFilePath = fileEntrie.FullName;
+                BLReferentialHolder.nextBattleInitializerPending = false;
+
+                MultiplayerOptions.Instance.GetOptionFromOptionType(OptionType.Map,      MultiplayerOptionsAccessMode.NextMapOptions).UpdateValue(battleInitializerNext.MissionInitializerRecord.SceneName);
+                MultiplayerOptions.Instance.GetOptionFromOptionType(OptionType.GameType, MultiplayerOptionsAccessMode.NextMapOptions).UpdateValue("BattleLink");
+
+                //if (BattleSideEnum.Attacker.ToString().Equals(battleInitializerNext.Teams[0].BattleSide))
+                //{
+                //    MultiplayerOptions.Instance.GetOptionFromOptionType(OptionType.CultureTeam1, MultiplayerOptionsAccessMode.NextMapOptions).UpdateValue(battleInitializerNext.Teams[0].Culture);
+                //    MultiplayerOptions.Instance.GetOptionFromOptionType(OptionType.CultureTeam2, MultiplayerOptionsAccessMode.NextMapOptions).UpdateValue(battleInitializerNext.Teams[1].Culture);
+                //}
+                //else
+                //{
+                //    MultiplayerOptions.Instance.GetOptionFromOptionType(OptionType.CultureTeam1, MultiplayerOptionsAccessMode.NextMapOptions).UpdateValue(battleInitializerNext.Teams[1].Culture);
+                //    MultiplayerOptions.Instance.GetOptionFromOptionType(OptionType.CultureTeam2, MultiplayerOptionsAccessMode.NextMapOptions).UpdateValue(battleInitializerNext.Teams[0].Culture);
+                //}
+
+                MBDebug.Print("BLMissionMDomination - setNextBLMap finished scene:" + battleInitializerNext.MissionInitializerRecord.SceneName, 0, DebugColor.Green);
+
+                return;
+            }
+
+            // no initializer, go back to default
+            {
+                BLReferentialHolder.nextBattleInitializerFilePath = null;
+                BLReferentialHolder.nextBattleInitializerPending = false;
+
                 MultiplayerIntermissionVotingManager.Instance.IsCultureVoteEnabled = true;
                 MultiplayerIntermissionVotingManager.Instance.IsMapVoteEnabled = true;
-                MultiplayerOptions.Instance.GetOptionFromOptionType(OptionType.GameType, MultiplayerOptionsAccessMode.NextMapOptions).UpdateValue("Captain");
+                string gamemodeDefault = new PropertiesUtils(System.IO.Path.Combine(BasePath.Name, "Modules", "BattleLink", "config.properties")).Get("gamemode.default");
+                MultiplayerOptions.Instance.GetOptionFromOptionType(OptionType.GameType, MultiplayerOptionsAccessMode.NextMapOptions).UpdateValue(gamemodeDefault);
 
-                MBDebug.Print("BLMissionMDomination - setNextBLMap no initializer, go back to captain", 0, DebugColor.DarkYellow);
+                MBDebug.Print($"BLMissionMDomination - setNextBLMap no initializer, go back to {gamemodeDefault}", 0, DebugColor.DarkYellow);
             }
         }
 
@@ -969,6 +1039,9 @@ namespace BattleLink.Server
           KillingBlow blow)
         {
             base.OnAgentRemoved(affectedAgent, affectorAgent, agentState, blow);
+
+            replaceGeneralIfNeeded(affectedAgent);
+
             if (this.UseGold() && affectorAgent != null && affectedAgent != null && affectedAgent.IsHuman && blow.DamageType != DamageTypes.Invalid && (agentState == AgentState.Unconscious || agentState == AgentState.Killed))
             {
                 bool isFriendly = affectorAgent.Team != null && affectedAgent.Team != null && affectorAgent.Team.Side == affectedAgent.Team.Side;
@@ -1032,6 +1105,32 @@ namespace BattleLink.Server
             FlagDominationMissionRepresentative representative4 = assistingHitter1.HitterPeer.Representative as FlagDominationMissionRepresentative;
             int dataAndUpdateFlags1 = representative4.GetGoldGainFromKillDataAndUpdateFlags(classForCharacter1, true);
             this.ChangeCurrentGoldForPeer(assistingHitter1.HitterPeer, representative4.Gold + dataAndUpdateFlags1);
+
+        }
+
+        private static void replaceGeneralIfNeeded(Agent affectedAgent)
+        {
+            Team teamAffected = affectedAgent.Team;
+            if (teamAffected != null && teamAffected.GeneralAgent == affectedAgent)
+            {
+                MBDebug.Print("BLMissionMDomination - OnAgentDeleted - General Dead", 0, DebugColor.Green);
+
+                teamAffected.GeneralAgent = null;
+                // set ai now TODO choose peer
+                if (teamAffected.TeamAI == null && teamAffected.GeneralAgent == null)
+                {
+                    BLTeamAIGeneral teamAI = new BLTeamAIGeneral(Mission.Current, teamAffected);
+                    teamAI.AddTacticOption(new TacticDefensiveEngagement(teamAffected));
+                    teamAI.AddTacticOption(new TacticCharge(teamAffected));
+                    TeamQuerySystemUtils.setPowerFix(Mission.Current);
+                    foreach (Formation formation in teamAffected.FormationsIncludingSpecialAndEmpty)
+                    {
+                        teamAI.OnUnitAddedToFormationForTheFirstTime(formation);
+                    }
+                    teamAffected.AddTeamAI(teamAI);
+                    teamAffected.SetPlayerRole(false, false);
+                }
+            }
         }
 
         public override float GetTroopNumberMultiplierForMissingPlayer(MissionPeer spawningPeer)
@@ -1081,5 +1180,9 @@ namespace BattleLink.Server
 
             MBDebug.Print("RBMissionMpGameMode - HandleNewClientAfterLoadingFinished", 0, DebugColor.Green);
         }
+
     }
+
+
+
 }

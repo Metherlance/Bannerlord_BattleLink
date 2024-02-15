@@ -1,6 +1,7 @@
 ﻿using BattleLink.Common.Model;
+using BattleLink.CommonSvMp.Model;
 using BattleLink.Server.Api;
-using RealmsBattle.Server;
+using SandBox.GameComponents;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.MountAndBlade;
@@ -51,6 +52,7 @@ namespace BattleLink.Server
 
             // GameModelsManager part du dernier élement
             starterObject.AddModel(new BLAgentStatCalculateModel());
+            starterObject.AddModel(new BLBattleBannerBearersModel());
 
             {
                 var xmlDocument = MBObjectManager.GetMergedXmlForManaged("CraftingPieces", false, false, "MultiplayerGame");

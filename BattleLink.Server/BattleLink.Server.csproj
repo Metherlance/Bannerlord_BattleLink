@@ -29,11 +29,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Resources\**" />
+    <EmbeddedResource Remove="Resources\**" />
+    <None Remove="Resources\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Nullable" Version="1.3.0" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
     <PackageReference Include="IsExternalInit" Version="1.0.2" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
   </ItemGroup>
 	
   <ItemGroup>
+
+
+    <Reference Include="SandBox">
+      <HintPath>..\..\..\..\games\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\SandBox\bin\Win64_Shipping_Client\SandBox.dll</HintPath>
+    </Reference>
 
 
     <Reference Include="TaleWorlds.AchievementSystem">
@@ -42,6 +53,10 @@
     <Reference Include="TaleWorlds.ActivitySystem">
       <HintPath>..\..\..\..\games\Steam\steamapps\common\Mount &amp; Blade II Dedicated Server\bin\Win64_Shipping_Server\TaleWorlds.ActivitySystem.dll</HintPath><Private>False</Private>
     <Private>False</Private></Reference>
+    <Reference Include="TaleWorlds.CampaignSystem">
+      <HintPath>..\..\..\..\games\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.CampaignSystem.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="TaleWorlds.Core">
       <HintPath>..\..\..\..\games\Steam\steamapps\common\Mount &amp; Blade II Dedicated Server\bin\Win64_Shipping_Server\TaleWorlds.Core.dll</HintPath><Private>False</Private>
     <Private>False</Private></Reference>
@@ -157,20 +172,30 @@
 	
   <ItemGroup>
     <Folder Include="Behavior\" />
-    <Folder Include="Resources\ModuleData\" />
   </ItemGroup>
 	
   <ItemGroup>
-    <ProjectReference Include="..\BattleLink.Common\BattleLink.Common.csproj">
-      <Project>{1D9F084C-B59A-49D9-8AD1-C2D62422EF8F}</Project>
-      <Name>BattleLink.Common</Name>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
+	  <ProjectReference Include="..\BattleLink.Common\BattleLink.Common.csproj">
+		  <Project>{1D9F084C-B59A-49D9-8AD1-C2D62422EF8F}</Project>
+		  <Name>BattleLink.Common</Name>
+		  <EmbedInteropTypes></EmbedInteropTypes>
+		  <Private>True</Private>
+		  <ReferenceOutputAssembly></ReferenceOutputAssembly>
+	  </ProjectReference>
+    <ProjectReference Include="..\BattleLink.CommonSvMp\BattleLink.CommonSvMp.csproj">
+	  <Name>BattleLink.CommonSvMp</Name>
+      <EmbedInteropTypes></EmbedInteropTypes>
+      <Private>True</Private>
+      <ReferenceOutputAssembly></ReferenceOutputAssembly>
     </ProjectReference>
+    <ProjectReference Include="..\BattleLink.CommonSvSp\BattleLink.CommonSvSp.csproj">
+	  <Name>BattleLink.CommonSvSp</Name>
+      <EmbedInteropTypes></EmbedInteropTypes>
+      <Private>True</Private>
+      <ReferenceOutputAssembly></ReferenceOutputAssembly>
+    </ProjectReference>
+  
   </ItemGroup>
-	
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy /d /y /s /e /h /c /i &quot;$(MSBuildProjectDirectory)\Resources&quot; &quot;..\..\..\..\games\Steam\steamapps\common\Mount &amp; Blade II Dedicated Server\Modules\BattleLink&quot;&#xD;&#xA;xcopy /d /y /s /e /h /c /i &quot;$(MSBuildProjectDirectory)\Resources\battlelink-config.txt&quot; &quot;..\..\..\..\games\Steam\steamapps\common\Mount &amp; Blade II Dedicated Server\Modules\Native&quot;&#xD;&#xA;&#xD;&#xA;" />
-  </Target>
 	
   <ProjectExtensions><VisualStudio><UserProperties properties_4launchsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 

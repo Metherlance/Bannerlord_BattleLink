@@ -5,4 +5,7 @@
     <StartArguments>/multiplayer _MODULES_%2aNative%2aMultiplayer%2aMPLocal%2aSandBoxCoreMP%2aBattleLink%2a_MODULES_</StartArguments>
     <EnableUnmanagedDebugging>true</EnableUnmanagedDebugging>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <StartArguments>/multiplayer _MODULES_%2aNative%2aMultiplayer%2aMPLocal%2aSandBoxCoreMP%2aBattleLink%2a_MODULES_</StartArguments>
+  </PropertyGroup>
 </Project>

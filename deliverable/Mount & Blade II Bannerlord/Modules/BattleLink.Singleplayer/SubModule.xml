@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Module xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/BUTR/Bannerlord.XmlSchemas/master/SubModule.xsd" >
+	<Id value="BattleLink.Singleplayer" />
+	<Name value="Battle Link Singleplayer" />
+	<Version value="v1.2.9.1" />
+	<Official value="false" />
+	<DefaultModule value="false" />
+
+	<ModuleCategory value="Singleplayer"/>
+
+	<DependedModules>
+		<DependedModule Id="Bannerlord.Harmony" DependentVersion="v2.3.0" Optional="false"/>
+		<DependedModule Id="Native" DependentVersion="v1.2.9" Optional="false"/>
+		<DependedModule Id="SandBoxCore" DependentVersion="v1.2.9" Optional="false"/>
+		<DependedModule Id="Sandbox" DependentVersion="v1.2.9" Optional="false"/>
+		<DependedModule Id="StoryMode" DependentVersion="v1.2.9" Optional="false"/>
+		<DependedModule Id="CustomBattle" DependentVersion="v1.2.9" Optional="false"/>
+	</DependedModules>
+
+	<DependedModuleMetadatas>
+		<DependedModuleMetadata id="Bannerlord.Harmony" order="LoadBeforeThis" />
+		<DependedModuleMetadata id="Native" order="LoadBeforeThis" />
+		<DependedModuleMetadata id="SandBoxCore" order="LoadBeforeThis" />
+		<DependedModuleMetadata id="Sandbox" order="LoadBeforeThis" />
+		<DependedModuleMetadata id="StoryMode" order="LoadBeforeThis" />
+		<DependedModuleMetadata id="CustomBattle" order="LoadBeforeThis" />
+	</DependedModuleMetadatas>
+	
+	<SubModules>
+		<SubModule>
+			<Name value="Battle Link Singleplayer" />
+			<DLLName value="BattleLink.Singleplayer.dll" />
+			<SubModuleClassType value="BattleLink.Singleplayer.SubModule" />
+			<Tags />
+		</SubModule>
+	</SubModules>
+	<Xmls>
+	</Xmls>
+
+</Module>

@@ -4,7 +4,7 @@ using BattleLink.Common.DtoSpSv;
 using BattleLink.Common.Model;
 using BattleLink.Common.Spawn;
 using BattleLink.Common.Spawn.Battle;
-using BattleLink.Server;
+using BattleLink.Common.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -24,7 +24,7 @@ using TaleWorlds.ObjectSystem;
 using static TaleWorlds.Library.Debug;
 using static TaleWorlds.MountAndBlade.MultiplayerOptions;
 
-namespace RealmsBattle.Server
+namespace BattleLink.Server
 {
     public class BattleLinkGameMode : MissionBasedMultiplayerGameMode
     {
@@ -49,20 +49,22 @@ namespace RealmsBattle.Server
 
                 BLReferentialHolder.basicCharacterObjects = new List<BLCharacterObject>();
 
-
-                FileInfo[] fileEntries = new DirectoryInfo(System.IO.Path.Combine(BasePath.Name, "Modules", "BattleLink", "Battles", "Pending"))
-                        .GetFiles("BL_MPBattle_*_Initializer.xml")
-                        .OrderBy(f => f.CreationTime)
-                        .ToArray();
-                if (fileEntries.Length == 0)
+                FileInfo fileInfo;
+                if (null == BLReferentialHolder.nextBattleInitializerFilePath)
                 {
-                    MBDebug.Print("BL - StartMultiplayerGame - no pending battle", 0, DebugColor.Green);
-                    MultiplayerMissions.OpenCaptainMission(_scene);
+                    BLMissionMpDomination.setNextBLMap();
+
+                    MBDebug.Print("BL - StartMultiplayerGame - no pending battle or finished battle", 0, DebugColor.Green);
+                    //MultiplayerMissions.OpenCaptainMission(_scene);
+                    string gamemodeDefault = new PropertiesUtils(System.IO.Path.Combine(BasePath.Name, "Modules", "BattleLink", "config.properties")).Get("gamemode.default");
+                    Module.CurrentModule.StartMultiplayerGame(gamemodeDefault, _scene);
+                    taskEndAndSetNextMission = EndAndSetNextMission();
                     return;
                 }
-
-
-                FileInfo fileInfo = fileEntries[0];
+                else
+                {
+                    fileInfo = new FileInfo(BLReferentialHolder.nextBattleInitializerFilePath);
+                }                               
 
                 // Declare an object variable of the type to be deserialized.
                 XmlSerializer serializer = new XmlSerializer(typeof(MPBattleInitializer));
@@ -90,6 +92,9 @@ namespace RealmsBattle.Server
 
                 if (!_scene.Equals(sceneName))
                 {
+                    MultiplayerIntermissionVotingManager.Instance.IsCultureVoteEnabled = false;
+                    MultiplayerIntermissionVotingManager.Instance.IsMapVoteEnabled = false;
+
 
                     //var NativeOptions = ConfigManager.Instance.GetNativeOptionsCopy();
                     //SetNativeOption(OptionType.GameType, GameMode);
@@ -100,16 +105,24 @@ namespace RealmsBattle.Server
                     MBDebug.Print("BL - StartMultiplayerGame - reloading the correct scene", 0, DebugColor.Green);
                     // close task
                     // MultiplayerMissions.OpenCaptainMission(_scene);
-                    MultiplayerMissions.OpenCaptainMission(_scene);
+                    string gamemodeDefault = new PropertiesUtils(System.IO.Path.Combine(BasePath.Name, "Modules", "BattleLink", "config.properties")).Get("gamemode.default");
+                    new MissionBasedMultiplayerGameMode(gamemodeDefault).StartMultiplayerGame(_scene);
+                   // MultiplayerMissions.OpenCaptainMission(_scene);
+
                     //end mission and restart
                     taskEndAndSetNextMission = EndAndSetNextMission();
                     return;
                 }
-                string gameTyp = MultiplayerOptions.OptionType.GameType.GetStrValue();
-                string ma = MultiplayerOptions.OptionType.Map.GetStrValue();
 
-                MultiplayerOptions.Instance.GetOptionFromOptionType(OptionType.GameType, MultiplayerOptionsAccessMode.CurrentMapOptions).GetValue(out string gameTyp2);
-                MultiplayerOptions.Instance.GetOptionFromOptionType(OptionType.Map, MultiplayerOptionsAccessMode.CurrentMapOptions).GetValue(out string map2);
+
+
+                BLReferentialHolder.currentBattleInitializerPending = BLReferentialHolder.nextBattleInitializerPending;
+
+                //string gameTyp = MultiplayerOptions.OptionType.GameType.GetStrValue();
+                //string ma = MultiplayerOptions.OptionType.Map.GetStrValue();
+
+                //MultiplayerOptions.Instance.GetOptionFromOptionType(OptionType.GameType, MultiplayerOptionsAccessMode.CurrentMapOptions).GetValue(out string gameTyp2);
+                //MultiplayerOptions.Instance.GetOptionFromOptionType(OptionType.Map, MultiplayerOptionsAccessMode.CurrentMapOptions).GetValue(out string map2);
 
                 mir.PlayingInCampaignMode = false;//else crash
 
@@ -129,41 +142,38 @@ namespace RealmsBattle.Server
                 };
                 foreach (var team in BLReferentialHolder.listTeam)
                 {
-                    if (cultureBaseName.Contains(team.Culture))
+                    BasicCultureObject basicCultureObject;
+                    if (!cultureBaseName.Contains(team.Culture))
                     {
-                        // no need to create culture for base game
-                        continue;
+                        XmlDocument doc2 = new XmlDocument();
+                        XmlElement culture = doc2.CreateElement("Culture");
+
+                        culture.SetAttribute("id", team.Culture);
+                        culture.SetAttribute("name", team.Name);
+                        culture.SetAttribute("is_main_culture", "true");
+                        culture.SetAttribute("default_face_key", "000fa92e90004202aced5d976886573d5d679585a376fdd605877a7764b8987c00000000000007520000037f0000000f00000037049140010000000000000000");
+
+
+                        culture.SetAttribute("color", team.Color);
+                        culture.SetAttribute("color2", team.Color2);
+                        culture.SetAttribute("cloth_alternative_color1", team.Color);
+                        culture.SetAttribute("cloth_alternative_color2", team.Color2);
+
+                        culture.SetAttribute("banner_background_color1", team.Color);
+                        culture.SetAttribute("banner_background_color2", team.Color);
+                        culture.SetAttribute("banner_foreground_color1", team.Color2);
+                        culture.SetAttribute("banner_foreground_color2", team.Color2);
+
+
+                        culture.SetAttribute("faction_banner_key", team.FactionBannerKey);
+
+
+                        basicCultureObject = (BasicCultureObject)MBObjectManager.Instance.CreateObjectFromXmlNode(culture);
                     }
-
-                    //if (team.Culture.Equals("empire"))
-                    //{
-                    //    continue;
-                    //}
-
-                    XmlDocument doc2 = new XmlDocument();
-                    XmlElement culture = doc2.CreateElement("Culture");
-
-                    culture.SetAttribute("id", team.Culture);
-                    culture.SetAttribute("name", team.Name);
-                    culture.SetAttribute("is_main_culture", "true");
-                    culture.SetAttribute("default_face_key", "000fa92e90004202aced5d976886573d5d679585a376fdd605877a7764b8987c00000000000007520000037f0000000f00000037049140010000000000000000");
-
-
-                    culture.SetAttribute("color", team.Color);
-                    culture.SetAttribute("color2", team.Color2);
-                    culture.SetAttribute("cloth_alternative_color1", team.Color);
-                    culture.SetAttribute("cloth_alternative_color2", team.Color2);
-
-                    culture.SetAttribute("banner_background_color1", team.Color);
-                    culture.SetAttribute("banner_background_color2", team.Color);
-                    culture.SetAttribute("banner_foreground_color1", team.Color2);
-                    culture.SetAttribute("banner_foreground_color2", team.Color2);
-
-
-                    culture.SetAttribute("faction_banner_key", team.FactionBannerKey);
-
-
-                    var basicCultureObject = (BasicCultureObject)MBObjectManager.Instance.CreateObjectFromXmlNode(culture);
+                    else
+                    {
+                        basicCultureObject = MBObjectManager.Instance.GetObject<BasicCultureObject>(team.Culture);
+                    }
 
 
                     //Create dummy character hero for culture
@@ -280,6 +290,7 @@ namespace RealmsBattle.Server
                             //new BLAgentLogsLogic(),
                              //new BattleAgentLogic(),
                             // new RBDebugMissionLogic(),
+                            new BannerBearerLogic(),
                 };
 
                 MBDebug.Print("BattleLinkGameMode - StartMultiplayerGame - end", 0, DebugColor.Green);
@@ -298,16 +309,21 @@ namespace RealmsBattle.Server
         }
 
         private static Task? taskEndAndSetNextMission = null;
-
+        // TODO private class
         public static async Task EndAndSetNextMission()
         {
             if (null != taskEndAndSetNextMission)
             {
-                MBDebug.Print("BattleLinkGameMode - EndAndStartMission - already have EndAndSetNextMission", 0, DebugColor.Red);
+                MBDebug.Print("BattleLinkGameMode - EndAndSetNextMission - already have EndAndSetNextMission", 0, DebugColor.Red);
+                return;
+            }
+            if (BLReferentialHolder.nextBattleInitializerPending)
+            {
+                MBDebug.Print("BattleLinkGameMode - EndAndSetNextMission - battle in pending state is processing -> no stop", 0, DebugColor.Red);
                 return;
             }
 
-            MBDebug.Print("BattleLinkGameMode - EndAndStartMission - start", 0, DebugColor.Green);
+            MBDebug.Print("BattleLinkGameMode - EndAndSetNextMission - start", 0, DebugColor.Green);
 
             //set the next map
             BLMissionMpDomination.setNextBLMap();
@@ -328,7 +344,7 @@ namespace RealmsBattle.Server
 
             taskEndAndSetNextMission = null;
 
-            MBDebug.Print("BattleLinkGameMode - EndAndStartMission - SetStateEndingAsServer ok", 0, DebugColor.Green);
+            MBDebug.Print("BattleLinkGameMode - EndAndSetNextMission - SetStateEndingAsServer ok", 0, DebugColor.Green);
             return;
         }
 

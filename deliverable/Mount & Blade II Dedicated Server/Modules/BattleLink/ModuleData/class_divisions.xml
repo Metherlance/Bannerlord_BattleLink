@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<MPClassDivisions>
+
+  <MPClassDivision id="bl_character_class_division"
+                   hero="bl_character"
+                   troop="bl_character"
+			hero_idle_anim="act_vlandia_mp_peasant_levy_idle"
+			troop_idle_anim="act_idle_unarmed_1"
+			multiplier="0.92"
+			cost="80"
+			casual_cost="90"
+			icon="Infantry_Light"
+			melee_ai="30"
+			ranged_ai="30"
+			armor="7"
+			movement_speed="0.82"
+			combat_movement_speed="0.9"
+			acceleration="1.8">
+		<Perks>
+			<Perk
+				game_mode="all"
+				name="{=ZvMcHde3}Pickaxe"
+				description="{=WxMGCqPw}Replaces Sickle with Pickaxe, effective against shields."
+				icon="PerkPickaxe"
+				perk_list="1">
+				<OnSpawnEffect
+					type="AlternativeEquipmentOnSpawn"
+					slot="Item0"
+					item="mp_vlandian_pick_axe" />
+			</Perk>
+		</Perks>
+	</MPClassDivision>
+	
+</MPClassDivisions>

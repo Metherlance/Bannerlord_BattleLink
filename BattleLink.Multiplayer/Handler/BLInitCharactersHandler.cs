@@ -68,6 +68,7 @@ namespace BattleLink.Handler
             skills.AppendChild(createSkillValue(doc, "Crossbow", message.skillCrossbow));
             skills.AppendChild(createSkillValue(doc, "Bow", message.skillBow));
             skills.AppendChild(createSkillValue(doc, "Throwing", message.skillThrowing));
+            skills.AppendChild(createSkillValue(doc, "Athletics", message.skillAthletics));
 
 
             //      message.bodyPropertiesValue

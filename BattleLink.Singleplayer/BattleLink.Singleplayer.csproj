@@ -50,6 +50,7 @@
     <Reference Include="Bannerlord.Harmony, Version=2.1.1.65, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\games\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\Bannerlord.Harmony\bin\Win64_Shipping_Client\Bannerlord.Harmony.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="C:\games\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.AchievementSystem.dll">
       <HintPath>C:\games\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.AchievementSystem.dll</HintPath>
@@ -263,9 +264,6 @@
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.7.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
@@ -302,6 +300,10 @@
     <Content Include="Resources\SubModule.xml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BattleLink.CommonSvSp\BattleLink.CommonSvSp.csproj">
+      <Project>{494965d7-6177-4f29-811b-3db0eab84f01}</Project>
+      <Name>BattleLink.CommonSvSp</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BattleLink.Common\BattleLink.Common.csproj">
       <Project>{DFF0AE2E-B310-41E7-80A7-BA149C2A8ADA}</Project>
       <Name>BattleLink.Common</Name>
@@ -313,7 +315,8 @@
   </ItemGroup>
   <!-- Post-Build -->
   <PropertyGroup>
-    <PostBuildEvent>xcopy /d /y /s /e /h /c /i "$(MSBuildProjectDirectory)\Resources" "C:\games\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\BattleLink.Singleplayer"</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

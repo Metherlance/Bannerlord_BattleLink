@@ -39,7 +39,7 @@
   <PropertyGroup>
     <StartAction>Program</StartAction>
     <StartProgram>C:\games\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\Bannerlord.exe</StartProgram>
-    <StartArguments>/singleplayer _MODULES_*Native*SandBoxCore*SandBox*StoryMode*CustomBattle*BattleLink*_MODULES_</StartArguments>
+    <StartArguments>/multiplayer _MODULES_*Native*Multiplayer*SandBoxCoreMP*BattleLink*_MODULES_</StartArguments>
     <StartWorkingDirectory>C:\games\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client</StartWorkingDirectory>
   </PropertyGroup>
   <!-- Bannerlord Native Assemblies -->
@@ -291,17 +291,16 @@
     <Compile Include="Handler\BLCreateAgentHandler.cs" />
     <Compile Include="Handler\BLInitCharactersHandler.cs" />
     <Compile Include="Handler\BLInitCultureHandler.cs" />
-    <Compile Include="ProcessUtils.cs" />
     <Compile Include="SubModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TeamSelect\BLTeamSelectTeamVM.cs" />
     <Compile Include="TeamSelect\BLTeamSelectView.cs" />
     <Compile Include="TeamSelect\BLTeamSelectVM.cs" />
+    <Compile Include="Widgets\BannerWidget.cs" />
     <Compile Include="Widgets\LobbyLeftBtn.cs" />
     <Compile Include="Widgets\VBox.cs" />
     <Content Include="Resources\GUI\Prefabs\Dummy.xml" />
     <Content Include="Resources\ModuleData\multiplayer_strings.xml" />
-    <Content Include="Resources\SubModule.xml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -310,6 +309,11 @@
     <Folder Include="Views\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BattleLink.CommonSvMp\BattleLink.CommonSvMp.csproj">
+      <Project>{7f607320-285d-4a75-9879-266bc9720e0c}</Project>
+      <Name>BattleLink.CommonSvMp</Name>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </ProjectReference>
     <ProjectReference Include="..\BattleLink.Common\BattleLink.Common.csproj">
       <Project>{1D9F084C-B59A-49D9-8AD1-C2D62422EF8F}</Project>
       <Name>BattleLink.Common</Name>
@@ -318,8 +322,8 @@
   </ItemGroup>
   <!-- Post-Build -->
   <PropertyGroup>
-    <PostBuildEvent>xcopy /d /y /s /e /h /c /i "$(MSBuildProjectDirectory)\Resources" "C:\games\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\BattleLink"
-</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

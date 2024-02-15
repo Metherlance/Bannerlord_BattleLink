@@ -1,0 +1,3494 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SkillSets>
+	<SkillSet
+		id="infantry_heavyinfantry_level1_template_skills">
+		<skill
+			id="Athletics"
+			value="30" />
+		<skill
+			id="OneHanded"
+			value="30" />
+		<skill
+			id="TwoHanded"
+			value="20" />
+		<skill
+			id="Polearm"
+			value="30" />
+		<skill
+			id="Throwing"
+			value="20" />
+	</SkillSet>
+	<SkillSet
+		id="infantry_heavyinfantry_level6_template_skills">
+		<skill
+			id="Athletics"
+			value="20" />
+		<skill
+			id="Riding"
+			value="5" />
+		<skill
+			id="OneHanded"
+			value="20" />
+		<skill
+			id="TwoHanded"
+			value="20" />
+		<skill
+			id="Polearm"
+			value="20" />
+		<skill
+			id="Bow"
+			value="5" />
+		<skill
+			id="Crossbow"
+			value="5" />
+		<skill
+			id="Throwing"
+			value="5" />
+	</SkillSet>
+	<SkillSet
+		id="infantry_heavyinfantry_level11_template_skills">
+		<skill
+			id="Athletics"
+			value="40" />
+		<skill
+			id="Riding"
+			value="5" />
+		<skill
+			id="OneHanded"
+			value="40" />
+		<skill
+			id="TwoHanded"
+			value="40" />
+		<skill
+			id="Polearm"
+			value="40" />
+		<skill
+			id="Bow"
+			value="15" />
+		<skill
+			id="Crossbow"
+			value="15" />
+		<skill
+			id="Throwing"
+			value="20" />
+	</SkillSet>
+	<SkillSet
+		id="infantry_heavyinfantry_level16_template_skills">
+		<skill
+			id="Athletics"
+			value="70" />
+		<skill
+			id="Riding"
+			value="10" />
+		<skill
+			id="OneHanded"
+			value="100" />
+		<skill
+			id="TwoHanded"
+			value="40" />
+		<skill
+			id="Polearm"
+			value="40" />
+		<skill
+			id="Bow"
+			value="30" />
+		<skill
+			id="Crossbow"
+			value="30" />
+		<skill
+			id="Throwing"
+			value="70" />
+	</SkillSet>
+	<SkillSet
+		id="infantry_heavyinfantry_level21_template_skills">
+		<skill
+			id="Athletics"
+			value="100" />
+		<skill
+			id="Riding"
+			value="15" />
+		<skill
+			id="OneHanded"
+			value="100" />
+		<skill
+			id="TwoHanded"
+			value="100" />
+		<skill
+			id="Polearm"
+			value="100" />
+		<skill
+			id="Bow"
+			value="45" />
+		<skill
+			id="Crossbow"
+			value="45" />
+		<skill
+			id="Throwing"
+			value="60" />
+	</SkillSet>
+	<SkillSet
+		id="infantry_heavyinfantry_level26_template_skills">
+		<skill
+			id="Athletics"
+			value="130" />
+		<skill
+			id="Riding"
+			value="20" />
+		<skill
+			id="OneHanded"
+			value="130" />
+		<skill
+			id="TwoHanded"
+			value="130" />
+		<skill
+			id="Polearm"
+			value="130" />
+		<skill
+			id="Bow"
+			value="60" />
+		<skill
+			id="Crossbow"
+			value="60" />
+		<skill
+			id="Throwing"
+			value="80" />
+	</SkillSet>
+	<SkillSet
+		id="infantry_heavyinfantry_level31_template_skills">
+		<skill
+			id="Athletics"
+			value="170" />
+		<skill
+			id="Riding"
+			value="60" />
+		<skill
+			id="OneHanded"
+			value="220" />
+		<skill
+			id="TwoHanded"
+			value="260" />
+		<skill
+			id="Polearm"
+			value="260" />
+		<skill
+			id="Bow"
+			value="50" />
+		<skill
+			id="Crossbow"
+			value="25" />
+		<skill
+			id="Throwing"
+			value="40" />
+	</SkillSet>
+	<SkillSet
+		id="infantry_heavyinfantry_highestlevel_template_skills">
+		<skill
+			id="Athletics"
+			value="185" />
+		<skill
+			id="Bow"
+			value="80" />
+		<skill
+			id="Crossbow"
+			value="80" />
+		<skill
+			id="OneHanded"
+			value="240" />
+		<skill
+			id="Polearm"
+			value="200" />
+		<skill
+			id="Riding"
+			value="80" />
+		<skill
+			id="Throwing"
+			value="190" />
+		<skill
+			id="TwoHanded"
+			value="240" />
+	</SkillSet>
+	<SkillSet
+		id="cavalry_lightcavalry_heavycavalry_level1_template_skills">
+		<skill
+			id="Athletics"
+			value="10" />
+		<skill
+			id="OneHanded"
+			value="30" />
+		<skill
+			id="Polearm"
+			value="30" />
+		<skill
+			id="Riding"
+			value="30" />
+		<skill
+			id="TwoHanded"
+			value="10" />
+	</SkillSet>
+	<SkillSet
+		id="cavalry_lightcavalry_heavycavalry_level6_template_skills">
+		<skill
+			id="Athletics"
+			value="10" />
+		<skill
+			id="Riding"
+			value="10" />
+		<skill
+			id="OneHanded"
+			value="20" />
+		<skill
+			id="TwoHanded"
+			value="20" />
+		<skill
+			id="Polearm"
+			value="20" />
+		<skill
+			id="Bow"
+			value="5" />
+		<skill
+			id="Crossbow"
+			value="5" />
+		<skill
+			id="Throwing"
+			value="10" />
+	</SkillSet>
+	<SkillSet
+		id="cavalry_lightcavalry_heavycavalry_level11_template_skills">
+		<skill
+			id="Athletics"
+			value="20" />
+		<skill
+			id="Riding"
+			value="40" />
+		<skill
+			id="OneHanded"
+			value="60" />
+		<skill
+			id="TwoHanded"
+			value="40" />
+		<skill
+			id="Polearm"
+			value="40" />
+		<skill
+			id="Bow"
+			value="20" />
+		<skill
+			id="Crossbow"
+			value="5" />
+		<skill
+			id="Throwing"
+			value="5" />
+	</SkillSet>
+	<SkillSet
+		id="cavalry_lightcavalry_heavycavalry_level16_template_skills">
+		<skill
+			id="Athletics"
+			value="60" />
+		<skill
+			id="Riding"
+			value="70" />
+		<skill
+			id="OneHanded"
+			value="70" />
+		<skill
+			id="TwoHanded"
+			value="100" />
+		<skill
+			id="Polearm"
+			value="100" />
+		<skill
+			id="Bow"
+			value="30" />
+		<skill
+			id="Crossbow"
+			value="10" />
+		<skill
+			id="Throwing"
+			value="10" />
+	</SkillSet>
+	<SkillSet
+		id="cavalry_lightcavalry_heavycavalry_level21_template_skills">
+		<skill
+			id="Athletics"
+			value="40" />
+		<skill
+			id="Riding"
+			value="110" />
+		<skill
+			id="OneHanded"
+			value="110" />
+		<skill
+			id="TwoHanded"
+			value="160" />
+		<skill
+			id="Polearm"
+			value="150" />
+		<skill
+			id="Bow"
+			value="40" />
+		<skill
+			id="Crossbow"
+			value="15" />
+		<skill
+			id="Throwing"
+			value="15" />
+	</SkillSet>
+	<SkillSet
+		id="cavalry_lightcavalry_heavycavalry_level26_template_skills">
+		<skill
+			id="Athletics"
+			value="80" />
+		<skill
+			id="Riding"
+			value="130" />
+		<skill
+			id="OneHanded"
+			value="130" />
+		<skill
+			id="TwoHanded"
+			value="160" />
+		<skill
+			id="Polearm"
+			value="160" />
+		<skill
+			id="Bow"
+			value="60" />
+		<skill
+			id="Crossbow"
+			value="20" />
+		<skill
+			id="Throwing"
+			value="60" />
+	</SkillSet>
+	<SkillSet
+		id="cavalry_lightcavalry_heavycavalry_level31_template_skills">
+		<skill
+			id="Athletics"
+			value="60" />
+		<skill
+			id="Riding"
+			value="200" />
+		<skill
+			id="OneHanded"
+			value="200" />
+		<skill
+			id="TwoHanded"
+			value="260" />
+		<skill
+			id="Polearm"
+			value="260" />
+		<skill
+			id="Bow"
+			value="60" />
+		<skill
+			id="Crossbow"
+			value="25" />
+		<skill
+			id="Throwing"
+			value="45" />
+	</SkillSet>
+	<SkillSet
+		id="cavalry_lightcavalry_heavycavalry_highestlevel_template_skills">
+		<skill
+			id="Athletics"
+			value="175" />
+		<skill
+			id="Bow"
+			value="70" />
+		<skill
+			id="Crossbow"
+			value="70" />
+		<skill
+			id="OneHanded"
+			value="240" />
+		<skill
+			id="Polearm"
+			value="240" />
+		<skill
+			id="Riding"
+			value="260" />
+		<skill
+			id="Throwing"
+			value="110" />
+		<skill
+			id="TwoHanded"
+			value="200" />
+	</SkillSet>
+	<SkillSet
+		id="ranged_skirmisher_level1_template_skills">
+		<skill
+			id="Athletics"
+			value="30" />
+		<skill
+			id="Bow"
+			value="30" />
+		<skill
+			id="Crossbow"
+			value="30" />
+		<skill
+			id="OneHanded"
+			value="10" />
+		<skill
+			id="Throwing"
+			value="30" />
+		<skill
+			id="TwoHanded"
+			value="10" />
+	</SkillSet>
+	<SkillSet
+		id="ranged_skirmisher_level6_template_skills">
+		<skill
+			id="Athletics"
+			value="20" />
+		<skill
+			id="Riding"
+			value="5" />
+		<skill
+			id="OneHanded"
+			value="20" />
+		<skill
+			id="TwoHanded"
+			value="10" />
+		<skill
+			id="Polearm"
+			value="5" />
+		<skill
+			id="Bow"
+			value="20" />
+		<skill
+			id="Crossbow"
+			value="20" />
+		<skill
+			id="Throwing"
+			value="20" />
+	</SkillSet>
+	<SkillSet
+		id="ranged_skirmisher_level11_template_skills">
+		<skill
+			id="Athletics"
+			value="40" />
+		<skill
+			id="Riding"
+			value="5" />
+		<skill
+			id="OneHanded"
+			value="40" />
+		<skill
+			id="TwoHanded"
+			value="15" />
+		<skill
+			id="Polearm"
+			value="20" />
+		<skill
+			id="Bow"
+			value="40" />
+		<skill
+			id="Crossbow"
+			value="40" />
+		<skill
+			id="Throwing"
+			value="40" />
+	</SkillSet>
+	<SkillSet
+		id="ranged_skirmisher_level16_template_skills">
+		<skill
+			id="Athletics"
+			value="70" />
+		<skill
+			id="Riding"
+			value="10" />
+		<skill
+			id="OneHanded"
+			value="70" />
+		<skill
+			id="TwoHanded"
+			value="40" />
+		<skill
+			id="Polearm"
+			value="30" />
+		<skill
+			id="Bow"
+			value="100" />
+		<skill
+			id="Crossbow"
+			value="100" />
+		<skill
+			id="Throwing"
+			value="100" />
+	</SkillSet>
+	<SkillSet
+		id="ranged_skirmisher_level21_template_skills">
+		<skill
+			id="Athletics"
+			value="100" />
+		<skill
+			id="Riding"
+			value="15" />
+		<skill
+			id="OneHanded"
+			value="100" />
+		<skill
+			id="TwoHanded"
+			value="60" />
+		<skill
+			id="Polearm"
+			value="60" />
+		<skill
+			id="Bow"
+			value="100" />
+		<skill
+			id="Crossbow"
+			value="100" />
+		<skill
+			id="Throwing"
+			value="100" />
+	</SkillSet>
+	<SkillSet
+		id="ranged_skirmisher_level26_template_skills">
+		<skill
+			id="Athletics"
+			value="130" />
+		<skill
+			id="Riding"
+			value="20" />
+		<skill
+			id="OneHanded"
+			value="130" />
+		<skill
+			id="TwoHanded"
+			value="30" />
+		<skill
+			id="Polearm"
+			value="80" />
+		<skill
+			id="Bow"
+			value="160" />
+		<skill
+			id="Crossbow"
+			value="160" />
+		<skill
+			id="Throwing"
+			value="160" />
+	</SkillSet>
+	<SkillSet
+		id="ranged_skirmisher_level31_template_skills">
+		<skill
+			id="Athletics"
+			value="160" />
+		<skill
+			id="Bow"
+			value="210" />
+		<skill
+			id="Crossbow"
+			value="210" />
+		<skill
+			id="OneHanded"
+			value="110" />
+		<skill
+			id="Polearm"
+			value="70" />
+		<skill
+			id="Riding"
+			value="40" />
+		<skill
+			id="Throwing"
+			value="160" />
+		<skill
+			id="TwoHanded"
+			value="110" />
+	</SkillSet>
+	<SkillSet
+		id="ranged_skirmisher_highestlevel_template_skills">
+		<skill
+			id="Athletics"
+			value="220" />
+		<skill
+			id="Bow"
+			value="240" />
+		<skill
+			id="Crossbow"
+			value="240" />
+		<skill
+			id="OneHanded"
+			value="120" />
+		<skill
+			id="Polearm"
+			value="100" />
+		<skill
+			id="Riding"
+			value="70" />
+		<skill
+			id="Throwing"
+			value="180" />
+		<skill
+			id="TwoHanded"
+			value="130" />
+	</SkillSet>
+	<SkillSet
+		id="horsearcher_level1_template_skills">
+		<skill
+			id="Athletics"
+			value="10" />
+		<skill
+			id="Bow"
+			value="30" />
+		<skill
+			id="Crossbow"
+			value="20" />
+		<skill
+			id="OneHanded"
+			value="5" />
+		<skill
+			id="Polearm"
+			value="5" />
+		<skill
+			id="Riding"
+			value="40" />
+		<skill
+			id="Throwing"
+			value="0" />
+		<skill
+			id="TwoHanded"
+			value="0" />
+	</SkillSet>
+	<SkillSet
+		id="horsearcher_level6_template_skills">
+		<skill
+			id="Athletics"
+			value="20" />
+		<skill
+			id="Riding"
+			value="10" />
+		<skill
+			id="OneHanded"
+			value="5" />
+		<skill
+			id="TwoHanded"
+			value="5" />
+		<skill
+			id="Polearm"
+			value="5" />
+		<skill
+			id="Bow"
+			value="20" />
+		<skill
+			id="Crossbow"
+			value="20" />
+		<skill
+			id="Throwing"
+			value="5" />
+	</SkillSet>
+	<SkillSet
+		id="horsearcher_level11_template_skills">
+		<skill
+			id="Athletics"
+			value="20" />
+		<skill
+			id="Riding"
+			value="40" />
+		<skill
+			id="OneHanded"
+			value="10" />
+		<skill
+			id="TwoHanded"
+			value="10" />
+		<skill
+			id="Polearm"
+			value="55" />
+		<skill
+			id="Bow"
+			value="40" />
+		<skill
+			id="Crossbow"
+			value="40" />
+		<skill
+			id="Throwing"
+			value="5" />
+	</SkillSet>
+	<SkillSet
+		id="horsearcher_level16_template_skills">
+		<skill
+			id="Athletics"
+			value="40" />
+		<skill
+			id="Riding"
+			value="70" />
+		<skill
+			id="OneHanded"
+			value="45" />
+		<skill
+			id="TwoHanded"
+			value="15" />
+		<skill
+			id="Polearm"
+			value="30" />
+		<skill
+			id="Bow"
+			value="70" />
+		<skill
+			id="Crossbow"
+			value="70" />
+		<skill
+			id="Throwing"
+			value="25" />
+	</SkillSet>
+	<SkillSet
+		id="horsearcher_level21_template_skills">
+		<skill
+			id="Athletics"
+			value="45" />
+		<skill
+			id="Riding"
+			value="110" />
+		<skill
+			id="OneHanded"
+			value="40" />
+		<skill
+			id="TwoHanded"
+			value="40" />
+		<skill
+			id="Polearm"
+			value="110" />
+		<skill
+			id="Bow"
+			value="150" />
+		<skill
+			id="Crossbow"
+			value="15" />
+		<skill
+			id="Throwing"
+			value="15" />
+	</SkillSet>
+	<SkillSet
+		id="horsearcher_level26_template_skills">
+		<skill
+			id="Athletics"
+			value="80" />
+		<skill
+			id="Riding"
+			value="130" />
+		<skill
+			id="OneHanded"
+			value="50" />
+		<skill
+			id="TwoHanded"
+			value="50" />
+		<skill
+			id="Polearm"
+			value="130" />
+		<skill
+			id="Bow"
+			value="160" />
+		<skill
+			id="Crossbow"
+			value="160" />
+		<skill
+			id="Throwing"
+			value="60" />
+	</SkillSet>
+	<SkillSet
+		id="horsearcher_level31_template_skills">
+		<skill
+			id="Athletics"
+			value="60" />
+		<skill
+			id="Riding"
+			value="200" />
+		<skill
+			id="OneHanded"
+			value="60" />
+		<skill
+			id="TwoHanded"
+			value="60" />
+		<skill
+			id="Polearm"
+			value="220" />
+		<skill
+			id="Bow"
+			value="260" />
+		<skill
+			id="Crossbow"
+			value="260" />
+		<skill
+			id="Throwing"
+			value="30" />
+	</SkillSet>
+	<SkillSet
+		id="horsearcher_highestlevel_template_skills">
+		<skill
+			id="Athletics"
+			value="140" />
+		<skill
+			id="Bow"
+			value="220" />
+		<skill
+			id="Crossbow"
+			value="210" />
+		<skill
+			id="OneHanded"
+			value="150" />
+		<skill
+			id="Polearm"
+			value="100" />
+		<skill
+			id="Riding"
+			value="260" />
+		<skill
+			id="Throwing"
+			value="130" />
+		<skill
+			id="TwoHanded"
+			value="70" />
+	</SkillSet>
+	<SkillSet
+		id="custombattle_commander_1_template_skills">
+		<!--<skill id="Athletics" value="80" /> #OLD_SKILL# -->
+		<skill
+			id="Athletics"
+			value="90" />
+		<skill
+			id="Bow"
+			value="100" />
+		<skill
+			id="OneHanded"
+			value="100" />
+		<skill
+			id="Polearm"
+			value="100" />
+		<skill
+			id="Riding"
+			value="160" />
+		<!--<skill id="Shield" value="60" />-->
+		<skill
+			id="Throwing"
+			value="100" />
+		<skill
+			id="TwoHanded"
+			value="120" />
+		<skill
+			id="Tactics"
+			value="200" />
+	</SkillSet>
+	<SkillSet
+		id="custombattle_commander_2_template_skills">
+		<skill
+			id="Athletics"
+			value="90" />
+		<skill
+			id="Bow"
+			value="100" />
+		<skill
+			id="OneHanded"
+			value="100" />
+		<skill
+			id="Polearm"
+			value="100" />
+		<skill
+			id="Riding"
+			value="160" />
+		<skill
+			id="Throwing"
+			value="100" />
+		<skill
+			id="TwoHanded"
+			value="100" />
+		<skill
+			id="Tactics"
+			value="200" />
+	</SkillSet>
+	<SkillSet
+		id="custombattle_commander_3_template_skills">
+		<skill
+			id="Athletics"
+			value="90" />
+		<skill
+			id="Bow"
+			value="100" />
+		<skill
+			id="OneHanded"
+			value="100" />
+		<skill
+			id="Polearm"
+			value="100" />
+		<skill
+			id="Riding"
+			value="160" />
+		<skill
+			id="Throwing"
+			value="100" />
+		<skill
+			id="TwoHanded"
+			value="100" />
+		<skill
+			id="Tactics"
+			value="180" />
+	</SkillSet>
+	<SkillSet
+		id="custombattle_commander_4_template_skills">
+		<!--<skill id="Athletics" value="80" /> #OLD_SKILL# -->
+		<skill
+			id="Athletics"
+			value="90" />
+		<skill
+			id="Bow"
+			value="100" />
+		<skill
+			id="OneHanded"
+			value="100" />
+		<skill
+			id="Polearm"
+			value="100" />
+		<skill
+			id="Riding"
+			value="160" />
+		<!--<skill id="Shield" value="60" />-->
+		<skill
+			id="Throwing"
+			value="100" />
+		<skill
+			id="TwoHanded"
+			value="100" />
+		<skill
+			id="Tactics"
+			value="180" />
+	</SkillSet>
+	<SkillSet
+		id="custombattle_commander_5_template_skills">
+		<skill
+			id="Athletics"
+			value="90" />
+		<skill
+			id="Bow"
+			value="100" />
+		<skill
+			id="OneHanded"
+			value="100" />
+		<skill
+			id="Polearm"
+			value="100" />
+		<skill
+			id="Riding"
+			value="160" />
+		<skill
+			id="Throwing"
+			value="100" />
+		<skill
+			id="TwoHanded"
+			value="100" />
+		<skill
+			id="Tactics"
+			value="150" />
+	</SkillSet>
+	<SkillSet
+		id="custombattle_commander_6_template_skills">
+		<skill
+			id="Athletics"
+			value="90" />
+		<skill
+			id="Bow"
+			value="100" />
+		<skill
+			id="OneHanded"
+			value="100" />
+		<skill
+			id="Polearm"
+			value="100" />
+		<skill
+			id="Riding"
+			value="160" />
+		<skill
+			id="Throwing"
+			value="100" />
+		<skill
+			id="TwoHanded"
+			value="100" />
+		<skill
+			id="Tactics"
+			value="150" />
+	</SkillSet>
+	<SkillSet
+		id="custombattle_commander_7_template_skills">
+		<skill
+			id="Athletics"
+			value="90" />
+		<skill
+			id="Bow"
+			value="100" />
+		<skill
+			id="OneHanded"
+			value="100" />
+		<skill
+			id="Polearm"
+			value="100" />
+		<skill
+			id="Riding"
+			value="160" />
+		<skill
+			id="Throwing"
+			value="100" />
+		<skill
+			id="TwoHanded"
+			value="100" />
+		<skill
+			id="Tactics"
+			value="130" />
+	</SkillSet>
+	<SkillSet
+		id="custombattle_commander_8_template_skills">
+		<skill
+			id="Athletics"
+			value="90" />
+		<skill
+			id="Bow"
+			value="100" />
+		<skill
+			id="OneHanded"
+			value="100" />
+		<skill
+			id="Polearm"
+			value="100" />
+		<skill
+			id="Riding"
+			value="160" />
+		<skill
+			id="Throwing"
+			value="100" />
+		<skill
+			id="TwoHanded"
+			value="100" />
+		<skill
+			id="Tactics"
+			value="130" />
+	</SkillSet>
+	<SkillSet
+		id="custombattle_commander_9_template_skills">
+		<skill
+			id="Athletics"
+			value="90" />
+		<skill
+			id="Bow"
+			value="100" />
+		<skill
+			id="OneHanded"
+			value="100" />
+		<skill
+			id="Polearm"
+			value="100" />
+		<skill
+			id="Riding"
+			value="160" />
+		<skill
+			id="Throwing"
+			value="100" />
+		<skill
+			id="TwoHanded"
+			value="100" />
+		<skill
+			id="Tactics"
+			value="130" />
+	</SkillSet>
+	<SkillSet
+		id="custombattle_commander_10_template_skills">
+		<skill
+			id="Athletics"
+			value="90" />
+		<skill
+			id="Bow"
+			value="100" />
+		<skill
+			id="OneHanded"
+			value="100" />
+		<skill
+			id="Polearm"
+			value="100" />
+		<skill
+			id="Riding"
+			value="160" />
+		<skill
+			id="Throwing"
+			value="100" />
+		<skill
+			id="TwoHanded"
+			value="100" />
+		<skill
+			id="Tactics"
+			value="100" />
+	</SkillSet>
+	<SkillSet
+		id="custombattle_commander_11_template_skills">
+		<skill
+			id="Athletics"
+			value="90" />
+		<skill
+			id="Bow"
+			value="100" />
+		<skill
+			id="OneHanded"
+			value="100" />
+		<skill
+			id="Polearm"
+			value="100" />
+		<skill
+			id="Riding"
+			value="160" />
+		<skill
+			id="Throwing"
+			value="100" />
+		<skill
+			id="TwoHanded"
+			value="100" />
+		<skill
+			id="Tactics"
+			value="100" />
+	</SkillSet>
+	<SkillSet
+		id="custombattle_commander_12_template_skills">
+		<skill
+			id="Athletics"
+			value="90" />
+		<skill
+			id="Bow"
+			value="100" />
+		<skill
+			id="OneHanded"
+			value="100" />
+		<skill
+			id="Polearm"
+			value="100" />
+		<skill
+			id="Riding"
+			value="160" />
+		<skill
+			id="Throwing"
+			value="100" />
+		<skill
+			id="TwoHanded"
+			value="100" />
+		<skill
+			id="Tactics"
+			value="15" />
+	</SkillSet>
+	<SkillSet
+		id="custombattle_commander_13_template_skills">
+		<skill
+			id="Athletics"
+			value="90" />
+		<skill
+			id="Bow"
+			value="100" />
+		<skill
+			id="OneHanded"
+			value="100" />
+		<skill
+			id="Polearm"
+			value="100" />
+		<skill
+			id="Riding"
+			value="160" />
+		<skill
+			id="Throwing"
+			value="100" />
+		<skill
+			id="TwoHanded"
+			value="100" />
+		<skill
+			id="Tactics"
+			value="70" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_empire_0_skills">
+		<!-- Engineer who refused to comply with guild backscratching -->
+		<skill
+			id="Athletics"
+			value="80" />
+		<skill
+			id="Riding"
+			value="15" />
+		<skill
+			id="OneHanded"
+			value="80" />
+		<skill
+			id="TwoHanded"
+			value="30" />
+		<skill
+			id="Polearm"
+			value="40" />
+		<skill
+			id="Bow"
+			value="50" />
+		<skill
+			id="Crossbow"
+			value="60" />
+		<skill
+			id="Throwing"
+			value="80" />
+		<skill
+			id="Engineering"
+			value="120" />
+		<skill
+			id="Crafting"
+			value="30" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_empire_1_skills">
+		<!-- Very boastful fighter -->
+		<skill
+			id="Athletics"
+			value="120" />
+		<skill
+			id="Riding"
+			value="40" />
+		<skill
+			id="OneHanded"
+			value="105" />
+		<skill
+			id="TwoHanded"
+			value="95" />
+		<skill
+			id="Polearm"
+			value="60" />
+		<skill
+			id="Bow"
+			value="20" />
+		<skill
+			id="Crossbow"
+			value="60" />
+		<skill
+			id="Throwing"
+			value="80" />
+		<skill
+			id="Leadership"
+			value="60" />
+		<skill
+			id="Tactics"
+			value="80" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_empire_2_skills">
+		<!-- Family lost military land grant, must work for merchants -->
+		<skill
+			id="Athletics"
+			value="35" />
+		<skill
+			id="Riding"
+			value="115" />
+		<skill
+			id="OneHanded"
+			value="85" />
+		<skill
+			id="TwoHanded"
+			value="35" />
+		<skill
+			id="Polearm"
+			value="120" />
+		<skill
+			id="Bow"
+			value="20" />
+		<skill
+			id="Crossbow"
+			value="40" />
+		<skill
+			id="Throwing"
+			value="40" />
+		<skill
+			id="Leadership"
+			value="120" />
+		<skill
+			id="Tactics"
+			value="90" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_empire_3_skills">
+		<!--  Die-hard legionary -->
+		<skill
+			id="Athletics"
+			value="105" />
+		<skill
+			id="Riding"
+			value="15" />
+		<skill
+			id="OneHanded"
+			value="140" />
+		<skill
+			id="TwoHanded"
+			value="75" />
+		<skill
+			id="Polearm"
+			value="105" />
+		<skill
+			id="Leadership"
+			value="60" />
+		<skill
+			id="Crossbow"
+			value="20" />
+		<skill
+			id="Throwing"
+			value="40" />
+		<skill
+			id="Scouting"
+			value="45" />
+		<skill
+			id="Tactics"
+			value="90" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_empire_4_skills">
+		<!-- Bandit who found bandits too sociopathic -->
+		<skill
+			id="Athletics"
+			value="80" />
+		<skill
+			id="Riding"
+			value="20" />
+		<skill
+			id="OneHanded"
+			value="85" />
+		<skill
+			id="TwoHanded"
+			value="70" />
+		<skill
+			id="Polearm"
+			value="40" />
+		<skill
+			id="Bow"
+			value="150" />
+		<skill
+			id="Crossbow"
+			value="40" />
+		<skill
+			id="Throwing"
+			value="100" />
+		<skill
+			id="Scouting"
+			value="85" />
+		<skill
+			id="Roguery"
+			value="120" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_empire_5_skills">
+		<!-- the butcher, doesn't give much away about himself -->
+		<skill
+			id="Athletics"
+			value="90" />
+		<skill
+			id="Riding"
+			value="20" />
+		<skill
+			id="OneHanded"
+			value="105" />
+		<skill
+			id="TwoHanded"
+			value="50" />
+		<skill
+			id="Polearm"
+			value="100" />
+		<skill
+			id="Bow"
+			value="120" />
+		<skill
+			id="Crossbow"
+			value="60" />
+		<skill
+			id="Throwing"
+			value="105" />
+		<skill
+			id="Roguery"
+			value="110" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_empire_6_skills">
+		<!-- maquisard, ex-messianic rebel turned mafiosi -->
+		<skill
+			id="Athletics"
+			value="60" />
+		<skill
+			id="Riding"
+			value="10" />
+		<skill
+			id="OneHanded"
+			value="70" />
+		<skill
+			id="TwoHanded"
+			value="30" />
+		<skill
+			id="Polearm"
+			value="60" />
+		<skill
+			id="Bow"
+			value="90" />
+		<skill
+			id="Crossbow"
+			value="100" />
+		<skill
+			id="Tactics"
+			value="15" />
+		<skill
+			id="Scouting"
+			value="75" />
+		<skill
+			id="Roguery"
+			value="40" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_empire_7_skills">
+		<!-- posed as man to join army. needed the money. Armorer -->
+		<skill
+			id="Athletics"
+			value="80" />
+		<skill
+			id="Riding"
+			value="15" />
+		<skill
+			id="OneHanded"
+			value="75" />
+		<skill
+			id="TwoHanded"
+			value="20" />
+		<skill
+			id="Polearm"
+			value="105" />
+		<skill
+			id="Bow"
+			value="20" />
+		<skill
+			id="Crossbow"
+			value="40" />
+		<skill
+			id="Crafting"
+			value="70" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_empire_8_skills">
+		<!-- merchant-class. family was in sacked city, followed in wake of refugee columns.  -->
+		<skill
+			id="Athletics"
+			value="40" />
+		<skill
+			id="Riding"
+			value="50" />
+		<skill
+			id="OneHanded"
+			value="30" />
+		<skill
+			id="TwoHanded"
+			value="15" />
+		<skill
+			id="Polearm"
+			value="20" />
+		<skill
+			id="Bow"
+			value="20" />
+		<skill
+			id="Crossbow"
+			value="30" />
+		<skill
+			id="Roguery"
+			value="70" />
+		<skill
+			id="Trade"
+			value="120" />
+		<skill
+			id="Steward"
+			value="105" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_empire_9_skills">
+		<!--female outlaw. Was adopted by gang as a very young girl, used as killer -->
+		<skill
+			id="Athletics"
+			value="120" />
+		<skill
+			id="Riding"
+			value="10" />
+		<skill
+			id="OneHanded"
+			value="90" />
+		<skill
+			id="TwoHanded"
+			value="20" />
+		<skill
+			id="Polearm"
+			value="10" />
+		<skill
+			id="Bow"
+			value="40" />
+		<skill
+			id="Crossbow"
+			value="40" />
+		<skill
+			id="Throwing"
+			value="90" />
+		<skill
+			id="Roguery"
+			value="80" />
+		<skill
+			id="Scouting"
+			value="20" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_empire_10_skills">
+		<!--  Doctor, forced to torture -->
+		<skill
+			id="Athletics"
+			value="30" />
+		<skill
+			id="Riding"
+			value="50" />
+		<skill
+			id="OneHanded"
+			value="20" />
+		<skill
+			id="TwoHanded"
+			value="10" />
+		<skill
+			id="Polearm"
+			value="50" />
+		<skill
+			id="Bow"
+			value="10" />
+		<skill
+			id="Crossbow"
+			value="30" />
+		<skill
+			id="Throwing"
+			value="60" />
+		<skill
+			id="Medicine"
+			value="120" />
+		<skill
+			id="Scouting"
+			value="40" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_empire_11_skills">
+		<!--upper-class dispossessed, refused a bad marriage -->
+		<skill
+			id="Athletics"
+			value="70" />
+		<skill
+			id="Riding"
+			value="140" />
+		<skill
+			id="OneHanded"
+			value="80" />
+		<skill
+			id="TwoHanded"
+			value="20" />
+		<skill
+			id="Polearm"
+			value="110" />
+		<skill
+			id="Bow"
+			value="50" />
+		<skill
+			id="Crossbow"
+			value="20" />
+		<skill
+			id="Throwing"
+			value="20" />
+		<skill
+			id="Charm"
+			value="90" />
+		<skill
+			id="Leadership"
+			value="60" />
+		<skill
+			id="Steward"
+			value="80" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_aserai_0_skills">
+		<!-- misanthropic, chip-on-shoulder illegitimate. nautical surgeon -->
+		<skill
+			id="Athletics"
+			value="70" />
+		<skill
+			id="Riding"
+			value="20" />
+		<skill
+			id="OneHanded"
+			value="50" />
+		<skill
+			id="TwoHanded"
+			value="10" />
+		<skill
+			id="Polearm"
+			value="10" />
+		<skill
+			id="Bow"
+			value="10" />
+		<skill
+			id="Crossbow"
+			value="20" />
+		<skill
+			id="Throwing"
+			value="10" />
+		<skill
+			id="Medicine"
+			value="180" />
+		<skill
+			id="Trade"
+			value="50" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_aserai_1_skills">
+		<!-- Wealthy soldier of fortune, obsessed with own genealogy -->
+		<skill
+			id="Athletics"
+			value="70" />
+		<skill
+			id="Riding"
+			value="160" />
+		<skill
+			id="OneHanded"
+			value="150" />
+		<skill
+			id="TwoHanded"
+			value="60" />
+		<skill
+			id="Polearm"
+			value="150" />
+		<skill
+			id="Bow"
+			value="40" />
+		<skill
+			id="Crossbow"
+			value="15" />
+		<skill
+			id="Throwing"
+			value="15" />
+		<skill
+			id="Leadership"
+			value="100" />
+		<skill
+			id="Tactics"
+			value="140" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_aserai_2_skills">
+		<!--The falcon, chivalrous, but thinks great clans hog the glory -->
+		<skill
+			id="Athletics"
+			value="70" />
+		<skill
+			id="Riding"
+			value="130" />
+		<skill
+			id="OneHanded"
+			value="160" />
+		<skill
+			id="TwoHanded"
+			value="90" />
+		<skill
+			id="Polearm"
+			value="150" />
+		<skill
+			id="Bow"
+			value="40" />
+		<skill
+			id="Crossbow"
+			value="10" />
+		<skill
+			id="Throwing"
+			value="45" />
+		<skill
+			id="Leadership"
+			value="145" />
+		<skill
+			id="Tactics"
+			value="110" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_aserai_3_skills">
+		<!--professional, fighter and killer. often provoked enemies. fell out with lord over a slave woman that he sold -->
+		<skill
+			id="Athletics"
+			value="120" />
+		<skill
+			id="Riding"
+			value="15" />
+		<skill
+			id="OneHanded"
+			value="110" />
+		<skill
+			id="TwoHanded"
+			value="70" />
+		<skill
+			id="Polearm"
+			value="50" />
+		<skill
+			id="Bow"
+			value="15" />
+		<skill
+			id="Crossbow"
+			value="15" />
+		<skill
+			id="Throwing"
+			value="70" />
+		<skill
+			id="Charm"
+			value="70" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_aserai_4_skills">
+		<!-- "The Prince", fitiwi whom a guard captain tried to corrupt -->
+		<skill
+			id="Athletics"
+			value="70" />
+		<skill
+			id="Riding"
+			value="30" />
+		<skill
+			id="OneHanded"
+			value="35" />
+		<skill
+			id="TwoHanded"
+			value="110" />
+		<skill
+			id="Polearm"
+			value="70" />
+		<skill
+			id="Bow"
+			value="10" />
+		<skill
+			id="Crossbow"
+			value="20" />
+		<skill
+			id="Throwing"
+			value="120" />
+		<skill
+			id="Charm"
+			value="110" />
+		<skill
+			id="Roguery"
+			value="100" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_aserai_5_skills">
+		<!-- "The Hyena" (contemptuous killer) -->
+		<skill
+			id="Athletics"
+			value="150" />
+		<skill
+			id="Riding"
+			value="50" />
+		<skill
+			id="OneHanded"
+			value="125" />
+		<skill
+			id="TwoHanded"
+			value="45" />
+		<skill
+			id="Polearm"
+			value="140" />
+		<skill
+			id="Bow"
+			value="50" />
+		<skill
+			id="Crossbow"
+			value="10" />
+		<skill
+			id="Throwing"
+			value="70" />
+		<skill
+			id="Roguery"
+			value="110" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_aserai_6_skills">
+		<!--of the Wastes - 'the searing gravel plain knows me' -->
+		<skill
+			id="Athletics"
+			value="80" />
+		<skill
+			id="Riding"
+			value="70" />
+		<skill
+			id="OneHanded"
+			value="70" />
+		<skill
+			id="TwoHanded"
+			value="20" />
+		<skill
+			id="Polearm"
+			value="60" />
+		<skill
+			id="Bow"
+			value="125" />
+		<skill
+			id="Crossbow"
+			value="50" />
+		<skill
+			id="Throwing"
+			value="110" />
+		<skill
+			id="Scouting"
+			value="170" />
+		<skill
+			id="Trade"
+			value="30" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_aserai_7_skills">
+		<!-- female member of clan that lost power -->
+		<skill
+			id="Athletics"
+			value="40" />
+		<skill
+			id="Riding"
+			value="120" />
+		<skill
+			id="OneHanded"
+			value="110" />
+		<skill
+			id="TwoHanded"
+			value="10" />
+		<skill
+			id="Polearm"
+			value="125" />
+		<skill
+			id="Bow"
+			value="20" />
+		<skill
+			id="Crossbow"
+			value="10" />
+		<skill
+			id="Throwing"
+			value="50" />
+		<skill
+			id="Scouting"
+			value="50" />
+		<skill
+			id="Charm"
+			value="40" />
+		<skill
+			id="Leadership"
+			value="120" />
+		<skill
+			id="Tactics"
+			value="60" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_aserai_8_skills">
+		<!--unlucky merchant -->
+		<skill
+			id="Athletics"
+			value="90" />
+		<skill
+			id="Riding"
+			value="40" />
+		<skill
+			id="OneHanded"
+			value="20" />
+		<skill
+			id="TwoHanded"
+			value="10" />
+		<skill
+			id="Polearm"
+			value="10" />
+		<skill
+			id="Bow"
+			value="20" />
+		<skill
+			id="Crossbow"
+			value="120" />
+		<skill
+			id="Throwing"
+			value="10" />
+		<skill
+			id="Steward"
+			value="90" />
+		<skill
+			id="Trade"
+			value="110" />
+		<skill
+			id="Leadership"
+			value="30" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_aserai_9_skills">
+		<!-- female alley urchin -->
+		<skill
+			id="Athletics"
+			value="70" />
+		<skill
+			id="Riding"
+			value="10" />
+		<skill
+			id="OneHanded"
+			value="50" />
+		<skill
+			id="TwoHanded"
+			value="10" />
+		<skill
+			id="Polearm"
+			value="60" />
+		<skill
+			id="Bow"
+			value="30" />
+		<skill
+			id="Crossbow"
+			value="10" />
+		<skill
+			id="Throwing"
+			value="80" />
+		<skill
+			id="Roguery"
+			value="120" />
+		<skill
+			id="Trade"
+			value="90" />
+		<skill
+			id="Leadership"
+			value="40" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_aserai_10_skills">
+		<!-- engineer -->
+		<skill
+			id="Athletics"
+			value="20" />
+		<skill
+			id="Riding"
+			value="40" />
+		<skill
+			id="OneHanded"
+			value="20" />
+		<skill
+			id="TwoHanded"
+			value="10" />
+		<skill
+			id="Polearm"
+			value="30" />
+		<skill
+			id="Bow"
+			value="60" />
+		<skill
+			id="Crossbow"
+			value="20" />
+		<skill
+			id="Throwing"
+			value="30" />
+		<skill
+			id="Engineering"
+			value="100" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_sturgia_0_skills">
+		<!-- Herbalist, female, driven from village-->
+		<skill
+			id="Athletics"
+			value="40" />
+		<skill
+			id="Riding"
+			value="15" />
+		<skill
+			id="OneHanded"
+			value="40" />
+		<skill
+			id="TwoHanded"
+			value="10" />
+		<skill
+			id="Polearm"
+			value="25" />
+		<skill
+			id="Bow"
+			value="35" />
+		<skill
+			id="Crossbow"
+			value="15" />
+		<skill
+			id="Throwing"
+			value="60" />
+		<skill
+			id="Medicine"
+			value="90" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_sturgia_1_skills">
+		<!--braggart backstory - claims he found skolderbrotva too soft -->
+		<skill
+			id="Athletics"
+			value="50" />
+		<skill
+			id="Riding"
+			value="35" />
+		<skill
+			id="OneHanded"
+			value="90" />
+		<skill
+			id="TwoHanded"
+			value="110" />
+		<skill
+			id="Polearm"
+			value="30" />
+		<skill
+			id="Bow"
+			value="15" />
+		<skill
+			id="Crossbow"
+			value="5" />
+		<skill
+			id="Throwing"
+			value="80" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_sturgia_2_skills">
+		<!--enterprising young would-be raider, wants to do his father proud -->
+		<skill
+			id="Athletics"
+			value="95" />
+		<skill
+			id="Riding"
+			value="20" />
+		<skill
+			id="OneHanded"
+			value="100" />
+		<skill
+			id="TwoHanded"
+			value="60" />
+		<skill
+			id="Polearm"
+			value="15" />
+		<skill
+			id="Bow"
+			value="5" />
+		<skill
+			id="Crossbow"
+			value="5" />
+		<skill
+			id="Throwing"
+			value="50" />
+		<skill
+			id="Leadership"
+			value="60" />
+		<skill
+			id="Charm"
+			value="70" />
+		<skill
+			id="Tactics"
+			value="20" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_sturgia_3_skills">
+		<!-- vaegir guard veteran backstory - bitter about riots -->
+		<skill
+			id="Athletics"
+			value="155" />
+		<skill
+			id="Riding"
+			value="20" />
+		<skill
+			id="OneHanded"
+			value="150" />
+		<skill
+			id="TwoHanded"
+			value="210" />
+		<skill
+			id="Polearm"
+			value="95" />
+		<skill
+			id="Bow"
+			value="15" />
+		<skill
+			id="Crossbow"
+			value="5" />
+		<skill
+			id="Throwing"
+			value="75" />
+		<skill
+			id="Scouting"
+			value="15" />
+		<skill
+			id="Tactics"
+			value="55" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_sturgia_4_skills">
+		<!--outlaw backstory,  easily angered  -->
+		<skill
+			id="Athletics"
+			value="130" />
+		<skill
+			id="Riding"
+			value="55" />
+		<skill
+			id="OneHanded"
+			value="90" />
+		<skill
+			id="TwoHanded"
+			value="25" />
+		<skill
+			id="Polearm"
+			value="20" />
+		<skill
+			id="Bow"
+			value="10" />
+		<skill
+			id="Crossbow"
+			value="5" />
+		<skill
+			id="Throwing"
+			value="120" />
+		<skill
+			id="Scouting"
+			value="90" />
+		<skill
+			id="Tactics"
+			value="45" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_sturgia_5_skills">
+		<!-- coalbiter, duellist -->
+		<skill
+			id="Athletics"
+			value="125" />
+		<skill
+			id="Riding"
+			value="35" />
+		<skill
+			id="OneHanded"
+			value="90" />
+		<skill
+			id="TwoHanded"
+			value="140" />
+		<skill
+			id="Polearm"
+			value="35" />
+		<skill
+			id="Bow"
+			value="10" />
+		<skill
+			id="Crossbow"
+			value="5" />
+		<skill
+			id="Throwing"
+			value="40" />
+		<skill
+			id="Crafting"
+			value="70" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_sturgia_6_skills">
+		<!--icebeard - mossbeard. Simple misanthrope, cheated in marriage by brother-in-law, went to woods -->
+		<skill
+			id="Athletics"
+			value="50" />
+		<skill
+			id="Riding"
+			value="90" />
+		<skill
+			id="OneHanded"
+			value="50" />
+		<skill
+			id="TwoHanded"
+			value="20" />
+		<skill
+			id="Polearm"
+			value="10" />
+		<skill
+			id="Bow"
+			value="90" />
+		<skill
+			id="Crossbow"
+			value="20" />
+		<skill
+			id="Throwing"
+			value="25" />
+		<skill
+			id="Scouting"
+			value="110" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_sturgia_7_skills">
+		<!-- dispossessed because of birthmark, engineer -->
+		<skill
+			id="Athletics"
+			value="70" />
+		<skill
+			id="Riding"
+			value="25" />
+		<skill
+			id="OneHanded"
+			value="20" />
+		<skill
+			id="TwoHanded"
+			value="20" />
+		<skill
+			id="Polearm"
+			value="10" />
+		<skill
+			id="Bow"
+			value="35" />
+		<skill
+			id="Crossbow"
+			value="25" />
+		<skill
+			id="Throwing"
+			value="70" />
+		<skill
+			id="Engineering"
+			value="70" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_sturgia_8_skills">
+		<!-- shield maiden -->
+		<skill
+			id="Athletics"
+			value="155" />
+		<skill
+			id="Riding"
+			value="25" />
+		<skill
+			id="OneHanded"
+			value="175" />
+		<skill
+			id="TwoHanded"
+			value="20" />
+		<skill
+			id="Polearm"
+			value="155" />
+		<skill
+			id="Bow"
+			value="10" />
+		<skill
+			id="Crossbow"
+			value="5" />
+		<skill
+			id="Throwing"
+			value="80" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_sturgia_9_skills">
+		<!--longknife, proud hireling who will do any task, values professionalism -->
+		<skill
+			id="Athletics"
+			value="70" />
+		<skill
+			id="Riding"
+			value="35" />
+		<skill
+			id="OneHanded"
+			value="105" />
+		<skill
+			id="TwoHanded"
+			value="10" />
+		<skill
+			id="Polearm"
+			value="70" />
+		<skill
+			id="Bow"
+			value="10" />
+		<skill
+			id="Crossbow"
+			value="5" />
+		<skill
+			id="Throwing"
+			value="65" />
+		<skill
+			id="Roguery"
+			value="85" />
+		<skill
+			id="Scouting"
+			value="50" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_vlandia_0_skills">
+		<!-- Talkative philosopher of medicine. Chatty monk -->
+		<skill
+			id="Athletics"
+			value="50" />
+		<skill
+			id="Riding"
+			value="10" />
+		<skill
+			id="OneHanded"
+			value="70" />
+		<skill
+			id="TwoHanded"
+			value="30" />
+		<skill
+			id="Polearm"
+			value="50" />
+		<skill
+			id="Bow"
+			value="5" />
+		<skill
+			id="Crossbow"
+			value="30" />
+		<skill
+			id="Throwing"
+			value="35" />
+		<skill
+			id="Charm"
+			value="65" />
+		<skill
+			id="Steward"
+			value="75" />
+		<skill
+			id="Medicine"
+			value="75" />
+		<skill
+			id="Trade"
+			value="50" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_vlandia_1_skills">
+		<!-- boorish noble -->
+		<skill
+			id="Athletics"
+			value="40" />
+		<skill
+			id="Riding"
+			value="110" />
+		<skill
+			id="OneHanded"
+			value="80" />
+		<skill
+			id="TwoHanded"
+			value="40" />
+		<skill
+			id="Polearm"
+			value="125" />
+		<skill
+			id="Bow"
+			value="5" />
+		<skill
+			id="Crossbow"
+			value="5" />
+		<skill
+			id="Throwing"
+			value="5" />
+		<skill
+			id="Leadership"
+			value="65" />
+		<skill
+			id="Tactics"
+			value="45" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_vlandia_2_skills">
+		<!-- bastard who went away to avoid complications for his family -->
+		<skill
+			id="Athletics"
+			value="30" />
+		<skill
+			id="Riding"
+			value="140" />
+		<skill
+			id="OneHanded"
+			value="80" />
+		<skill
+			id="TwoHanded"
+			value="30" />
+		<skill
+			id="Polearm"
+			value="90" />
+		<skill
+			id="Bow"
+			value="15" />
+		<skill
+			id="Crossbow"
+			value="25" />
+		<skill
+			id="Throwing"
+			value="10" />
+		<skill
+			id="Leadership"
+			value="45" />
+		<skill
+			id="Scouting"
+			value="85" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_vlandia_3_skills">
+		<!-- veteran. decent man haunted by looting of cities. hated being loyal to men who saved his lives who turn out to be killers -->
+		<skill
+			id="Athletics"
+			value="90" />
+		<skill
+			id="Riding"
+			value="50" />
+		<skill
+			id="OneHanded"
+			value="95" />
+		<skill
+			id="TwoHanded"
+			value="60" />
+		<skill
+			id="Polearm"
+			value="120" />
+		<skill
+			id="Bow"
+			value="5" />
+		<skill
+			id="Crossbow"
+			value="115" />
+		<skill
+			id="Throwing"
+			value="5" />
+		<skill
+			id="Scouting"
+			value="50" />
+		<skill
+			id="Tactics"
+			value="85" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_vlandia_4_skills">
+		<!--the shark, butcher/criminal -->
+		<skill
+			id="Athletics"
+			value="120" />
+		<skill
+			id="Riding"
+			value="20" />
+		<skill
+			id="OneHanded"
+			value="95" />
+		<skill
+			id="TwoHanded"
+			value="35" />
+		<skill
+			id="Polearm"
+			value="70" />
+		<skill
+			id="Bow"
+			value="20" />
+		<skill
+			id="Crossbow"
+			value="45" />
+		<skill
+			id="Throwing"
+			value="105" />
+		<skill
+			id="Scouting"
+			value="30" />
+		<skill
+			id="Roguery"
+			value="80" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_vlandia_5_skills">
+		<!-- longshoreman, fled dominating guild. revenge against gang leader -->
+		<skill
+			id="Athletics"
+			value="80" />
+		<skill
+			id="Riding"
+			value="35" />
+		<skill
+			id="OneHanded"
+			value="35" />
+		<skill
+			id="TwoHanded"
+			value="85" />
+		<skill
+			id="Polearm"
+			value="70" />
+		<skill
+			id="Bow"
+			value="15" />
+		<skill
+			id="Crossbow"
+			value="15" />
+		<skill
+			id="Throwing"
+			value="30" />
+		<skill
+			id="Steward"
+			value="60" />
+		<skill
+			id="Trade"
+			value="90" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_vlandia_6_skills">
+		<!-- loner - father fled to avoid feud with bailiff, then disappeared in a blizzard -->
+		<skill
+			id="Athletics"
+			value="150" />
+		<skill
+			id="Riding"
+			value="40" />
+		<skill
+			id="OneHanded"
+			value="85" />
+		<skill
+			id="TwoHanded"
+			value="45" />
+		<skill
+			id="Polearm"
+			value="80" />
+		<skill
+			id="Bow"
+			value="5" />
+		<skill
+			id="Crossbow"
+			value="135" />
+		<skill
+			id="Throwing"
+			value="25" />
+		<skill
+			id="Scouting"
+			value="110" />
+		<skill
+			id="Tactics"
+			value="60" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_vlandia_7_skills">
+		<!--female. ex brother of the woods. Like any other group of bandits. -->
+		<skill
+			id="Athletics"
+			value="150" />
+		<skill
+			id="Riding"
+			value="40" />
+		<skill
+			id="OneHanded"
+			value="75" />
+		<skill
+			id="TwoHanded"
+			value="45" />
+		<skill
+			id="Polearm"
+			value="80" />
+		<skill
+			id="Bow"
+			value="155" />
+		<skill
+			id="Crossbow"
+			value="65" />
+		<skill
+			id="Throwing"
+			value="60" />
+		<skill
+			id="Scouting"
+			value="90" />
+		<skill
+			id="Tactics"
+			value="60" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_vlandia_8_skills">
+		<!-- smith, struck dead a young knight who ran a boy down with his horse -->
+		<skill
+			id="Athletics"
+			value="55" />
+		<skill
+			id="Riding"
+			value="20" />
+		<skill
+			id="OneHanded"
+			value="45" />
+		<skill
+			id="TwoHanded"
+			value="75" />
+		<skill
+			id="Polearm"
+			value="40" />
+		<skill
+			id="Bow"
+			value="10" />
+		<skill
+			id="Crossbow"
+			value="30" />
+		<skill
+			id="Throwing"
+			value="20" />
+		<skill
+			id="Crafting"
+			value="95" />
+		<skill
+			id="Tactics"
+			value="30" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_vlandia_9_skills">
+		<!-- female bandit, left the woods because life expectancy too short -->
+		<skill
+			id="Athletics"
+			value="90" />
+		<skill
+			id="Riding"
+			value="30" />
+		<skill
+			id="OneHanded"
+			value="20" />
+		<skill
+			id="TwoHanded"
+			value="30" />
+		<skill
+			id="Polearm"
+			value="55" />
+		<skill
+			id="Bow"
+			value="55" />
+		<skill
+			id="Crossbow"
+			value="85" />
+		<skill
+			id="Throwing"
+			value="35" />
+		<skill
+			id="Roguery"
+			value="110" />
+		<skill
+			id="Scouting"
+			value="95" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_vlandia_10_skills">
+		<!--female engineer, father emigrant to empire, killed in riots -->
+		<skill
+			id="Athletics"
+			value="90" />
+		<skill
+			id="Riding"
+			value="10" />
+		<skill
+			id="OneHanded"
+			value="60" />
+		<skill
+			id="TwoHanded"
+			value="20" />
+		<skill
+			id="Polearm"
+			value="25" />
+		<skill
+			id="Bow"
+			value="30" />
+		<skill
+			id="Crossbow"
+			value="80" />
+		<skill
+			id="Throwing"
+			value="10" />
+		<skill
+			id="Engineering"
+			value="95" />
+		<skill
+			id="Trade"
+			value="25" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_vlandia_11_skills">
+		<!--free company -->
+		<skill
+			id="Athletics"
+			value="70" />
+		<skill
+			id="Riding"
+			value="45" />
+		<skill
+			id="OneHanded"
+			value="80" />
+		<skill
+			id="TwoHanded"
+			value="110" />
+		<skill
+			id="Polearm"
+			value="20" />
+		<skill
+			id="Bow"
+			value="10" />
+		<skill
+			id="Crossbow"
+			value="100" />
+		<skill
+			id="Throwing"
+			value="20" />
+		<skill
+			id="Crafting"
+			value="55" />
+		<skill
+			id="Tactics"
+			value="65" />
+		<skill
+			id="Leadership"
+			value="35" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_vlandia_12_skills">
+		<!-- Gamekeeper -->
+		<skill
+			id="Athletics"
+			value="110" />
+		<skill
+			id="Riding"
+			value="45" />
+		<skill
+			id="OneHanded"
+			value="95" />
+		<skill
+			id="TwoHanded"
+			value="55" />
+		<skill
+			id="Polearm"
+			value="110" />
+		<skill
+			id="Bow"
+			value="10" />
+		<skill
+			id="Crossbow"
+			value="75" />
+		<skill
+			id="Throwing"
+			value="55" />
+		<skill
+			id="Scouting"
+			value="120" />
+		<skill
+			id="Tactics"
+			value="35" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_battania_0_skills">
+		<!-- 'By the time I became a woman I was sick of filthy huts and puking babies.' -->
+		<skill
+			id="Athletics"
+			value="115" />
+		<skill
+			id="Riding"
+			value="30" />
+		<skill
+			id="OneHanded"
+			value="55" />
+		<skill
+			id="TwoHanded"
+			value="40" />
+		<skill
+			id="Polearm"
+			value="35" />
+		<skill
+			id="Bow"
+			value="95" />
+		<skill
+			id="Crossbow"
+			value="5" />
+		<skill
+			id="Throwing"
+			value="5" />
+		<skill
+			id="Scouting"
+			value="45" />
+		<skill
+			id="Tactics"
+			value="25" />
+		<skill
+			id="Medicine"
+			value="95" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_battania_1_skills">
+		<!-- boastful, keeps a collection of his enemies' heads  -->
+		<skill
+			id="Athletics"
+			value="75" />
+		<skill
+			id="Riding"
+			value="5" />
+		<skill
+			id="OneHanded"
+			value="45" />
+		<skill
+			id="TwoHanded"
+			value="110" />
+		<skill
+			id="Polearm"
+			value="15" />
+		<skill
+			id="Bow"
+			value="85" />
+		<skill
+			id="Crossbow"
+			value="5" />
+		<skill
+			id="Throwing"
+			value="15" />
+		<skill
+			id="Leadership"
+			value="45" />
+		<skill
+			id="Charm"
+			value="65" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_battania_2_skills">
+		<!--Set up to die in a duel by his stepfather, but won the duels -->
+		<skill
+			id="Athletics"
+			value="140" />
+		<skill
+			id="Riding"
+			value="25" />
+		<skill
+			id="OneHanded"
+			value="125" />
+		<skill
+			id="TwoHanded"
+			value="70" />
+		<skill
+			id="Polearm"
+			value="50" />
+		<skill
+			id="Bow"
+			value="25" />
+		<skill
+			id="Crossbow"
+			value="5" />
+		<skill
+			id="Throwing"
+			value="120" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_battania_3_skills">
+		<!-- professional veteran. fought for the empire -->
+		<skill
+			id="Athletics"
+			value="115" />
+		<skill
+			id="Riding"
+			value="25" />
+		<skill
+			id="OneHanded"
+			value="105" />
+		<skill
+			id="TwoHanded"
+			value="55" />
+		<skill
+			id="Polearm"
+			value="30" />
+		<skill
+			id="Bow"
+			value="75" />
+		<skill
+			id="Crossbow"
+			value="5" />
+		<skill
+			id="Throwing"
+			value="130" />
+		<skill
+			id="Leadership"
+			value="45" />
+		<skill
+			id="Tactics"
+			value="25" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_battania_4_skills">
+		<!-- horsethief, boastful -->
+		<skill
+			id="Athletics"
+			value="70" />
+		<skill
+			id="Riding"
+			value="135" />
+		<skill
+			id="OneHanded"
+			value="100" />
+		<skill
+			id="TwoHanded"
+			value="45" />
+		<skill
+			id="Polearm"
+			value="110" />
+		<skill
+			id="Bow"
+			value="5" />
+		<skill
+			id="Crossbow"
+			value="5" />
+		<skill
+			id="Throwing"
+			value="140" />
+		<skill
+			id="Roguery"
+			value="95" />
+		<skill
+			id="Charm"
+			value="30" />
+		<skill
+			id="Tactics"
+			value="30" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_battania_5_skills">
+		<!--loner, deserted the wolfskins -->
+		<skill
+			id="Athletics"
+			value="90" />
+		<skill
+			id="Riding"
+			value="65" />
+		<skill
+			id="OneHanded"
+			value="70" />
+		<skill
+			id="TwoHanded"
+			value="60" />
+		<skill
+			id="Polearm"
+			value="35" />
+		<skill
+			id="Bow"
+			value="135" />
+		<skill
+			id="Crossbow"
+			value="5" />
+		<skill
+			id="Throwing"
+			value="70" />
+		<skill
+			id="Scouting"
+			value="70" />
+		<skill
+			id="Tactics"
+			value="35" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_battania_6_skills">
+		<!--talkative bandit, of the hills -->
+		<skill
+			id="Athletics"
+			value="90" />
+		<skill
+			id="Riding"
+			value="25" />
+		<skill
+			id="OneHanded"
+			value="75" />
+		<skill
+			id="TwoHanded"
+			value="60" />
+		<skill
+			id="Polearm"
+			value="50" />
+		<skill
+			id="Bow"
+			value="90" />
+		<skill
+			id="Crossbow"
+			value="5" />
+		<skill
+			id="Throwing"
+			value="120" />
+		<skill
+			id="Scouting"
+			value="90" />
+		<skill
+			id="Tactics"
+			value="30" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_battania_7_skills">
+		<!--female, the wanderer. killed a chief's son who pestered her -->
+		<skill
+			id="Athletics"
+			value="135" />
+		<skill
+			id="Riding"
+			value="25" />
+		<skill
+			id="OneHanded"
+			value="70" />
+		<skill
+			id="TwoHanded"
+			value="45" />
+		<skill
+			id="Polearm"
+			value="90" />
+		<skill
+			id="Bow"
+			value="85" />
+		<skill
+			id="Crossbow"
+			value="5" />
+		<skill
+			id="Throwing"
+			value="90" />
+		<skill
+			id="Scouting"
+			value="70" />
+		<skill
+			id="Tactics"
+			value="15" />
+		<skill
+			id="Roguery"
+			value="95" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_battania_8_skills">
+		<!-- The accursed, believed to be bad luck -->
+		<skill
+			id="Athletics"
+			value="120" />
+		<skill
+			id="Riding"
+			value="5" />
+		<skill
+			id="OneHanded"
+			value="70" />
+		<skill
+			id="TwoHanded"
+			value="90" />
+		<skill
+			id="Polearm"
+			value="50" />
+		<skill
+			id="Bow"
+			value="50" />
+		<skill
+			id="Crossbow"
+			value="5" />
+		<skill
+			id="Throwing"
+			value="20" />
+		<skill
+			id="Crafting"
+			value="90" />
+		<skill
+			id="Trade"
+			value="15" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_battania_9_skills">
+		<!-- 'Cowthief' - caught up in feud, raided cattle as revenge -->
+		<skill
+			id="Athletics"
+			value="50" />
+		<skill
+			id="Riding"
+			value="90" />
+		<skill
+			id="OneHanded"
+			value="60" />
+		<skill
+			id="TwoHanded"
+			value="90" />
+		<skill
+			id="Polearm"
+			value="55" />
+		<skill
+			id="Bow"
+			value="40" />
+		<skill
+			id="Crossbow"
+			value="10" />
+		<skill
+			id="Throwing"
+			value="30" />
+		<skill
+			id="Steward"
+			value="80" />
+		<skill
+			id="Trade"
+			value="45" />
+		<skill
+			id="Charm"
+			value="45" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_khuzait_0_skills">
+		<!--engineer, sent to learn trade -->
+		<skill
+			id="Athletics"
+			value="30" />
+		<skill
+			id="Riding"
+			value="95" />
+		<skill
+			id="OneHanded"
+			value="45" />
+		<skill
+			id="TwoHanded"
+			value="20" />
+		<skill
+			id="Polearm"
+			value="10" />
+		<skill
+			id="Bow"
+			value="50" />
+		<skill
+			id="Crossbow"
+			value="10" />
+		<skill
+			id="Throwing"
+			value="10" />
+		<skill
+			id="Engineering"
+			value="90" />
+		<skill
+			id="Trade"
+			value="65" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_khuzait_1_skills">
+		<!-- the hawk, curt voice. Rural clan nemesis. Easily insulted, killed a man's brother over a girl -->
+		<skill
+			id="Athletics"
+			value="75" />
+		<skill
+			id="Riding"
+			value="145" />
+		<skill
+			id="OneHanded"
+			value="95" />
+		<skill
+			id="TwoHanded"
+			value="20" />
+		<skill
+			id="Polearm"
+			value="95" />
+		<skill
+			id="Bow"
+			value="165" />
+		<skill
+			id="Crossbow"
+			value="5" />
+		<skill
+			id="Throwing"
+			value="10" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_khuzait_2_skills">
+		<!-- the fatherless, backed out of a family feud -->
+		<skill
+			id="Athletics"
+			value="55" />
+		<skill
+			id="Riding"
+			value="105" />
+		<skill
+			id="OneHanded"
+			value="55" />
+		<skill
+			id="TwoHanded"
+			value="5" />
+		<skill
+			id="Polearm"
+			value="55" />
+		<skill
+			id="Bow"
+			value="95" />
+		<skill
+			id="Crossbow"
+			value="5" />
+		<skill
+			id="Throwing"
+			value="10" />
+		<skill
+			id="Charm"
+			value="90" />
+		<skill
+			id="Leadership"
+			value="40" />
+		<skill
+			id="Steward"
+			value="50" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_khuzait_3_skills">
+		<!-- ironeye, professional soldier. infantryman -->
+		<skill
+			id="Athletics"
+			value="95" />
+		<skill
+			id="Riding"
+			value="55" />
+		<skill
+			id="OneHanded"
+			value="115" />
+		<skill
+			id="TwoHanded"
+			value="5" />
+		<skill
+			id="Polearm"
+			value="95" />
+		<skill
+			id="Bow"
+			value="75" />
+		<skill
+			id="Crossbow"
+			value="5" />
+		<skill
+			id="Throwing"
+			value="50" />
+		<skill
+			id="Leadership"
+			value="55" />
+		<skill
+			id="Tactics"
+			value="40" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_khuzait_4_skills">
+		<!--the proud, turned on protectors. lord as nemesis -->
+		<skill
+			id="Athletics"
+			value="60" />
+		<skill
+			id="Riding"
+			value="105" />
+		<skill
+			id="OneHanded"
+			value="95" />
+		<skill
+			id="TwoHanded"
+			value="5" />
+		<skill
+			id="Polearm"
+			value="55" />
+		<skill
+			id="Bow"
+			value="75" />
+		<skill
+			id="Crossbow"
+			value="5" />
+		<skill
+			id="Throwing"
+			value="35" />
+		<skill
+			id="Leadership"
+			value="75" />
+		<skill
+			id="Steward"
+			value="90" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_khuzait_5_skills">
+		<!-- 'the mad' soft voice, sinister? Pickpocket. Have gang leader as nemesis? -->
+		<skill
+			id="Athletics"
+			value="60" />
+		<skill
+			id="Riding"
+			value="135" />
+		<skill
+			id="OneHanded"
+			value="85" />
+		<skill
+			id="TwoHanded"
+			value="5" />
+		<skill
+			id="Polearm"
+			value="95" />
+		<skill
+			id="Bow"
+			value="75" />
+		<skill
+			id="Crossbow"
+			value="15" />
+		<skill
+			id="Throwing"
+			value="50" />
+		<skill
+			id="Roguery"
+			value="85" />
+		<skill
+			id="Scouting"
+			value="30" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_khuzait_6_skills">
+		<!--the grey falcon, lone survivor of a hunted steppe clan -->
+		<skill
+			id="Athletics"
+			value="55" />
+		<skill
+			id="Riding"
+			value="160" />
+		<skill
+			id="OneHanded"
+			value="70" />
+		<skill
+			id="TwoHanded"
+			value="10" />
+		<skill
+			id="Polearm"
+			value="125" />
+		<skill
+			id="Bow"
+			value="105" />
+		<skill
+			id="Crossbow"
+			value="5" />
+		<skill
+			id="Throwing"
+			value="45" />
+		<skill
+			id="Tactics"
+			value="90" />
+		<skill
+			id="Leadership"
+			value="40" />
+		<skill
+			id="Scouting"
+			value="30" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_khuzait_7_skills">
+		<!--the she-wolf - taken by empire, slave in arena. CHANGED TO AT-START-->
+		<skill
+			id="Athletics"
+			value="150" />
+		<skill
+			id="Riding"
+			value="50" />
+		<skill
+			id="OneHanded"
+			value="105" />
+		<skill
+			id="TwoHanded"
+			value="15" />
+		<skill
+			id="Polearm"
+			value="135" />
+		<skill
+			id="Bow"
+			value="5" />
+		<skill
+			id="Crossbow"
+			value="5" />
+		<skill
+			id="Throwing"
+			value="55" />
+		<skill
+			id="Tactics"
+			value="45" />
+		<skill
+			id="Scouting"
+			value="20" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_khuzait_8_skills">
+		<!-- lone daughter of mother -->
+		<skill
+			id="Athletics"
+			value="45" />
+		<skill
+			id="Riding"
+			value="35" />
+		<skill
+			id="OneHanded"
+			value="35" />
+		<skill
+			id="TwoHanded"
+			value="5" />
+		<skill
+			id="Polearm"
+			value="10" />
+		<skill
+			id="Bow"
+			value="50" />
+		<skill
+			id="Crossbow"
+			value="5" />
+		<skill
+			id="Throwing"
+			value="10" />
+		<skill
+			id="Tactics"
+			value="20" />
+		<skill
+			id="Scouting"
+			value="75" />
+	</SkillSet>
+	<!--
+  <SkillSet id="spc_wanderer_khuzait_8_skills">
+    <skill id="Athletics"
+           value="95" />
+    <skill id="Riding"
+           value="95" />
+    <skill id="OneHanded"
+           value="45" />
+    <skill id="TwoHanded"
+           value="5" />
+    <skill id="Polearm"
+           value="30" />
+    <skill id="Bow"
+           value="135" />
+    <skill id="Crossbow"
+           value="5" />
+    <skill id="Throwing"
+           value="35" />
+    <skill id="Leadership"
+           value="130" />
+    <skill id="Tactics"
+           value="90" />
+  </SkillSet>
+  -->
+	<SkillSet
+		id="spc_wanderer_khuzait_9_skills">
+		<!-- tomboy daughter of caravan guard -->
+		<skill
+			id="Athletics"
+			value="120" />
+		<skill
+			id="Riding"
+			value="90" />
+		<skill
+			id="OneHanded"
+			value="100" />
+		<skill
+			id="TwoHanded"
+			value="15" />
+		<skill
+			id="Polearm"
+			value="110" />
+		<skill
+			id="Bow"
+			value="105" />
+		<skill
+			id="Crossbow"
+			value="5" />
+		<skill
+			id="Throwing"
+			value="10" />
+		<skill
+			id="Scouting"
+			value="50" />
+		<skill
+			id="Tactics"
+			value="40" />
+		<skill
+			id="Trade"
+			value="90" />
+	</SkillSet>
+	<SkillSet
+		id="spc_wanderer_khuzait_10_skills">
+		<!-- former 'horsethief' -->
+		<skill
+			id="Athletics"
+			value="105" />
+		<skill
+			id="Riding"
+			value="140" />
+		<skill
+			id="OneHanded"
+			value="75" />
+		<skill
+			id="TwoHanded"
+			value="5" />
+		<skill
+			id="Polearm"
+			value="85" />
+		<skill
+			id="Bow"
+			value="85" />
+		<skill
+			id="Crossbow"
+			value="5" />
+		<skill
+			id="Throwing"
+			value="10" />
+		<skill
+			id="Trade"
+			value="60" />
+		<skill
+			id="Crafting"
+			value="40" />
+	</SkillSet>
+</SkillSets>

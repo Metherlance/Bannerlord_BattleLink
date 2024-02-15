@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TaleWorlds.GauntletUI;
+﻿using TaleWorlds.GauntletUI;
 using TaleWorlds.GauntletUI.BaseTypes;
 using TaleWorlds.GauntletUI.Layout;
-using TaleWorlds.Localization;
 
-namespace RealmsBattle.Client.Widgets
+namespace BattleLink.Client.Widgets
 {
     /// <summary>
     /// </summary>

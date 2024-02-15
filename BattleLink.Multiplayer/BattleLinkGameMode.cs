@@ -1,6 +1,5 @@
-﻿using BattleLink.Common.Spawn;
-using RealmsBattle.Client.Behavior;
-using RealmsBattle.Common.Behavior;
+﻿using BattleLink.Client.Behavior;
+using BattleLink.Common.Behavior;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.MountAndBlade;
@@ -9,7 +8,7 @@ using TaleWorlds.MountAndBlade.Multiplayer;
 using TaleWorlds.MountAndBlade.Source.Missions;
 using static TaleWorlds.Library.Debug;
 
-namespace RealmsBattle.Multiplayer
+namespace BattleLink.Multiplayer
 {
     public class BattleLinkGameMode : MissionBasedMultiplayerGameMode
     {
@@ -29,8 +28,8 @@ namespace RealmsBattle.Multiplayer
 
                           (MissionBehavior) MissionLobbyComponent.CreateBehavior(),
                           (MissionBehavior) new MultiplayerAchievementComponent(),
-                          (MissionBehavior) new BLMultiplayerWarmupComponent(),
-                          //(MissionBehavior) new MultiplayerWarmupComponent(),
+                          //(MissionBehavior) new BLMultiplayerWarmupComponent(),
+                          (MissionBehavior) new MultiplayerWarmupComponent(),
                           (MissionBehavior) new MissionMultiplayerGameModeFlagDominationClient(),
                           (MissionBehavior) new MultiplayerRoundComponent(),
                           (MissionBehavior) new MultiplayerTimerComponent(),

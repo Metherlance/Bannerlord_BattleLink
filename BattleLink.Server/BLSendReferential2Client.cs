@@ -40,7 +40,7 @@ namespace BattleLink.Server
             //prepare message of character
             listCharacterMessage = new List<BLInitCharactersMessage>();
             int index = 0;
-            foreach (var character in BLReferentialHolder.basicCharacterObjects)
+            foreach (BLCharacterObject character in BLReferentialHolder.basicCharacterObjects)
             {
                 listCharacterMessage.Add(new BLInitCharactersMessage()
                 {
@@ -49,6 +49,9 @@ namespace BattleLink.Server
                     name = character.Name.ToString(),
                     isFemale = character.IsFemale,
                     defaultGroup = character.DefaultFormationGroup,
+
+                    occupation = (int)character.Occupation,
+
                     bodyPropertiesValue = character.BodyPropertyRange.BodyPropertyMin,
                     bodyPropertiesValueMax = character.BodyPropertyRange.BodyPropertyMax,
 
@@ -61,6 +64,7 @@ namespace BattleLink.Server
                     skillCrossbow = character.GetSkillValue(DefaultSkills.Crossbow),
                     skillBow = character.GetSkillValue(DefaultSkills.Bow),
                     skillThrowing = character.GetSkillValue(DefaultSkills.Throwing),
+                    skillAthletics = character.GetSkillValue(DefaultSkills.Athletics),
 
                     culture = character.Culture?.StringId,
 

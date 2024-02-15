@@ -4,8 +4,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.5.33502.453
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BattleLink.Singleplayer", "BattleLink.Singleplayer\BattleLink.Singleplayer.csproj", "{0D391AB9-BA30-427B-B67E-B4E469E41AE3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{494965D7-6177-4F29-811B-3DB0EAB84F01} = {494965D7-6177-4F29-811B-3DB0EAB84F01}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BattleLink.Common", "BattleLink.Common\BattleLink.Common.csproj", "{DFF0AE2E-B310-41E7-80A7-BA149C2A8ADA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BattleLink.CommonSvSp", "BattleLink.CommonSvSp\BattleLink.CommonSvSp.csproj", "{494965D7-6177-4F29-811B-3DB0EAB84F01}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +36,14 @@ Global
 		{DFF0AE2E-B310-41E7-80A7-BA149C2A8ADA}.Release|Any CPU.Build.0 = Release|x64
 		{DFF0AE2E-B310-41E7-80A7-BA149C2A8ADA}.Release|x64.ActiveCfg = Release|x64
 		{DFF0AE2E-B310-41E7-80A7-BA149C2A8ADA}.Release|x64.Build.0 = Release|x64
+		{494965D7-6177-4F29-811B-3DB0EAB84F01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{494965D7-6177-4F29-811B-3DB0EAB84F01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{494965D7-6177-4F29-811B-3DB0EAB84F01}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{494965D7-6177-4F29-811B-3DB0EAB84F01}.Debug|x64.Build.0 = Debug|Any CPU
+		{494965D7-6177-4F29-811B-3DB0EAB84F01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{494965D7-6177-4F29-811B-3DB0EAB84F01}.Release|Any CPU.Build.0 = Release|Any CPU
+		{494965D7-6177-4F29-811B-3DB0EAB84F01}.Release|x64.ActiveCfg = Release|Any CPU
+		{494965D7-6177-4F29-811B-3DB0EAB84F01}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,4 +1,4 @@
-﻿using BattleLink.Common.Behavior;
+﻿using BattleLink.Common;
 using HarmonyLib;
 using SandBox;
 using SandBox.Missions.MissionLogics;
@@ -177,7 +177,7 @@ namespace BattleLink.Singleplayer
 
                         bLAgentOriginSp.mapEventParty = partyTeamElement.Item1;
 
-                        if (team.GeneralAgent == null && partyTeamElement.Item1.Party.General.StringId == agentBuildLog.characterStringId)
+                        if (team.GeneralAgent == null && partyTeamElement.Item1.Party.General!=null && partyTeamElement.Item1.Party.General.StringId == agentBuildLog.characterStringId)
                         {
                             team.GeneralAgent = agent;
                         }

@@ -1,7 +1,4 @@
-﻿using System;
-using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.Encounters;
-using TaleWorlds.CampaignSystem.MapEvents;
+﻿using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
@@ -29,17 +26,20 @@ namespace BattleLink.Singleplayer
         //    }
         //}
 
-        //protected override void OnSubModuleLoad()
-        //{
-        //    //var a2 = (Mission)FormatterServices.GetUninitializedObject(typeof(MissionAgentSpawnLogic));
+        protected override void OnSubModuleLoad()
+        {
+            //new SandboxBattleBannerBearersModel();
+            //new BattlePowerCalculationLogic();
 
-        //    //var a2 = (PlayerEncounter)FormatterServices.GetUninitializedObject(typeof(PlayerEncounter));
-        //    //a2.SetupFields(null,null);
+            //var a2 = (Mission)FormatterServices.GetUninitializedObject(typeof(MissionAgentSpawnLogic));
 
-        //    base.OnSubModuleLoad();
+            //var a2 = (PlayerEncounter)FormatterServices.GetUninitializedObject(typeof(PlayerEncounter));
+            //a2.SetupFields(null,null);
+
+            base.OnSubModuleLoad();
 
 
-        //}
+        }
 
         //protected override void OnSubModuleUnloaded()
         //{
@@ -52,7 +52,7 @@ namespace BattleLink.Singleplayer
         {
             base.OnBeforeInitialModuleScreenSetAsRoot();
 
-            InformationManager.DisplayMessage(new InformationMessage("BattleLink | loaded", new Color(0,1,0)));
+            InformationManager.DisplayMessage(new InformationMessage("BattleLink | loaded", new Color(0, 1, 0)));
 
         }
 

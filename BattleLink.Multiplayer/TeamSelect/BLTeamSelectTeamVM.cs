@@ -38,6 +38,7 @@ namespace BattleLink.TeamSelect
         private HintViewModel _friendsExtraHint;
         private Color _cultureColor1;
         private Color _cultureColor2;
+        //private string _factionName;
 
         [DataSourceProperty]
         public string CultureId
@@ -343,6 +344,7 @@ namespace BattleLink.TeamSelect
                 CultureColor1 = Color.FromUint(team.Color);
                 CultureColor2 = Color.FromUint(team.Color2);
             }
+            //_factionName = team.
 
             _friends = new List<MPPlayerVM>();
             FriendAvatars = new MBBindingList<MPPlayerVM>();

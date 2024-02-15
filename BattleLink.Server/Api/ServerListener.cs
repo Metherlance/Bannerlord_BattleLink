@@ -1,6 +1,6 @@
 ﻿using BattleLink.Common;
+using BattleLink.Common.Behavior;
 using BattleLink.Common.Utils;
-using RealmsBattle.Server;
 using System;
 using System.Globalization;
 using System.IO;
@@ -45,26 +45,28 @@ namespace BattleLink.Server.Api
                     if (filename.IsEmpty())
                     {
                         MBDebug.Print($"File name empty", 0, DebugColor.Red);
-                        context.Response.StatusCode = 400;//dont give info
+                        context.Response.StatusDescription = "Error file";
+                        context.Response.StatusCode = 401;
                         context.Response.Close();
                         return;
                     }
                     if (filename.Contains("..") || filename.Contains("/") || filename.Contains("\\"))
                     {
                         MBDebug.Print($"Injection!!! {filename}", 0, DebugColor.Red);
-                        context.Response.StatusCode = 400;//dont give info
+                        context.Response.StatusCode = 401;
                         context.Response.Close();
                         return;
                     }
 
                     string date = context.Request.Headers["x-ms-date"];
-                    var dateTime = DateTimeOffset.ParseExact(date, "o", CultureInfo.InvariantCulture);
+                    DateTimeOffset dateTime = DateTimeOffset.ParseExact(date, "o", CultureInfo.InvariantCulture);
                     // 10 seconds tolerance
-                    if (date.IsEmpty() || dateTime.AddSeconds(15) < DateTimeOffset.UtcNow || dateTime > DateTimeOffset.UtcNow)
+                    if (date.IsEmpty() || dateTime.AddSeconds(15) < DateTimeOffset.UtcNow || dateTime > DateTimeOffset.UtcNow.AddSeconds(5))
                     {
                         // too long ago
-                        MBDebug.Print($"Peer not sync date {date}", 0, DebugColor.Red);
-                        context.Response.StatusCode = 400;//dont give info
+                        MBDebug.Print($"Peer not sync date {date} != {DateTimeOffset.UtcNow}", 0, DebugColor.Red);
+                        context.Response.StatusDescription = "Error date";
+                        context.Response.StatusCode = 401;
                         context.Response.Close();
                         return;
                     }
@@ -78,7 +80,8 @@ namespace BattleLink.Server.Api
                     if (contentInitilizerXml.Length > 512 * 1024)
                     {
                         MBDebug.Print($"File too long {contentInitilizerXml.Length}", 0, DebugColor.Red);
-                        context.Response.StatusCode = 400;//dont give info
+                        context.Response.StatusDescription = "Error content";
+                        context.Response.StatusCode = 401;
                         context.Response.Close();
                         return;
                     }
@@ -89,7 +92,8 @@ namespace BattleLink.Server.Api
                     if (!signatureCalculated.Equals(signature))
                     {
                         MBDebug.Print($"Wrong signature excepted: {signatureCalculated}, recevied: {signature}", 0, DebugColor.Red);
-                        context.Response.StatusCode = 400;//dont give info
+                        context.Response.StatusDescription = "Error signature";
+                        context.Response.StatusCode = 401;
                         context.Response.Close();
                         return;
                     }
@@ -108,7 +112,7 @@ namespace BattleLink.Server.Api
 
                     // set new battle
                     MultiplayerOptions.Instance.GetOptionFromOptionType(OptionType.Map, MultiplayerOptionsAccessMode.CurrentMapOptions).GetValue(out string gameMode);
-                    if (!"BattleLink".Equals(gameMode))
+                    if (!BLReferentialHolder.nextBattleInitializerPending && !BLReferentialHolder.currentBattleInitializerPending)
                     {
                         _ = BattleLinkGameMode.EndAndSetNextMission();
                     }
@@ -174,12 +178,15 @@ namespace BattleLink.Server.Api
                 catch (Exception ex)
                 {
                     MBDebug.Print($"Error: {ex.Message}", 0, DebugColor.Red);
+                    context.Response.StatusDescription = "Error Server";
                     context.Response.StatusCode = 500;
                     context.Response.Close();
                 }
             }
             else
             {
+                MBDebug.Print($"Error method incorrect  {context.Request.HttpMethod}", 0, DebugColor.Red);
+                context.Response.StatusDescription = "Method Not Allowed";
                 context.Response.StatusCode = 405; // Method Not Allowed
                 context.Response.Close();
             }
@@ -187,37 +194,48 @@ namespace BattleLink.Server.Api
 
         static async Task ServerApi()
         {
-            if (!HttpListener.IsSupported)
+            try
             {
-                MBDebug.Print("Windows XP SP2 or Server 2003 is required to use the HttpListener class.", 0, DebugColor.Red);
-                return;
-            }
-            string secret = new PropertiesUtils(System.IO.Path.Combine(BasePath.Name, "Modules", "BattleLink", "config.properties")).Get("secret");
-            if (secret.IsEmpty() || secret.Length < 36)
-            {
-                MBDebug.Print("Secret not set in config.properties or too short " + secret, 0, DebugColor.Red);
-                return;
-            }
-
-            var baseUrls = new string[] { "http://localhost:7211/battlelink/api/battles/" };
-            // Create a listener.
-            using (listener = new HttpListener())
-            {
-                // Add the prefixes.
-                foreach (string s in baseUrls)
+                if (!HttpListener.IsSupported)
                 {
-                    listener.Prefixes.Add(s);
+                    MBDebug.Print("Windows XP SP2 or Server 2003 is required to use the HttpListener class.", 0, DebugColor.Red);
+                    return;
+                }
+                var propertiesUtils = new PropertiesUtils(System.IO.Path.Combine(BasePath.Name, "Modules", "BattleLink", "config.properties"));
+                string secret = propertiesUtils.Get("secret");
+                if (secret.IsEmpty() || secret.Length < 36)
+                {
+                    MBDebug.Print("Secret not set in config.properties or too short " + secret, 0, DebugColor.Red);
+                    return;
                 }
 
-                listener.Start();
-                MBDebug.Print("Server is listening on " + baseUrls, 0, DebugColor.Green);
-
-                while (true)
+                string apiPort = propertiesUtils.Get("api.port");
+                var baseUrls = new string[] { $"{apiPort}/battlelink/api/battles/" };
+                // Create a listener.
+                using (listener = new HttpListener())
                 {
-                    HttpListenerContext context = await listener.GetContextAsync();
-                    ProcessRequest(context);
+                    // Add the prefixes.
+                    foreach (string s in baseUrls)
+                    {
+                        listener.Prefixes.Add(s);
+                    }
+
+                    listener.Start();
+                    MBDebug.Print("Server is listening on " + String.Join(" ", baseUrls), 0, DebugColor.Green);
+
+                    while (true)
+                    {
+                        HttpListenerContext context = await listener.GetContextAsync();
+                        ProcessRequest(context);
+                    }
                 }
+
             }
+            catch (Exception ex)
+            {
+                MBDebug.Print($"Error: {ex.Message}  ${ex.StackTrace}", 0, DebugColor.Red);
+            }
+
         }
     }
 }

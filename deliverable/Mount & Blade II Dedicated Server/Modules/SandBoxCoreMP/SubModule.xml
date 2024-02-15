@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Module>
+	<Name value = "SandBox Core MP"/>
+	<Id value = "SandBoxCoreMP"/>
+	<Version value = "v1.2.9.0"/> 
+	<DefaultModule value="false"/>
+	<ModuleCategory value="Multiplayer"/>
+	<ModuleType value ="Community" />
+	<DependedModules>
+		<DependedModule Id="Native" DependentVersion="v1.2.9" Optional="false"/>
+	</DependedModules>
+	<SubModules/>
+	<Xmls>
+		<XmlNode>                
+			<XmlName id="SkillSets" path="sandboxcore_skill_sets"/>
+			<IncludedGameTypes>
+				<GameType value = "MultiplayerGame"/>
+			</IncludedGameTypes>
+		</XmlNode>
+	
+		<XmlNode>                
+			<XmlName id="CraftingPieces" path="crafting_pieces"/>
+			<IncludedGameTypes>
+				<GameType value = "MultiplayerGame"/>
+			</IncludedGameTypes>
+		</XmlNode>  
+		<XmlNode>                
+			<XmlName id="Items" path="items"/>
+			<IncludedGameTypes>
+				<GameType value = "MultiplayerGame"/>
+			</IncludedGameTypes>
+		</XmlNode>  
+   		<XmlNode>                
+			<XmlName id="EquipmentRosters" path="sandboxcore_equipment_sets"/>
+			<IncludedGameTypes>
+				<GameType value = "MultiplayerGame"/>
+			</IncludedGameTypes>
+		</XmlNode>
+
+	</Xmls>
+</Module>

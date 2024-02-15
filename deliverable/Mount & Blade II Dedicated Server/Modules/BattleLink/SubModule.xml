@@ -1,0 +1,27 @@
+﻿<Module>
+	<Name value="Battle Link"/>
+	<Id value="BattleLink"/>
+	<Version value="v1.2.9.1"/>
+	<ModuleCategory value="Multiplayer"/>
+	<DependedModules>
+		<DependedModule Id="Native" DependentVersion="v1.2.9" Optional="false" />
+		<DependedModule Id="SandBoxCoreMP" DependentVersion="v1.2.9.0" Optional="false" />
+	</DependedModules>
+	<SubModules>
+		<SubModule>
+			<!-- for load handler -->
+			<Name value="BattleLink"/>
+			<DLLName value="BattleLink.CommonSvMp.dll"/>
+			<SubModuleClassType value="BattleLink.CommonSvMp.SubModule"/>
+			<Tags />
+		</SubModule>	
+		<SubModule>
+			<Name value="Battle Link"/>
+			<DLLName value="BattleLink.Server.dll"/>
+			<SubModuleClassType value="BattleLink.Server.SubModule"/>
+			<Tags />
+		</SubModule>
+	</SubModules>
+	<Xmls>
+	</Xmls>
+</Module>

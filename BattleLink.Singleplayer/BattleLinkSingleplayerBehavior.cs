@@ -1,5 +1,4 @@
 ﻿using BattleLink.Common;
-using BattleLink.Common.Behavior;
 using BattleLink.Common.DtoSpSv;
 using BattleLink.Common.Utils;
 using Helpers;
@@ -10,9 +9,12 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
+using TaleWorlds.CampaignSystem.CharacterDevelopment;
 using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.Map;
@@ -24,6 +26,7 @@ using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.ObjectSystem;
 using static TaleWorlds.CampaignSystem.GameMenus.GameMenuOption;
+using static TaleWorlds.MountAndBlade.MovementOrder;
 
 namespace BattleLink.Singleplayer
 {
@@ -97,8 +100,8 @@ namespace BattleLink.Singleplayer
                 //string json = JsonUtils.SerializeObject(battleResult, 10);
                 // private string GetDirectoryFullPath(PlatformDirectoryPath directoryPath);
                 //string path = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "MB2_BL_2185888_res.json"); 
-                string pathResult = System.IO.Path.Combine(BasePath.Name, "Modules", "BattleLink.Singleplayer", "Battles", "BL_MPBattle_" + Campaign.CurrentTime + "_Result.xml");
-                string pathInitializer = System.IO.Path.Combine(BasePath.Name, "Modules", "BattleLink.Singleplayer", "Battles", "BL_MPBattle_" + Campaign.CurrentTime + "_Initializer.xml");
+                string pathResult = System.IO.Path.Combine(BasePath.Name, "Modules", "BattleLink.Singleplayer", "Battles", "BL_MPBattle_" + getCampainTimeSec() + "_Result.xml");
+                string pathInitializer = System.IO.Path.Combine(BasePath.Name, "Modules", "BattleLink.Singleplayer", "Battles", "BL_MPBattle_" + getCampainTimeSec() + "_Initializer.xml");
                 args.IsEnabled = File.Exists(pathInitializer) || File.Exists(pathResult);
                 if (!args.IsEnabled)
                 {
@@ -110,7 +113,7 @@ namespace BattleLink.Singleplayer
 
         private async void game_menu_load_result_encounter_on_consequence(MenuCallbackArgs args)
         {
-            string filenameResult = "BL_MPBattle_" + Campaign.CurrentTime + "_Result.csbin";
+            string filenameResult = "BL_MPBattle_" + getCampainTimeSec() + "_Result.csbin";
             string pathResult = System.IO.Path.Combine(BasePath.Name, "Modules", "BattleLink.Singleplayer", "Battles", filenameResult);
 
             try
@@ -121,7 +124,7 @@ namespace BattleLink.Singleplayer
                 List<IBLLog> mpBattleLogs = null;
                 if (File.Exists(pathResult))
                 {
-                    mpBattleLogs = BLAgentLogsLogic.Deserialize<List<IBLLog>>(pathResult);
+                    mpBattleLogs = BattleResultLogs.Deserialize<List<IBLLog>>(pathResult);
                 }
 
                 //search on server
@@ -142,7 +145,7 @@ namespace BattleLink.Singleplayer
 
                             File.WriteAllBytes(pathResult, result);
 
-                            mpBattleLogs = BLAgentLogsLogic.Deserialize<List<IBLLog>>(pathResult);
+                            mpBattleLogs = BattleResultLogs.Deserialize<List<IBLLog>>(pathResult);
                         }
                         catch (Exception ex)
                         {
@@ -169,7 +172,7 @@ namespace BattleLink.Singleplayer
             }
 
         }
-     
+
 
         public static List<T> enumerate2List<T>(IEnumerator<T> e)
         {
@@ -301,16 +304,19 @@ namespace BattleLink.Singleplayer
             var blInit = new MPBattleInitializer
             {
                 MissionInitializerRecord = rec,
+                BLCharacters = characters,
                 Teams = new List<Team>()
                 {
-                    new Team(battle.DefenderSide),
-                    new Team(battle.AttackerSide),
+                    createTeamDto(battle.DefenderSide),
+                    createTeamDto(battle.AttackerSide),
                 },
                 Players = players,
             };
-            blInit.initCharacter(MBObjectManager.Instance);
 
-            string filenameInitializer = "BL_MPBattle_" + Campaign.CurrentTime + "_Initializer.xml";
+            characters.AddRange(createCharatersDto(blInit.Teams));
+
+
+            string filenameInitializer = "BL_MPBattle_" + getCampainTimeSec() + "_Initializer.xml";
             string pathInitializer = System.IO.Path.Combine(BasePath.Name, "Modules", "BattleLink.Singleplayer", "Battles", filenameInitializer);
 
             {
@@ -370,7 +376,7 @@ namespace BattleLink.Singleplayer
                     HttpResponseMessage result = await client.PostAsync(requestUri, content);
                     if (!result.IsSuccessStatusCode)
                     {
-                        InformationManager.DisplayMessage(new InformationMessage("Error http code" + result.StatusCode, new Color(1f, 0f, 0f)));
+                        InformationManager.DisplayMessage(new InformationMessage("Error http code" + result.StatusCode+" "+ result.ReasonPhrase, new Color(1f, 0f, 0f)));
                         return;
                     }
                 }
@@ -419,9 +425,127 @@ namespace BattleLink.Singleplayer
             }
 
 
-            InformationManager.DisplayMessage(new InformationMessage("BL_MPBattle_" + Campaign.CurrentTime + "_Initializer.xml writed"));
+            InformationManager.DisplayMessage(new InformationMessage("BL_MPBattle_" + getCampainTimeSec() + "_Initializer.xml writed"));
 
         }
 
+        private IEnumerable<BLCharacter> createCharatersDto(List<Team> teams)
+        {
+            var characters = new List<BLCharacter>();
+            foreach (var team in teams)
+            {
+                foreach (var party in team.Parties)
+                {
+                    foreach (var troop in party.Troops)
+                    {
+                        var character = MBObjectManager.Instance.GetObject<BasicCharacterObject>(troop.Id);
+                        characters.Add(createCharaterDto(character));
+                    }
+                }
+            }
+            characters = characters.GroupBy(x => x.Id).Select(x => x.First()).ToList();
+            return characters;
+        }
+
+        private BLCharacter createCharaterDto(BasicCharacterObject bso)
+        {
+           
+            var Skills = new Skills
+            {
+                Skill = new List<Skill>()
+                {
+                    new Skill() { Id = "Riding", Value =  bso.GetSkillValue(DefaultSkills.Riding) },
+                    new Skill() { Id = "OneHanded", Value =  bso.GetSkillValue(DefaultSkills.OneHanded) },
+                    new Skill() { Id = "TwoHanded", Value =  bso.GetSkillValue(DefaultSkills.TwoHanded) },
+                    new Skill() { Id = "Polearm", Value =  bso.GetSkillValue(DefaultSkills.Polearm) },
+                    new Skill() { Id = "Crossbow", Value =  bso.GetSkillValue(DefaultSkills.Crossbow) },
+                    new Skill() { Id = "Bow", Value =  bso.GetSkillValue(DefaultSkills.Bow) },
+                    new Skill() { Id = "Throwing", Value =  bso.GetSkillValue(DefaultSkills.Throwing) },
+                    new Skill() { Id = "Athletics", Value =  bso.GetSkillValue(DefaultSkills.Athletics) },
+                }
+            };
+
+            CharacterObject co = bso as CharacterObject;
+            Perks Perks = null;
+            if (co!=null && co.IsHero)
+            {
+                List<Perk> lPerks = new List<Perk>();
+                foreach (PerkObject perk in PerkObject.All)
+                {
+                    if (co.HeroObject.GetPerkValue(perk))
+                    {
+                        lPerks.Add(new Perk() { Id = perk.StringId });
+                    }
+                }
+                Perks = new Perks() { Perk = lPerks };
+            }
+
+             var character = new BLCharacter()
+             {
+                Id = bso.StringId,
+                Level = bso.Level,
+                Name = bso.Name.ToString(),
+                DefaultGroup = bso.DefaultFormationClass.ToString(),
+                IsHero = bso.IsHero,
+                IsFemale = bso.IsFemale,
+                Occupation = co!=null ? co.Occupation.ToString() : null,
+
+                Face = new Face(bso.BodyPropertyRange),
+                Equipments = new Equipments(bso.AllEquipments),
+                Skills = Skills,
+                Perks = Perks,
+
+             };
+
+            return character;
+        }
+
+        private Team createTeamDto(MapEventSide side)
+        {
+            var Parties = new List<Party>();
+            foreach (var party in side.Parties)
+            {
+                Parties.Add(createPartyDto(party));
+            }
+            var faction = side.MapFaction;
+            
+            var team = new Team()
+            {
+                BattleSide = side.MissionSide.ToString(),
+                Color = side.MapFaction.Color.ToHexadecimalString(),
+                Color2 = side.MapFaction.Color2.ToHexadecimalString(),
+                Culture = side.MapFaction.StringId,
+                Name = side.MapFaction.Name.ToString(),
+                FactionBannerKey = faction.Banner.Serialize(),
+                Parties = Parties,
+            };
+            return team;
+        }
+
+        private Party createPartyDto(MapEventParty party)
+        {
+            var Troops = new List<Troop>();
+
+            for (int i = 0; i < party.Party.MemberRoster.Count; i += 1)
+            {
+                var roasterMember = party.Party.MemberRoster.GetElementCopyAtIndex(i);
+                Troops.Add(new Troop() { Id = roasterMember.Character.StringId, HitPoints = roasterMember.Character.HitPoints, Number = roasterMember.Number });
+            }
+
+            var partyDto = new Party()
+            {
+                GeneralId = party.Party.General?.StringId,
+                Id = party.Party.Id,
+                Index = party.Party.Index,
+                Troops = Troops,
+            };
+            return partyDto;
+        }
+
+
+        private static long getCampainTimeSec()
+        {
+           return (long)CampaignTime.Now.ToSeconds;
+        }
     }
 }
