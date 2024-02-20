@@ -1,4 +1,5 @@
 ﻿using BattleLink.Common;
+using BattleLink.Singleplayer.Patch;
 using HarmonyLib;
 using SandBox;
 using SandBox.Missions.MissionLogics;
@@ -16,34 +17,6 @@ using Team = TaleWorlds.MountAndBlade.Team;
 
 namespace BattleLink.Singleplayer
 {
-    [HarmonyPatch(typeof(Agent))]
-    class AgentPatch
-    {
-        //private static Random rand = new Random();
-
-        [HarmonyPrefix]
-        [HarmonyPatch("GetAgentFlags")]
-        static bool GetAgentFlags(ref AgentFlag __result, Agent __instance)
-        {
-            if (__instance.Origin is BLAgentOriginSp blOrigin)
-            {
-                __result = blOrigin.agentFlag;
-            }
-            return false;
-        }
-
-        [HarmonyPrefix]
-        [HarmonyPatch("get_State")]
-        static bool GetAgentState(ref AgentState __result, Agent __instance)
-        {
-            if (__instance.Origin is BLAgentOriginSp blOrigin)
-            {
-                __result = blOrigin.agentState;
-            }
-            return false;
-        }
-    }
-
     public class BattleLinkLogReader
     {
         private static FieldInfo fieldAgentTeam = typeof(Agent).GetField("<Team>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance);
@@ -129,8 +102,13 @@ namespace BattleLink.Singleplayer
                 dicParties.Add(party.Party.Index, (party, tDef, party.Troops.ToList()));
             }
 
-            var harmony = new Harmony("battleLink.singleplayer");
-            harmony.PatchAll();
+            var harmony = new Harmony("BattleLink.Singleplayer.Patch.Temp");
+            var GetAgentFlags = AccessTools.Method(typeof(Agent), "GetAgentFlags");
+            var GetAgentFlagsPrefix = AccessTools.Method(typeof(AgentPatch), "GetAgentFlags");
+            harmony.Patch(GetAgentFlags, prefix: new HarmonyMethod(GetAgentFlagsPrefix));
+            var GetStateFlags = AccessTools.Method(typeof(Agent), "get_State");
+            var GetStatePrefix = AccessTools.Method(typeof(AgentPatch), "get_State");
+            harmony.Patch(GetStateFlags, prefix: new HarmonyMethod(GetStatePrefix));
 
             //WinnerLog sideWinner = null;
             foreach (IBLLog log in mpBattleLogs)
@@ -378,7 +356,7 @@ namespace BattleLink.Singleplayer
 
 
 
-            harmony.UnpatchAll("battleLink.singleplayer");
+            harmony.UnpatchAll("BattleLink.Singleplayer.Patch.Temp");
 
             //applyKilledWonded(battle.AttackerSide, battleResult.attacker);
             //applyKilledWonded(battle.DefenderSide, battleResult.defender);

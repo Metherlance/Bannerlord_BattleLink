@@ -8,7 +8,7 @@ using TaleWorlds.MountAndBlade.ComponentInterfaces;
 using TaleWorlds.MountAndBlade;
 using BattleLink.Common.Model;
 
-namespace BattleLink.CommonSvMp.Model
+namespace BattleLink.CommonSvMp.GameComponents
 {
     // copy of SandboxBattleBannerBearersModel
     public class BLBattleBannerBearersModel : BattleBannerBearersModel
@@ -80,7 +80,7 @@ namespace BattleLink.CommonSvMp.Model
             if (agent.Formation != null)
             {
                 bool calculateHasSignificantNumberOfMounted = agent.Formation.CalculateHasSignificantNumberOfMounted;
-                if ((calculateHasSignificantNumberOfMounted && !agent.HasMount) || (!calculateHasSignificantNumberOfMounted && agent.HasMount))
+                if (calculateHasSignificantNumberOfMounted && !agent.HasMount || !calculateHasSignificantNumberOfMounted && agent.HasMount)
                 {
                     return 0;
                 }
@@ -98,13 +98,13 @@ namespace BattleLink.CommonSvMp.Model
 
         public override bool CanFormationDeployBannerBearers(Formation formation)
         {
-            BannerBearerLogic bannerBearerLogic = base.BannerBearerLogic;
+            BannerBearerLogic bannerBearerLogic = BannerBearerLogic;
             if (bannerBearerLogic == null || formation.CountOfUnits < GetMinimumFormationTroopCountToBearBanners() || bannerBearerLogic.GetFormationBanner(formation) == null)
             {
                 return false;
             }
 
-            return formation.UnitsWithoutLooseDetachedOnes.Count((IFormationUnit unit) => unit is Agent agent && CanAgentBecomeBannerBearer(agent)) > 0;
+            return formation.UnitsWithoutLooseDetachedOnes.Count((unit) => unit is Agent agent && CanAgentBecomeBannerBearer(agent)) > 0;
         }
 
         public override int GetDesiredNumberOfBannerBearersForFormation(Formation formation)
@@ -119,25 +119,27 @@ namespace BattleLink.CommonSvMp.Model
 
         public override ItemObject GetBannerBearerReplacementWeapon(BasicCharacterObject agentCharacter)
         {
-            if (agentCharacter is BLCharacterObject characterObject && agentCharacter.Culture is BasicCultureObject cultureObject && !cultureObject.BannerBearerReplacementWeapons.IsEmpty())
-            {
-                List<(int, ItemObject)> list = new List<(int, ItemObject)>();
-                int minTierDifference = int.MaxValue;
-                foreach (ItemObject bannerBearerReplacementWeapon in cultureObject.BannerBearerReplacementWeapons)
-                {
-                    int num = MathF.Abs((int)(bannerBearerReplacementWeapon.Tier + 1 - characterObject.Tier));
-                    if (num < minTierDifference)
-                    {
-                        minTierDifference = num;
-                    }
+            //if (agentCharacter is BLCharacterObject characterObject && agentCharacter.Culture is BasicCultureObject cultureObject && !cultureObject.BannerBearerReplacementWeapons.IsEmpty())
+            //{
+            //    List<(int, ItemObject)> list = new List<(int, ItemObject)>();
+            //    int minTierDifference = int.MaxValue;
+            //    foreach (ItemObject bannerBearerReplacementWeapon in cultureObject.BannerBearerReplacementWeapons)
+            //    {
+            //        int num = MathF.Abs((int)(bannerBearerReplacementWeapon.Tier + 1 - characterObject.Tier));
+            //        if (num < minTierDifference)
+            //        {
+            //            minTierDifference = num;
+            //        }
 
-                    list.Add((num, bannerBearerReplacementWeapon));
-                }
+            //        list.Add((num, bannerBearerReplacementWeapon));
+            //    }
 
-                return list.Where<(int, ItemObject)>(((int TierDifference, ItemObject Weapon) tuple) => tuple.TierDifference == minTierDifference).GetRandomElementInefficiently().Item2;
-            }
+            //    return list.Where(((int TierDifference, ItemObject Weapon) tuple) => tuple.TierDifference == minTierDifference).GetRandomElementInefficiently().Item2;
+            //}
 
-            return null;
+            //return null;
+
+            return agentCharacter.Equipment[EquipmentIndex.Weapon0].Item;
         }
     }
 }

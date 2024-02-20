@@ -54,8 +54,12 @@ namespace BattleLink.Handler
             NetworkCommunicator peer = createAgent.Peer;
             MissionPeer missionPeer = peer != null ? peer.GetComponent<MissionPeer>() : (MissionPeer)null;
             TaleWorlds.MountAndBlade.Team teamFromTeamIndex = Mission.MissionNetworkHelper.GetTeamFromTeamIndex(createAgent.TeamIndex);
+            BLParty party = new BLParty()
+            {
+                partyIndex=-1,
+            };
             AgentBuildData agentBuildData1 = new AgentBuildData(character).MissionPeer(createAgent.IsPlayerAgent ? missionPeer : (MissionPeer)null).Monster(createAgent.Monster)
-                .TroopOrigin(new BLBattleAgentOrigin(character, -1))
+                .TroopOrigin(new BLBattleAgentOrigin(character, party))
                 .Equipment(createAgent.SpawnEquipment)
                 .EquipmentSeed(createAgent.BodyPropertiesSeed);
 

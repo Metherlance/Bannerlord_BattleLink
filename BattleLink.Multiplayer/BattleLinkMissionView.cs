@@ -26,9 +26,11 @@ namespace BattleLink.Multiplayer
                 missionViewList.Add(ViewCreator.CreateMissionMainAgentEquipmentController(mission));
                 missionViewList.Add(ViewCreator.CreateMissionMainAgentCheerBarkControllerView(mission));
                 missionViewList.Add(MultiplayerViewCreator.CreateMissionMultiplayerEscapeMenu("Captain"));
-                missionViewList.Add(MultiplayerViewCreator.CreateMultiplayerMissionOrderUIHandler(mission));
+                //missionViewList.Add(MultiplayerViewCreator.CreateMultiplayerMissionOrderUIHandler(mission));
+                missionViewList.Add(new BLMissionGauntletMultiplayerOrderUIHandler());
                 missionViewList.Add(ViewCreator.CreateMissionAgentLabelUIHandler(mission));
-                missionViewList.Add(ViewCreator.CreateOrderTroopPlacerView(mission));
+                //missionViewList.Add(ViewCreator.CreateOrderTroopPlacerView(mission));
+                missionViewList.Add(new BLOrderTroopPlacer());
                 // missionViewList.Add(MultiplayerViewCreator.CreateMultiplayerTeamSelectUIHandler());//*
                 missionViewList.Add(new BLTeamSelectView());//*
                 missionViewList.Add(MultiplayerViewCreator.CreateMissionScoreBoardUIHandler(mission, false));

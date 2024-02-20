@@ -9,8 +9,9 @@ using TaleWorlds.MountAndBlade.Network.Messages;
 using TaleWorlds.MountAndBlade;
 using static TaleWorlds.Library.Debug;
 using TaleWorlds.Engine;
+using BattleLink.Common;
 
-namespace BattleLink.Common.Behavior
+namespace BattleLink.CommonSvMp.Behavior
 {
     public class BLMultiplayerRoundController : MissionNetwork, IRoundComponent, IMissionBehavior
     {
@@ -37,48 +38,48 @@ namespace BattleLink.Common.Behavior
 
         public int RoundCount
         {
-            get => this._roundCount;
+            get => _roundCount;
             set
             {
-                if (this._roundCount == value)
+                if (_roundCount == value)
                     return;
-                this._roundCount = value;
+                _roundCount = value;
                 if (!GameNetwork.IsServer)
                     return;
                 GameNetwork.BeginBroadcastModuleEvent();
-                GameNetwork.WriteMessage((GameNetworkMessage)new RoundCountChange(this._roundCount));
+                GameNetwork.WriteMessage(new RoundCountChange(_roundCount));
                 GameNetwork.EndBroadcastModuleEvent(GameNetwork.EventBroadcastFlags.None);
             }
         }
 
         public BattleSideEnum RoundWinner
         {
-            get => this._roundWinner;
+            get => _roundWinner;
             set
             {
-                if (this._roundWinner == value)
+                if (_roundWinner == value)
                     return;
-                this._roundWinner = value;
+                _roundWinner = value;
                 if (!GameNetwork.IsServer)
                     return;
                 GameNetwork.BeginBroadcastModuleEvent();
-                GameNetwork.WriteMessage((GameNetworkMessage)new RoundWinnerChange(value));
+                GameNetwork.WriteMessage(new RoundWinnerChange(value));
                 GameNetwork.EndBroadcastModuleEvent(GameNetwork.EventBroadcastFlags.None);
             }
         }
 
         public RoundEndReason RoundEndReason
         {
-            get => this._roundEndReason;
+            get => _roundEndReason;
             set
             {
-                if (this._roundEndReason == value)
+                if (_roundEndReason == value)
                     return;
-                this._roundEndReason = value;
+                _roundEndReason = value;
                 if (!GameNetwork.IsServer)
                     return;
                 GameNetwork.BeginBroadcastModuleEvent();
-                GameNetwork.WriteMessage((GameNetworkMessage)new RoundEndReasonChange(value));
+                GameNetwork.WriteMessage(new RoundEndReasonChange(value));
                 GameNetwork.EndBroadcastModuleEvent(GameNetwork.EventBroadcastFlags.None);
             }
         }
@@ -87,61 +88,61 @@ namespace BattleLink.Common.Behavior
 
         public float LastRoundEndRemainingTime { get; private set; }
 
-        public float RemainingRoundTime => this._gameModeServer.TimerComponent.GetRemainingTime(false);
+        public float RemainingRoundTime => _gameModeServer.TimerComponent.GetRemainingTime(false);
 
         public MultiplayerRoundState CurrentRoundState { get; private set; }
 
-        public bool IsRoundInProgress => this.CurrentRoundState == MultiplayerRoundState.InProgress;
+        public bool IsRoundInProgress => CurrentRoundState == MultiplayerRoundState.InProgress;
 
-        public void EnableEquipmentUpdate() => this._equipmentUpdateDisabled = false;
+        public void EnableEquipmentUpdate() => _equipmentUpdateDisabled = false;
 
         public override void AfterStart()
         {
-            this.AddRemoveMessageHandlers(GameNetwork.NetworkMessageHandlerRegisterer.RegisterMode.Add);
+            AddRemoveMessageHandlers(GameNetwork.NetworkMessageHandlerRegisterer.RegisterMode.Add);
             if (GameNetwork.IsServerOrRecorder)
-                this._gameModeServer = Mission.Current.GetMissionBehavior<MissionMultiplayerGameModeBase>();
-            this._missionLobbyComponent = Mission.Current.GetMissionBehavior<MissionLobbyComponent>();
-            this._roundCount = 0;
-            this._gameModeServer.TimerComponent.StartTimerAsServer(8f);
+                _gameModeServer = Mission.Current.GetMissionBehavior<MissionMultiplayerGameModeBase>();
+            _missionLobbyComponent = Mission.Current.GetMissionBehavior<MissionLobbyComponent>();
+            _roundCount = 0;
+            _gameModeServer.TimerComponent.StartTimerAsServer(8f);
         }
 
         private void EndRound()
         {
-            if (this.OnPreRoundEnding != null)
-                this.OnPreRoundEnding();
-            this.ChangeRoundState(MultiplayerRoundState.Ending);
-            this._gameModeServer.TimerComponent.StartTimerAsServer(3f);
-            this._roundTimeOver = false;
-            if (this.OnRoundEnding == null)
+            if (OnPreRoundEnding != null)
+                OnPreRoundEnding();
+            ChangeRoundState(MultiplayerRoundState.Ending);
+            _gameModeServer.TimerComponent.StartTimerAsServer(3f);
+            _roundTimeOver = false;
+            if (OnRoundEnding == null)
                 return;
-            this.OnRoundEnding();
+            OnRoundEnding();
         }
 
-        private bool CheckPostEndRound() => this._gameModeServer.TimerComponent.CheckIfTimerPassed();
+        private bool CheckPostEndRound() => _gameModeServer.TimerComponent.CheckIfTimerPassed();
 
-        private bool CheckPostMatchEnd() => this._gameModeServer.TimerComponent.CheckIfTimerPassed();
+        private bool CheckPostMatchEnd() => _gameModeServer.TimerComponent.CheckIfTimerPassed();
 
         private void PostRoundEnd()
         {
-            this._gameModeServer.TimerComponent.StartTimerAsServer(5f);
-            this.ChangeRoundState(MultiplayerRoundState.Ended);
-            if (this._roundCount == MultiplayerOptions.OptionType.RoundTotal.GetIntValue() || this.CheckForMatchEndEarly() || !this.HasEnoughCharactersOnBothSides())
-                this.IsMatchEnding = true;
-            if (this.OnPostRoundEnded == null)
+            _gameModeServer.TimerComponent.StartTimerAsServer(5f);
+            ChangeRoundState(MultiplayerRoundState.Ended);
+            if (_roundCount == MultiplayerOptions.OptionType.RoundTotal.GetIntValue() || CheckForMatchEndEarly() || !HasEnoughCharactersOnBothSides())
+                IsMatchEnding = true;
+            if (OnPostRoundEnded == null)
                 return;
-            this.OnPostRoundEnded();
+            OnPostRoundEnded();
         }
 
         private void PostMatchEnd()
         {
-            this._gameModeServer.TimerComponent.StartTimerAsServer(5f);
-            this.ChangeRoundState(MultiplayerRoundState.MatchEnded);
-            this._missionLobbyComponent.SetStateEndingAsServer();
+            _gameModeServer.TimerComponent.StartTimerAsServer(5f);
+            ChangeRoundState(MultiplayerRoundState.MatchEnded);
+            _missionLobbyComponent.SetStateEndingAsServer();
         }
 
         public override void OnRemoveBehavior()
         {
-            GameNetwork.RemoveNetworkHandler((IUdpNetworkHandler)this);
+            GameNetwork.RemoveNetworkHandler(this);
             base.OnRemoveBehavior();
         }
 
@@ -151,73 +152,73 @@ namespace BattleLink.Common.Behavior
             GameNetwork.NetworkMessageHandlerRegisterer handlerRegisterer = new GameNetwork.NetworkMessageHandlerRegisterer(mode);
             if (GameNetwork.IsClient || !GameNetwork.IsServer)
                 return;
-            handlerRegisterer.Register<CultureVoteClient>(new GameNetworkMessage.ClientMessageHandlerDelegate<CultureVoteClient>(this.HandleClientEventCultureSelect));
+            handlerRegisterer.Register(new GameNetworkMessage.ClientMessageHandlerDelegate<CultureVoteClient>(HandleClientEventCultureSelect));
         }
 
-        protected override void OnUdpNetworkHandlerClose() => this.AddRemoveMessageHandlers(GameNetwork.NetworkMessageHandlerRegisterer.RegisterMode.Remove);
+        protected override void OnUdpNetworkHandlerClose() => AddRemoveMessageHandlers(GameNetwork.NetworkMessageHandlerRegisterer.RegisterMode.Remove);
 
         public override void OnPreDisplayMissionTick(float dt)
         {
             if (GameNetwork.IsServer)
             {
-                if (this._missionLobbyComponent.CurrentMultiplayerState == MissionLobbyComponent.MultiplayerGameState.WaitingFirstPlayers)
+                if (_missionLobbyComponent.CurrentMultiplayerState == MissionLobbyComponent.MultiplayerGameState.WaitingFirstPlayers)
                     return;
-                if (!this.IsMatchEnding && this._missionLobbyComponent.CurrentMultiplayerState != MissionLobbyComponent.MultiplayerGameState.Ending && (this.CurrentRoundState == MultiplayerRoundState.WaitingForPlayers || this.CurrentRoundState == MultiplayerRoundState.Ended))
+                if (!IsMatchEnding && _missionLobbyComponent.CurrentMultiplayerState != MissionLobbyComponent.MultiplayerGameState.Ending && (CurrentRoundState == MultiplayerRoundState.WaitingForPlayers || CurrentRoundState == MultiplayerRoundState.Ended))
                 {
-                    if (this.CheckForNewRound())
+                    if (CheckForNewRound())
                     {
-                        this.BeginNewRound();
+                        BeginNewRound();
                     }
                     else
                     {
-                        if (!this.IsMatchEnding)
+                        if (!IsMatchEnding)
                             return;
-                        this.PostMatchEnd();
+                        PostMatchEnd();
                     }
                 }
-                else if (this.CurrentRoundState == MultiplayerRoundState.Preparation)
+                else if (CurrentRoundState == MultiplayerRoundState.Preparation)
                 {
-                    if (!this.CheckForPreparationEnd())
+                    if (!CheckForPreparationEnd())
                         return;
-                    this.EndPreparation();
-                    this.StartSpawning(this._equipmentUpdateDisabled);
+                    EndPreparation();
+                    StartSpawning(_equipmentUpdateDisabled);
                 }
-                else if (this.CurrentRoundState == MultiplayerRoundState.InProgress)
+                else if (CurrentRoundState == MultiplayerRoundState.InProgress)
                 {
-                    if (!this.CheckForRoundEnd())
+                    if (!CheckForRoundEnd())
                         return;
-                    this.EndRound();
+                    EndRound();
                 }
-                else if (this.CurrentRoundState == MultiplayerRoundState.Ending)
+                else if (CurrentRoundState == MultiplayerRoundState.Ending)
                 {
-                    if (!this.CheckPostEndRound())
+                    if (!CheckPostEndRound())
                         return;
-                    this.PostRoundEnd();
+                    PostRoundEnd();
                 }
                 else
                 {
-                    if (this.CurrentRoundState != MultiplayerRoundState.Ended || !this.IsMatchEnding || !this.CheckPostMatchEnd())
+                    if (CurrentRoundState != MultiplayerRoundState.Ended || !IsMatchEnding || !CheckPostMatchEnd())
                         return;
-                    this.PostMatchEnd();
+                    PostMatchEnd();
                 }
             }
             else
-                this._gameModeServer.TimerComponent.CheckIfTimerPassed();
+                _gameModeServer.TimerComponent.CheckIfTimerPassed();
         }
 
         private void ChangeRoundState(MultiplayerRoundState newRoundState)
         {
-            if (this.CurrentRoundState == newRoundState)
+            if (CurrentRoundState == newRoundState)
                 return;
-            if (this.CurrentRoundState == MultiplayerRoundState.InProgress)
-                this.LastRoundEndRemainingTime = this.RemainingRoundTime;
-            this.CurrentRoundState = newRoundState;
-            this._currentRoundStateStartTime = MissionTime.Now;
-            Action roundStateChanged = this.OnCurrentRoundStateChanged;
+            if (CurrentRoundState == MultiplayerRoundState.InProgress)
+                LastRoundEndRemainingTime = RemainingRoundTime;
+            CurrentRoundState = newRoundState;
+            _currentRoundStateStartTime = MissionTime.Now;
+            Action roundStateChanged = OnCurrentRoundStateChanged;
             if (roundStateChanged != null)
                 roundStateChanged();
             GameNetwork.BeginBroadcastModuleEvent();
-            GameNetwork.WriteMessage((GameNetworkMessage)new RoundStateChange(newRoundState, this._currentRoundStateStartTime.NumberOfTicks, MathF.Ceiling(this.LastRoundEndRemainingTime)));
+            GameNetwork.WriteMessage(new RoundStateChange(newRoundState, _currentRoundStateStartTime.NumberOfTicks, MathF.Ceiling(LastRoundEndRemainingTime)));
             GameNetwork.EndBroadcastModuleEvent(GameNetwork.EventBroadcastFlags.None);
         }
 
@@ -233,14 +234,14 @@ namespace BattleLink.Common.Behavior
 
         private bool CheckForRoundEnd()
         {
-            if (!this._roundTimeOver)
-                this._roundTimeOver = this._gameModeServer.TimerComponent.CheckIfTimerPassed();
-            return !this._gameModeServer.CheckIfOvertime() && this._roundTimeOver || this._gameModeServer.CheckForRoundEnd();
+            if (!_roundTimeOver)
+                _roundTimeOver = _gameModeServer.TimerComponent.CheckIfTimerPassed();
+            return !_gameModeServer.CheckIfOvertime() && _roundTimeOver || _gameModeServer.CheckForRoundEnd();
         }
 
         private bool CheckForNewRound()
         {
-            if (this.CurrentRoundState != MultiplayerRoundState.WaitingForPlayers && !this._gameModeServer.TimerComponent.CheckIfTimerPassed())
+            if (CurrentRoundState != MultiplayerRoundState.WaitingForPlayers && !_gameModeServer.TimerComponent.CheckIfTimerPassed())
                 return false;
             int[] source = new int[2];
             foreach (NetworkCommunicator networkPeer in GameNetwork.NetworkPeers)
@@ -249,47 +250,47 @@ namespace BattleLink.Common.Behavior
                 if (networkPeer.IsSynchronized && component?.Team != null && component.Team.Side != BattleSideEnum.None)
                     ++source[(int)component.Team.Side];
             }
-            if (((IEnumerable<int>)source).Sum() >= MultiplayerOptions.OptionType.MinNumberOfPlayersForMatchStart.GetIntValue() || this.RoundCount != 0)
+            if (source.Sum() >= MultiplayerOptions.OptionType.MinNumberOfPlayersForMatchStart.GetIntValue() || RoundCount != 0)
                 return true;
-            this.IsMatchEnding = true;
+            IsMatchEnding = true;
             return false;
         }
 
-        private bool HasEnoughCharactersOnBothSides() => ((MultiplayerOptions.OptionType.NumberOfBotsTeam1.GetIntValue() > 0 ? 1 : (GameNetwork.NetworkPeers.Count<NetworkCommunicator>((Func<NetworkCommunicator, bool>)(q => q.GetComponent<MissionPeer>() != null && q.GetComponent<MissionPeer>().Team == Mission.Current.AttackerTeam)) > 0 ? 1 : 0)) & (MultiplayerOptions.OptionType.NumberOfBotsTeam2.GetIntValue() > 0 ? (true ? 1 : 0) : (GameNetwork.NetworkPeers.Count<NetworkCommunicator>((Func<NetworkCommunicator, bool>)(q => q.GetComponent<MissionPeer>() != null && q.GetComponent<MissionPeer>().Team == Mission.Current.DefenderTeam)) > 0 ? 1 : 0))) != 0;
+        private bool HasEnoughCharactersOnBothSides() => ((MultiplayerOptions.OptionType.NumberOfBotsTeam1.GetIntValue() > 0 ? 1 : GameNetwork.NetworkPeers.Count(q => q.GetComponent<MissionPeer>() != null && q.GetComponent<MissionPeer>().Team == Mission.Current.AttackerTeam) > 0 ? 1 : 0) & (MultiplayerOptions.OptionType.NumberOfBotsTeam2.GetIntValue() > 0 ? true ? 1 : 0 : GameNetwork.NetworkPeers.Count(q => q.GetComponent<MissionPeer>() != null && q.GetComponent<MissionPeer>().Team == Mission.Current.DefenderTeam) > 0 ? 1 : 0)) != 0;
 
         private void BeginNewRound()
         {
-            if (this.CurrentRoundState == MultiplayerRoundState.WaitingForPlayers)
-                this._gameModeServer.ClearPeerCounts();
-            this.ChangeRoundState(MultiplayerRoundState.Preparation);
-            ++this.RoundCount;
+            if (CurrentRoundState == MultiplayerRoundState.WaitingForPlayers)
+                _gameModeServer.ClearPeerCounts();
+            ChangeRoundState(MultiplayerRoundState.Preparation);
+            ++RoundCount;
             Mission.Current.ResetMission();
-            this._gameModeServer.MultiplayerTeamSelectComponent.BalanceTeams();
-            this._gameModeServer.TimerComponent.StartTimerAsServer((float)MultiplayerOptions.OptionType.RoundPreparationTimeLimit.GetIntValue());
-            Action onRoundStarted = this.OnRoundStarted;
+            _gameModeServer.MultiplayerTeamSelectComponent.BalanceTeams();
+            _gameModeServer.TimerComponent.StartTimerAsServer(MultiplayerOptions.OptionType.RoundPreparationTimeLimit.GetIntValue());
+            Action onRoundStarted = OnRoundStarted;
             if (onRoundStarted != null)
                 onRoundStarted();
-            this._gameModeServer.SpawnComponent.ToggleUpdatingSpawnEquipment(true);
+            _gameModeServer.SpawnComponent.ToggleUpdatingSpawnEquipment(true);
 
             MBDebug.Print("RBMultiplayerRoundController - BeginNewRound", 0, DebugColor.Green);
             TeamQuerySystemUtils.setPowerFix(Mission.Current);
         }
 
-        private bool CheckForPreparationEnd() => this.CurrentRoundState == MultiplayerRoundState.Preparation && this._gameModeServer.TimerComponent.CheckIfTimerPassed();
+        private bool CheckForPreparationEnd() => CurrentRoundState == MultiplayerRoundState.Preparation && _gameModeServer.TimerComponent.CheckIfTimerPassed();
 
         private void EndPreparation()
         {
-            if (this.OnPreparationEnded == null)
+            if (OnPreparationEnded == null)
                 return;
-            this.OnPreparationEnded();
+            OnPreparationEnded();
         }
 
         private void StartSpawning(bool disableEquipmentUpdate = true)
         {
-            this._gameModeServer.TimerComponent.StartTimerAsServer((float)MultiplayerOptions.OptionType.RoundTimeLimit.GetIntValue());
+            _gameModeServer.TimerComponent.StartTimerAsServer(MultiplayerOptions.OptionType.RoundTimeLimit.GetIntValue());
             if (disableEquipmentUpdate)
-                this._gameModeServer.SpawnComponent.ToggleUpdatingSpawnEquipment(false);
-            this.ChangeRoundState(MultiplayerRoundState.InProgress);
+                _gameModeServer.SpawnComponent.ToggleUpdatingSpawnEquipment(false);
+            ChangeRoundState(MultiplayerRoundState.InProgress);
         }
 
         private bool CheckForMatchEndEarly()
@@ -315,13 +316,13 @@ namespace BattleLink.Common.Behavior
             if (networkPeer.IsServerPeer)
                 return;
             GameNetwork.BeginModuleEventAsServer(networkPeer);
-            GameNetwork.WriteMessage((GameNetworkMessage)new RoundStateChange(this.CurrentRoundState, this._currentRoundStateStartTime.NumberOfTicks, MathF.Ceiling(this.LastRoundEndRemainingTime)));
+            GameNetwork.WriteMessage(new RoundStateChange(CurrentRoundState, _currentRoundStateStartTime.NumberOfTicks, MathF.Ceiling(LastRoundEndRemainingTime)));
             GameNetwork.EndModuleEventAsServer();
             GameNetwork.BeginModuleEventAsServer(networkPeer);
-            GameNetwork.WriteMessage((GameNetworkMessage)new RoundWinnerChange(this.RoundWinner));
+            GameNetwork.WriteMessage(new RoundWinnerChange(RoundWinner));
             GameNetwork.EndModuleEventAsServer();
             GameNetwork.BeginModuleEventAsServer(networkPeer);
-            GameNetwork.WriteMessage((GameNetworkMessage)new RoundCountChange(this.RoundCount));
+            GameNetwork.WriteMessage(new RoundCountChange(RoundCount));
             GameNetwork.EndModuleEventAsServer();
         }
     }

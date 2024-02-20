@@ -171,10 +171,6 @@
   </ItemGroup>
 	
   <ItemGroup>
-    <Folder Include="Behavior\" />
-  </ItemGroup>
-	
-  <ItemGroup>
 	  <ProjectReference Include="..\BattleLink.Common\BattleLink.Common.csproj">
 		  <Project>{1D9F084C-B59A-49D9-8AD1-C2D62422EF8F}</Project>
 		  <Name>BattleLink.Common</Name>

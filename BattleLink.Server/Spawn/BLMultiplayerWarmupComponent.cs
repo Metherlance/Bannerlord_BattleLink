@@ -1,6 +1,8 @@
 ﻿using BattleLink.Common.Model;
 using BattleLink.Common.Spawn.Battle;
 using BattleLink.Common.Spawn.Warmup;
+using BattleLink.CommonSvMp.NetworkMessages.FromServer;
+using BattleLink.Server.Handler;
 using NetworkMessages.FromServer;
 using System;
 using System.Collections.Generic;
@@ -27,7 +29,7 @@ namespace BattleLink.Common.Spawn
         private MissionLobbyComponent _lobbyComponent;
         private MissionTime _currentStateStartTime;
         private WarmupStates _warmupState;
-        public new static float TotalWarmupDuration => 10;// MultiplayerOptions.OptionType.WarmupTimeLimit.GetIntValue() * 60;
+        public new static float TotalWarmupDuration => MultiplayerOptions.OptionType.WarmupTimeLimit.GetIntValue() * 60;//10;//
 
         public new event Action OnWarmupEnding;
 
@@ -147,7 +149,9 @@ namespace BattleLink.Common.Spawn
 
         private void AddRemoveMessageHandlers(RegisterMode mode)
         {
-
+            GameNetwork.NetworkMessageHandlerRegisterer reg = new NetworkMessageHandlerRegisterer(mode);
+            reg.Register<BLMainHeroRequestEndWarmupMessage>(BLMainHeroRequestEndWarmupHandler.HandleClientEventMainHeroRequestEndWarmupMessage);
+           // Mission.MissionNetworkHelper
         }
 
         public new bool CheckForWarmupProgressEnd() => _gameMode.CheckForWarmupEnd() || (double)_timerComponent.GetRemainingTime(false) <= 30.0;
@@ -282,5 +286,18 @@ namespace BattleLink.Common.Spawn
             else
                 MBSoundEvent.PlaySound(SoundEvent.GetEventIdFromString("event:/alerts/rally/generic"), position);
         }
+
+        public void EndingWarmupByMainHero()
+        {
+            WarmupState = WarmupStates.Ending;
+            _timerComponent.StartTimerAsServer(5f);
+            this.OnWarmupEnding?.Invoke();
+            _timerComponent.StartTimerAsServer(5f);
+
+            //WarmupState = WarmupStates.Ended;
+            //_timerComponent.StartTimerAsServer(3f);
+            //this.OnWarmupEnded?.Invoke();
+        }
+
     }
 }

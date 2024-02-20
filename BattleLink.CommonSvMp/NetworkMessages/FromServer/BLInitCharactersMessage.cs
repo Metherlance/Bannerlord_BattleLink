@@ -4,7 +4,7 @@ using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.Network.Messages;
 using static TaleWorlds.Library.Debug;
 
-namespace BattleLink.Common.Model
+namespace BattleLink.CommonSvMp.NetworkMessages.FromServer
 {
     /// <summary>
     /// NetworkMessage to synchronize AgentsInfoModel between server and clients.

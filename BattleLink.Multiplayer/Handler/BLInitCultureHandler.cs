@@ -1,5 +1,5 @@
-﻿using BattleLink.Common.Model;
-using BattleLink.Common.Utils;
+﻿using BattleLink.Common.Utils;
+using BattleLink.CommonSvMp.NetworkMessages.FromServer;
 using System.Xml;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade.Network.Messages;

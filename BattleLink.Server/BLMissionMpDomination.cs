@@ -2,6 +2,7 @@
 using BattleLink.Common.Behavior;
 using BattleLink.Common.DtoSpSv;
 using BattleLink.Common.Utils;
+using BattleLink.CommonSvMp.Behavior;
 using NetworkMessages.FromClient;
 using NetworkMessages.FromServer;
 using System;
@@ -16,7 +17,10 @@ using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.MissionRepresentatives;
 using TaleWorlds.MountAndBlade.Network.Messages;
 using TaleWorlds.ObjectSystem;
+using static TaleWorlds.CampaignSystem.MapEvents.MapEvent;
 using static TaleWorlds.Library.Debug;
+using static TaleWorlds.MountAndBlade.Mission;
+using static TaleWorlds.MountAndBlade.MovementOrder;
 using static TaleWorlds.MountAndBlade.MultiplayerOptions;
 using Team = TaleWorlds.MountAndBlade.Team;
 
@@ -56,22 +60,41 @@ namespace BattleLink.Server
             RoundController.OnPostRoundEnded += OnPostRoundEnd;
 
 
-            {
-                var team = BLReferentialHolder.listTeam.Where(x => BattleSideEnum.Attacker.ToString().Equals(x.BattleSide)).First();
-                var Color = Convert.ToUInt32(team.Color, 16);
-                var Color2 = Convert.ToUInt32(team.Color2, 16);
-                Banner banner = new Banner(team.FactionBannerKey, Color, Color2);
-                base.Mission.Teams.Add(BattleSideEnum.Attacker, Color, Color2, banner, isPlayerGeneral: false, isPlayerSergeant: true);
-            }
+
 
             {
-                var team = BLReferentialHolder.listTeam.Where(x => BattleSideEnum.Defender.ToString().Equals(x.BattleSide)).First();
-                var Color = Convert.ToUInt32(team.Color, 16);
-                var Color2 = Convert.ToUInt32(team.Color2, 16);
-                Banner banner = new Banner(team.FactionBannerKey, Color, Color2);
-                base.Mission.Teams.Add(BattleSideEnum.Defender, Color, Color2, banner, isPlayerGeneral: false, isPlayerSergeant: true);
+                var sideDef = BLReferentialHolder.listTeam.Where(x => BattleSideEnum.Defender.ToString().Equals(x.BattleSide)).First();
+                foreach (var teamDto in sideDef.Teams)
+                {
+                    var partyGeneral = teamDto.getPartyGeneral();
+
+                    var Color = Convert.ToUInt32(partyGeneral.Color, 16);
+                    var Color2 = Convert.ToUInt32(partyGeneral.Color2, 16);
+                    //Banner banner = new Banner(partyGeneral.FactionBannerKey, Color, Color2);
+                    Banner banner = new Banner(partyGeneral.FactionBannerKey);
+                    var team =  base.Mission.Teams.Add(BattleSideEnum.Defender, Color, Color2, banner, isPlayerGeneral: false, isPlayerSergeant: true);
+                    teamDto.missionTeamsIndex = team.TeamIndex;
+
+                }
             }
 
+
+            {
+                var sideAtt = BLReferentialHolder.listTeam.Where(x => BattleSideEnum.Attacker.ToString().Equals(x.BattleSide)).First();
+                foreach (var teamDto in sideAtt.Teams)
+                {
+                    var partyGeneral = teamDto.getPartyGeneral();
+
+                    var Color = Convert.ToUInt32(partyGeneral.Color, 16);
+                    var Color2 = Convert.ToUInt32(partyGeneral.Color2, 16);
+                    //Banner banner = new Banner(partyGeneral.FactionBannerKey, Color, Color2);
+                    Banner banner = new Banner(partyGeneral.FactionBannerKey);
+                    var team = base.Mission.Teams.Add(BattleSideEnum.Attacker, Color, Color2, banner, isPlayerGeneral: false, isPlayerSergeant: true);
+                    teamDto.missionTeamsIndex = team.TeamIndex;
+                }
+            }
+
+            BLSendReferential2Client.setTeamMessage();
 
             MBDebug.Print("RBMissionMpGameMode - AfterStart", 0, DebugColor.Green);
             // TeamQuerySystemUtils.setPowerFix(this.Mission);
@@ -82,20 +105,57 @@ namespace BattleLink.Server
             Mission.SpectatorTeam.FormationsIncludingEmpty.Clear();
 
 
-
         }
 
         //public override void OnAfterMissionCreated()//mission == null ...
         //{
         //    base.OnAfterMissionCreated();
+        //    var mission = Mission.Current;
+        //    var a =1;
         //}
+
+        public override void OnCreated()//mission == null ...
+        {
+            base.OnCreated();
+
+
+            // set AI type , normaly done in MissionCombatantsLogic EarlyStart
+
+            var type = BLReferentialHolder.battle.mapEventType;
+            Enum.TryParse(type, out BattleTypes battleType);
+
+            MissionTeamAITypeEnum aiType = MissionTeamAITypeEnum.FieldBattle;
+            if (BattleTypes.Siege==battleType)
+            {
+                aiType = MissionTeamAITypeEnum.Siege;
+            }
+            else if (BattleTypes.SallyOut == battleType)
+            {
+                aiType = MissionTeamAITypeEnum.SallyOut;
+            }
+
+            Mission.MissionTeamAIType = aiType;
+
+            //
+
+
+
+        }
+
+
 
         public override void EarlyStart()
         {
             base.EarlyStart();
             TeamQuerySystemUtils.setMission(Mission);
+            //var a = Mission.Scene.FindEntitiesWithTag("archer_position").ToList();
             MBDebug.Print("RBMissionMpGameMode - EarlyStart", 0, DebugColor.Cyan);
         }
+
+        //public override void AfterAddTeam(Team team)
+        //{
+        //    MBDebug.Print("RBDebugMissionLogic - AfterAddTeam", 0, DebugColor.Cyan);
+        //}
 
         protected override void OnEndMission()
         {
@@ -156,8 +216,8 @@ namespace BattleLink.Server
                 //}
                 //else
                 //{
-                //    MultiplayerOptions.Instance.GetOptionFromOptionType(OptionType.CultureTeam1, MultiplayerOptionsAccessMode.NextMapOptions).UpdateValue(battleInitializerNext.Teams[1].Culture);
-                //    MultiplayerOptions.Instance.GetOptionFromOptionType(OptionType.CultureTeam2, MultiplayerOptionsAccessMode.NextMapOptions).UpdateValue(battleInitializerNext.Teams[0].Culture);
+                MultiplayerOptions.Instance.GetOptionFromOptionType(OptionType.CultureTeam1, MultiplayerOptionsAccessMode.NextMapOptions).UpdateValue(battleInitializerNext.battle.Sides[1].Culture);
+                MultiplayerOptions.Instance.GetOptionFromOptionType(OptionType.CultureTeam2, MultiplayerOptionsAccessMode.NextMapOptions).UpdateValue(battleInitializerNext.battle.Sides[0].Culture);
                 //}
 
                 MBDebug.Print("BLMissionMDomination - setNextBLMap pending scene:" + battleInitializerNext.MissionInitializerRecord.SceneName, 0, DebugColor.Green);
@@ -197,8 +257,8 @@ namespace BattleLink.Server
                 //}
                 //else
                 //{
-                //    MultiplayerOptions.Instance.GetOptionFromOptionType(OptionType.CultureTeam1, MultiplayerOptionsAccessMode.NextMapOptions).UpdateValue(battleInitializerNext.Teams[1].Culture);
-                //    MultiplayerOptions.Instance.GetOptionFromOptionType(OptionType.CultureTeam2, MultiplayerOptionsAccessMode.NextMapOptions).UpdateValue(battleInitializerNext.Teams[0].Culture);
+                MultiplayerOptions.Instance.GetOptionFromOptionType(OptionType.CultureTeam1, MultiplayerOptionsAccessMode.NextMapOptions).UpdateValue(battleInitializerNext.battle.Sides[1].Culture);
+                MultiplayerOptions.Instance.GetOptionFromOptionType(OptionType.CultureTeam2, MultiplayerOptionsAccessMode.NextMapOptions).UpdateValue(battleInitializerNext.battle.Sides[0].Culture);
                 //}
 
                 MBDebug.Print("BLMissionMDomination - setNextBLMap finished scene:" + battleInitializerNext.MissionInitializerRecord.SceneName, 0, DebugColor.Green);
@@ -206,7 +266,7 @@ namespace BattleLink.Server
                 return;
             }
 
-            // no initializer, go back to default
+            // no initializer, go back to default mode
             {
                 BLReferentialHolder.nextBattleInitializerFilePath = null;
                 BLReferentialHolder.nextBattleInitializerPending = false;
@@ -313,8 +373,7 @@ namespace BattleLink.Server
         //    this.Mission.Teams.Add(BattleSideEnum.Defender, firstObject2.BackgroundColor2, firstObject2.ForegroundColor2, banner2, false, true);
         //}
 
-        protected override void AddRemoveMessageHandlers(
-          GameNetwork.NetworkMessageHandlerRegistererContainer registerer)
+        protected override void AddRemoveMessageHandlers(GameNetwork.NetworkMessageHandlerRegistererContainer registerer)
         {
             registerer.RegisterBaseHandler<RequestForfeitSpawn>(new GameNetworkMessage.ClientMessageHandlerDelegate<GameNetworkMessage>(this.HandleClientEventRequestForfeitSpawn));
         }
@@ -1117,17 +1176,18 @@ namespace BattleLink.Server
 
                 teamAffected.GeneralAgent = null;
                 // set ai now TODO choose peer
-                if (teamAffected.TeamAI == null && teamAffected.GeneralAgent == null)
+                if (teamAffected.GeneralAgent == null)
                 {
-                    BLTeamAIGeneral teamAI = new BLTeamAIGeneral(Mission.Current, teamAffected);
-                    teamAI.AddTacticOption(new TacticDefensiveEngagement(teamAffected));
-                    teamAI.AddTacticOption(new TacticCharge(teamAffected));
                     TeamQuerySystemUtils.setPowerFix(Mission.Current);
+                    var teamAI = teamAffected.TeamAI;// BLTeamAiUtils.addAIGeneral(Mission.Current, teamAffected);
+                   // teamAffected.AddTeamAI(teamAI);
                     foreach (Formation formation in teamAffected.FormationsIncludingSpecialAndEmpty)
                     {
-                        teamAI.OnUnitAddedToFormationForTheFirstTime(formation);
+                        if ((formation.PlayerOwner == null || formation.PlayerOwner.Index==affectedAgent.Index) && formation.CountOfUnits > 0)
+                        {
+                            teamAI.OnUnitAddedToFormationForTheFirstTime(formation);
+                        }
                     }
-                    teamAffected.AddTeamAI(teamAI);
                     teamAffected.SetPlayerRole(false, false);
                 }
             }
@@ -1181,8 +1241,40 @@ namespace BattleLink.Server
             MBDebug.Print("RBMissionMpGameMode - HandleNewClientAfterLoadingFinished", 0, DebugColor.Green);
         }
 
-    }
+        internal static void setNextBLMapForTesting()
+        {
+            // uniquely for testing purposes when first map of the pool is same xml initializer
+           
+            // Check pending state first
+            FileInfo[] fileEntries = new DirectoryInfo(System.IO.Path.Combine(BasePath.Name, "Modules", "BattleLink", "Battles", "Finished"))
+                        .GetFiles("BL_MPBattle_*_Initializer.xml")
+                        .OrderBy(f => f.CreationTime)
+                        .ToArray();
+            if (fileEntries.Length > 0)
+            {
+                FileInfo fileEntrie = fileEntries[0];
 
+                MultiplayerIntermissionVotingManager.Instance.IsCultureVoteEnabled = false;
+                MultiplayerIntermissionVotingManager.Instance.IsMapVoteEnabled = false;
+
+                XmlSerializer serializer = new XmlSerializer(typeof(MPBattleInitializer));
+                MPBattleInitializer battleInitializerNext = null;
+                using (Stream reader = new FileStream(fileEntrie.FullName, FileMode.Open))
+                {
+                    // Call the Deserialize method to restore the object's state.
+                    battleInitializerNext = (MPBattleInitializer)serializer.Deserialize(reader);
+                }
+
+                BLReferentialHolder.nextBattleInitializerFilePath = fileEntrie.FullName;
+                BLReferentialHolder.nextBattleInitializerPending = false;
+
+                MBDebug.Print("BLMissionMDomination - setNextBLMapForTesting scene:" + battleInitializerNext.MissionInitializerRecord.SceneName, 0, DebugColor.Green);
+
+                return;
+            }
+    
+        }
+    }
 
 
 }

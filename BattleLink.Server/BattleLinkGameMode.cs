@@ -5,21 +5,29 @@ using BattleLink.Common.Model;
 using BattleLink.Common.Spawn;
 using BattleLink.Common.Spawn.Battle;
 using BattleLink.Common.Utils;
+using BattleLink.CommonSvMp.Behavior;
+using BattleLink.CommonSvMp.Behavior.Siege;
+using NetworkMessages.FromServer;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 using System.Xml.XPath;
+using TaleWorlds.CampaignSystem.Siege;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.ListedServer;
+using TaleWorlds.MountAndBlade.Missions.Handlers;
 using TaleWorlds.MountAndBlade.Multiplayer;
+using TaleWorlds.MountAndBlade.Network.Messages;
 using TaleWorlds.MountAndBlade.Source.Missions;
+using TaleWorlds.MountAndBlade.Source.Missions.Handlers.Logic;
 using TaleWorlds.ObjectSystem;
 using static TaleWorlds.Library.Debug;
 using static TaleWorlds.MountAndBlade.MultiplayerOptions;
@@ -44,11 +52,17 @@ namespace BattleLink.Server
                 //0,256 -> -512 2048
                 CompressionMission.AgentOffsetCompressionInfo = new CompressionInfo.Integer(-512, 11);
 
+                MultiplayerIntermissionVotingManager.Instance.IsCultureVoteEnabled = false;
+                MultiplayerIntermissionVotingManager.Instance.IsMapVoteEnabled = false;
+
                 MBObjectManager.Instance.RegisterType<BLCharacterObject>("BLCharacter", "BLCharacters", 60U, true, true);
                 MBObjectManager.Instance.ClearAllObjectsWithType(typeof(BLCharacterObject));
 
                 BLReferentialHolder.basicCharacterObjects = new List<BLCharacterObject>();
 
+               // BLMissionMpDomination.setNextBLMapForTesting();
+
+                // load next battle and launch default mission
                 FileInfo fileInfo;
                 if (null == BLReferentialHolder.nextBattleInitializerFilePath)
                 {
@@ -83,7 +97,8 @@ namespace BattleLink.Server
 
 
                 //add map to server map pool
-                if (ListedServerCommandManager.ServerSideIntermissionManager.AutomatedMapPool.Contains(sceneName))
+                // AutomatedMapPool and not UsableMaps
+                if (!ListedServerCommandManager.ServerSideIntermissionManager.AutomatedMapPool.Contains(sceneName))
                 {
                     //ListedServerCommandManager.ServerSideIntermissionManager.AddMapToAutomatedBattlePool(sceneName);
                     ListedServerCommandManager.ServerSideIntermissionManager.AddMapToUsableMaps(sceneName);
@@ -115,7 +130,6 @@ namespace BattleLink.Server
                 }
 
 
-
                 BLReferentialHolder.currentBattleInitializerPending = BLReferentialHolder.nextBattleInitializerPending;
 
                 //string gameTyp = MultiplayerOptions.OptionType.GameType.GetStrValue();
@@ -126,7 +140,8 @@ namespace BattleLink.Server
 
                 mir.PlayingInCampaignMode = false;//else crash
 
-                BLReferentialHolder.listTeam = battleInitializer.Teams;
+                BLReferentialHolder.battle = battleInitializer.battle;
+                BLReferentialHolder.listTeam = battleInitializer.battle.Sides;
                 BLReferentialHolder.listPlayer = battleInitializer.Players;
 
                 //le faire dans l'export
@@ -136,71 +151,77 @@ namespace BattleLink.Server
                 //Note banner are in StdAssets\FactionIcons\LargeIcons , so I cant generated them on the fly or change MultiplayerFactionBannerWidget.class not a priority
                 // this.IconWidget.Sprite = this.Context.SpriteData.GetSprite("StdAssets\\FactionIcons\\LargeIcons\\" + this.FactionCode);
 
-                List<string> cultureBaseName = new List<string>()
-                {
-                    "empire", "vlandia", "sturgia", "battania", "aserai", "khuzait"
-                };
-                foreach (var team in BLReferentialHolder.listTeam)
-                {
-                    BasicCultureObject basicCultureObject;
-                    if (!cultureBaseName.Contains(team.Culture))
-                    {
-                        XmlDocument doc2 = new XmlDocument();
-                        XmlElement culture = doc2.CreateElement("Culture");
+                //List<string> cultureBaseName = new List<string>()
+                //{
+                //    "empire", "vlandia", "sturgia", "battania", "aserai", "khuzait", "neutral_culture", "looters"
+                //};
+                //foreach (var side in BLReferentialHolder.listTeam)
+                //{
+                //    foreach (var team in side.Teams)
+                //    {
+                //        Party party = team.Parties[team.partyGeneralIndex];
 
-                        culture.SetAttribute("id", team.Culture);
-                        culture.SetAttribute("name", team.Name);
-                        culture.SetAttribute("is_main_culture", "true");
-                        culture.SetAttribute("default_face_key", "000fa92e90004202aced5d976886573d5d679585a376fdd605877a7764b8987c00000000000007520000037f0000000f00000037049140010000000000000000");
+                //        BasicCultureObject basicCultureObject;
+                //        if (!cultureBaseName.Contains(side.Culture))
+                //        {
+                //            XmlDocument doc2 = new XmlDocument();
+                //            XmlElement culture = doc2.CreateElement("Culture");
 
-
-                        culture.SetAttribute("color", team.Color);
-                        culture.SetAttribute("color2", team.Color2);
-                        culture.SetAttribute("cloth_alternative_color1", team.Color);
-                        culture.SetAttribute("cloth_alternative_color2", team.Color2);
-
-                        culture.SetAttribute("banner_background_color1", team.Color);
-                        culture.SetAttribute("banner_background_color2", team.Color);
-                        culture.SetAttribute("banner_foreground_color1", team.Color2);
-                        culture.SetAttribute("banner_foreground_color2", team.Color2);
+                //            culture.SetAttribute("id", team.Culture);
+                //            culture.SetAttribute("name", team.Name);
+                //            culture.SetAttribute("is_main_culture", "true");
+                //            culture.SetAttribute("default_face_key", "000fa92e90004202aced5d976886573d5d679585a376fdd605877a7764b8987c00000000000007520000037f0000000f00000037049140010000000000000000");
 
 
-                        culture.SetAttribute("faction_banner_key", team.FactionBannerKey);
+                //            culture.SetAttribute("color", team.Color);
+                //            culture.SetAttribute("color2", team.Color2);
+                //            culture.SetAttribute("cloth_alternative_color1", team.Color);
+                //            culture.SetAttribute("cloth_alternative_color2", team.Color2);
+
+                //            culture.SetAttribute("banner_background_color1", team.Color);
+                //            culture.SetAttribute("banner_background_color2", team.Color);
+                //            culture.SetAttribute("banner_foreground_color1", team.Color2);
+                //            culture.SetAttribute("banner_foreground_color2", team.Color2);
 
 
-                        basicCultureObject = (BasicCultureObject)MBObjectManager.Instance.CreateObjectFromXmlNode(culture);
-                    }
-                    else
-                    {
-                        basicCultureObject = MBObjectManager.Instance.GetObject<BasicCultureObject>(team.Culture);
-                    }
+                //            culture.SetAttribute("faction_banner_key", team.FactionBannerKey);
 
 
-                    //Create dummy character hero for culture
-                    var characterDummy = MBObjectManager.Instance.GetObject<BLCharacterObject>("bl_character_" + team.Culture);
-                    if (characterDummy != null)
-                    {
-                        MBObjectManager.Instance.UnregisterObject(characterDummy);
-                    }
-                    var heroClass = MBObjectManager.Instance.GetObject<MultiplayerClassDivisions.MPHeroClass>("bl_character_" + team.Culture + "_class_division");
-                    if (heroClass != null)
-                    {
-                        MBObjectManager.Instance.UnregisterObject(heroClass);
-                    }
+                //            basicCultureObject = (BasicCultureObject)MBObjectManager.Instance.CreateObjectFromXmlNode(culture);
+                //        }
+                //        else
+                //        {
+                //            basicCultureObject = MBObjectManager.Instance.GetObject<BasicCultureObject>(team.Culture);
+                //        }
 
 
-                    //var heroes = MultiplayerClassDivisions.GetMPHeroClasses(basicCultureObject);
-                    //if (heroes.IsEmpty())
-                    //{
-                    var characterXml = BLBasicObject2Xml.createDummyCharacter(basicCultureObject);
-                    BLCharacterObject blCharacterObject = (BLCharacterObject)MBObjectManager.Instance.CreateObjectFromXmlNode(characterXml);
-                    BLReferentialHolder.basicCharacterObjects.Add(blCharacterObject);
+                //        //Create dummy character hero for culture
+                //        var characterDummy = MBObjectManager.Instance.GetObject<BLCharacterObject>("bl_character_" + team.Culture);
+                //        if (characterDummy != null)
+                //        {
+                //            MBObjectManager.Instance.UnregisterObject(characterDummy);
+                //        }
+                //        var heroClass = MBObjectManager.Instance.GetObject<MultiplayerClassDivisions.MPHeroClass>("bl_character_" + team.Culture + "_class_division");
+                //        if (heroClass != null)
+                //        {
+                //            MBObjectManager.Instance.UnregisterObject(heroClass);
+                //        }
 
-                    var classDivisionXml = BLBasicObject2Xml.createClassDivision(blCharacterObject);
-                    var classDivision = MBObjectManager.Instance.CreateObjectFromXmlNode(classDivisionXml);
-                    //}
 
-                }
+                //        //var heroes = MultiplayerClassDivisions.GetMPHeroClasses(basicCultureObject);
+                //        //if (heroes.IsEmpty())
+                //        //{
+                //        // Create dummy character and dummy class division/hero for the faction/culture
+                //        var characterXml = BLBasicObject2Xml.createDummyCharacter(basicCultureObject);
+                //        BLCharacterObject blCharacterObject = (BLCharacterObject)MBObjectManager.Instance.CreateObjectFromXmlNode(characterXml);
+                //        BLReferentialHolder.basicCharacterObjects.Add(blCharacterObject);
+
+                //        var classDivisionXml = BLBasicObject2Xml.createClassDivision(blCharacterObject);
+                //        var classDivision = MBObjectManager.Instance.CreateObjectFromXmlNode(classDivisionXml);
+                //        //}
+
+                //    }
+                //}
 
                 XmlSerializer x = new XmlSerializer(typeof(List<BLCharacter>));
                 XmlDocument doc = new XmlDocument();
@@ -228,6 +249,8 @@ namespace BattleLink.Server
 
                 }
 
+                BLSendReferential2Client.setCharacters(BLReferentialHolder.basicCharacterObjects);
+
 
                 //var a = MultiplayerOptions.OptionType.CultureTeam1.GetStrValue();
                 //var a1 = MultiplayerOptions.OptionType.CultureTeam2.GetStrValue();
@@ -251,6 +274,20 @@ namespace BattleLink.Server
 
                 List<IUdpNetworkHandler> gameNetworkHandler = GameNetwork.NetworkHandlers;
                 var referentialUdpNetwork = new BLSendReferential2Client();
+                BLSendReferential2Client.setInitRecord(mir, BLReferentialHolder.battle);
+
+                //foreach (NetworkCommunicator networkPeer in GameNetwork.NetworkPeers)
+                //{
+                //    if (!networkPeer.IsServerPeer)
+                //    {
+                //        GameNetwork.BeginModuleEventAsServer(networkPeer);
+                //        GameNetwork.WriteMessage((GameNetworkMessage)new MultiplayerIntermissionMapItemAdded(mir.SceneName));
+                //        GameNetwork.EndModuleEventAsServer();
+                //    }
+                //}
+
+                //referentialUdpNetwork.setSiegeEngines(BLReferentialHolder.battle);
+
                 if (!gameNetworkHandler.Contains(referentialUdpNetwork))
                 {
                     gameNetworkHandler.Insert(1, new BLSendReferential2Client());
@@ -259,8 +296,9 @@ namespace BattleLink.Server
 
 
                 // based on CaptainGameMode
-                InitializeMissionBehaviorsDelegate behaviors = (Mission) => new MissionBehavior[]{
-
+                InitializeMissionBehaviorsDelegate behaviors = (Mission) =>
+                {
+                    var listBehaviors = new List<MissionBehavior>{
                             (MissionBehavior) MissionLobbyComponent.CreateBehavior(),
                             (MissionBehavior) new BLMissionMpDomination(),//MissionMultiplayerFlagDomination
                             //(MissionBehavior) new MissionMultiplayerFlagDomination(MultiplayerGameType.Captain),//MissionMultiplayerFlagDomination
@@ -291,6 +329,50 @@ namespace BattleLink.Server
                              //new BattleAgentLogic(),
                             // new RBDebugMissionLogic(),
                             new BannerBearerLogic(),
+                    };
+
+                     if (BLReferentialHolder.battle.siege!=null)
+                     {
+                        // note: needs 100 men +5/sw for the attacker else TacticBreachWalls will stop using siege engine
+
+                        var siege = BLReferentialHolder.battle.siege;
+                        int siegeIndex = 0;
+                        var wAtt = siege.siegeWeaponsAtt.Select(x =>
+                        {
+                            SiegeEngineType type = MBObjectManager.Instance.GetObject<SiegeEngineType>(x.type);
+                            var s =  MissionSiegeWeapon.CreateCampaignWeapon(type, siegeIndex++, x.health, x.maxHealth);
+                            return s;
+                        }
+                        ).ToList();
+                        siegeIndex = 0;
+                        var wDef = siege.siegeWeaponsDef.Select(x =>
+                        {
+                            SiegeEngineType type = MBObjectManager.Instance.GetObject<SiegeEngineType>(x.type);
+                            return MissionSiegeWeapon.CreateCampaignWeapon(type, siegeIndex++, x.health, x.maxHealth);
+                        }
+                        ).ToList();
+
+                        listBehaviors.Add(new AmmoSupplyLogic(new List<BattleSideEnum> { BattleSideEnum.Defender }));
+                        listBehaviors.Add(new MissionSiegeEnginesLogic(wDef,wAtt));
+                        bool isSallyOut = false;
+                        bool isPlayerAttacker =true;
+                        bool isReliefForceAttack = false;
+
+                        //data.Type == DefaultSiegeEngineTypes.SiegeTower
+
+                        bool hasAnySiegeTower = wAtt.Exists(s=>{
+                            return DefaultSiegeEngineTypes.SiegeTower == s.Type;
+                        });
+                        listBehaviors.Add(new SiegeMissionPreparationHandler(isSallyOut, isReliefForceAttack, siege.wallHitPointsPercentages, hasAnySiegeTower));
+
+                        listBehaviors.Add(new EquipmentControllerLeaveLogic());
+
+                        listBehaviors.Add(new BLSiegeDeploymentHandler());
+                        listBehaviors.Add(new BLSiegeDeploymentMissionController());
+
+
+                    }
+                    return listBehaviors.ToArray();
                 };
 
                 MBDebug.Print("BattleLinkGameMode - StartMultiplayerGame - end", 0, DebugColor.Green);
@@ -312,12 +394,13 @@ namespace BattleLink.Server
         // TODO private class
         public static async Task EndAndSetNextMission()
         {
-            if (null != taskEndAndSetNextMission)
+            if (null != taskEndAndSetNextMission && !taskEndAndSetNextMission.IsCompleted && !taskEndAndSetNextMission.IsFaulted)
             {
                 MBDebug.Print("BattleLinkGameMode - EndAndSetNextMission - already have EndAndSetNextMission", 0, DebugColor.Red);
                 return;
             }
-            if (BLReferentialHolder.nextBattleInitializerPending)
+			//dont stop if we resolve a pending battle
+            if (BLReferentialHolder.currentBattleInitializerPending)
             {
                 MBDebug.Print("BattleLinkGameMode - EndAndSetNextMission - battle in pending state is processing -> no stop", 0, DebugColor.Red);
                 return;

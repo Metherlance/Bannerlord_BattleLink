@@ -48,6 +48,7 @@ namespace BattleLink.Common
     {
         public short partyId = -1;
         public string characterStringId = "";
+        public string playerUserName;
 
         public short agentId;
         public float health;// TODO remove no health on OnAgentCreated

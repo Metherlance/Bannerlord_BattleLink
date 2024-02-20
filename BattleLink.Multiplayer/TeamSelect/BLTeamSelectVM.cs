@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TaleWorlds.Core;
+using TaleWorlds.GauntletUI.BaseTypes;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
@@ -34,9 +35,13 @@ namespace BattleLink.TeamSelect
 
         private bool _isCancelDisabled;
 
-        private BLTeamSelectTeamVM _team1;
+        private BLTeamSelectTeamVM _teamAttVM;
 
-        private BLTeamSelectTeamVM _team2;
+        private BLTeamSelectTeamVM _teamDefVM;
+
+        private BLTeamSelectTeamVM _team3;
+
+        private BLTeamSelectTeamVM _team4;
 
         private BLTeamSelectTeamVM _teamSpectators;
 
@@ -67,14 +72,47 @@ namespace BattleLink.TeamSelect
             _gameMode = mission.GetMissionBehavior<MissionMultiplayerGameModeBaseClient>();
             MissionScoreboardComponent missionBehavior = mission.GetMissionBehavior<MissionScoreboardComponent>();
             IsRoundCountdownAvailable = _gameMode.IsGameModeUsingRoundCountdown;
-            Team team = teams.FirstOrDefault((t) => t.Side == BattleSideEnum.None);
-            TeamSpectators = new BLTeamSelectTeamVM(missionBehavior, team, null, null, onChangeTeamTo);
-            Team team2 = teams.FirstOrDefault((t) => t.Side == BattleSideEnum.Attacker);
+
+            Team teamSpec = teams.FirstOrDefault((t) => t.Side == BattleSideEnum.None);
+            TeamSpectators = new BLTeamSelectTeamVM(missionBehavior, teamSpec, null, null, onChangeTeamTo);
+            
+            Team teamAtt = teams.FirstOrDefault((t) => t.Side == BattleSideEnum.Attacker);
             BasicCultureObject basicCultureObject = MBObjectManager.Instance.GetObject<BasicCultureObject>(MultiplayerOptions.OptionType.CultureTeam1.GetStrValue(MultiplayerOptions.MultiplayerOptionsAccessMode.CurrentMapOptions));
-            Team1 = new BLTeamSelectTeamVM(missionBehavior, team2, basicCultureObject, BannerCode.CreateFrom(team2.Banner), onChangeTeamTo);
-            Team team3 = teams.FirstOrDefault((t) => t.Side == BattleSideEnum.Defender);
+            Team1 = new BLTeamSelectTeamVM(missionBehavior, teamAtt, basicCultureObject, BannerCode.CreateFrom(teamAtt.Banner), onChangeTeamTo);
+
+            Team teamAtt2 = teams.FirstOrDefault((t) => t.Side == BattleSideEnum.Attacker && !t.Equals(teamAtt));
+            if (teamAtt2 != null)
+            {
+                var bannerCode = BannerCode.CreateFrom(teamAtt2.Banner);
+                //var bannerCode = BannerCode.CreateFrom("34.154.154.1536.1536.764.764.1.0.0.411.155.155.454.454.764.764.0.0.0");
+                Team3 = new BLTeamSelectTeamVM(missionBehavior, teamAtt2, basicCultureObject, bannerCode, onChangeTeamTo);
+                IsTeam3Hidden = false;
+                Width+= 400;
+            }
+            else
+            {
+                Team3 = Team1;
+                IsTeam3Hidden = true;
+            }
+
+            Team teamDef = teams.FirstOrDefault((t) => t.Side == BattleSideEnum.Defender);
             basicCultureObject = MBObjectManager.Instance.GetObject<BasicCultureObject>(MultiplayerOptions.OptionType.CultureTeam2.GetStrValue(MultiplayerOptions.MultiplayerOptionsAccessMode.CurrentMapOptions));
-            Team2 = new BLTeamSelectTeamVM(missionBehavior, team3, basicCultureObject, BannerCode.CreateFrom(team3.Banner), onChangeTeamTo);
+            Team2 = new BLTeamSelectTeamVM(missionBehavior, teamDef, basicCultureObject, BannerCode.CreateFrom(teamDef.Banner), onChangeTeamTo);
+
+            Team teamDef2 = teams.FirstOrDefault((t) => t.Side == BattleSideEnum.Defender && !t.Equals(teamDef));
+            if (teamDef2 != null)
+            {
+                Team4 = new BLTeamSelectTeamVM(missionBehavior, teamDef2, basicCultureObject, BannerCode.CreateFrom(teamDef2.Banner), onChangeTeamTo);
+                IsTeam4Hidden = false;
+                Width += 400;
+            }
+            else
+            {
+                Team4 = Team2;
+                IsTeam4Hidden = true;
+            }
+
+
             if (GameNetwork.IsMyPeerReady)
             {
                 _missionPeer = GameNetwork.MyPeer.GetComponent<MissionPeer>();
@@ -89,8 +127,10 @@ namespace BattleLink.TeamSelect
             AutoassignLbl = new TextObject("{=bON4Kn6B}Auto Assign", null).ToString();
             TeamSelectTitle = new TextObject("{=aVixswW5}Team Selection", null).ToString();
             GamemodeLbl = GameTexts.FindText("str_multiplayer_official_game_type_name", _gamemodeStr).ToString();
-            Team1.RefreshValues();
-            _team2.RefreshValues();
+            _teamAttVM.RefreshValues();
+            _teamDefVM.RefreshValues();
+            _team3.RefreshValues();
+            _team4.RefreshValues();
             _teamSpectators.RefreshValues();
         }
 
@@ -113,6 +153,17 @@ namespace BattleLink.TeamSelect
                 {
                     team.SetIsDisabled(false, false);
                 }
+
+                if (Team3!= null)
+                {
+                    Team3.SetIsDisabled(false, false);
+                }
+
+                if (Team4 != null)
+                {
+                    Team4.SetIsDisabled(false, false);
+                }
+
                 BLTeamSelectTeamVM team2 = Team2;
                 if (team2 == null)
                 {
@@ -123,8 +174,8 @@ namespace BattleLink.TeamSelect
             }
             else
             {
-                BLTeamSelectTeamVM teamSpectators2 = TeamSpectators;
-                if (teamSpectators2 != null)
+                BLTeamSelectTeamVM teamSpectatorsDup = TeamSpectators;
+                if (teamSpectatorsDup != null)
                 {
                     bool flag = false;
                     bool flag2;
@@ -137,10 +188,11 @@ namespace BattleLink.TeamSelect
                         BLTeamSelectTeamVM teamSpectators3 = TeamSpectators;
                         flag2 = disabledTeams.Contains(teamSpectators3 != null ? teamSpectators3.Team : null);
                     }
-                    teamSpectators2.SetIsDisabled(flag, flag2);
+                    teamSpectatorsDup.SetIsDisabled(flag, flag2);
                 }
-                BLTeamSelectTeamVM team3 = Team1;
-                if (team3 != null)
+                
+                BLTeamSelectTeamVM team1VM = Team1;
+                if (team1VM != null)
                 {
                     BLTeamSelectTeamVM team4 = Team1;
                     Team team5 = team4 != null ? team4.Team : null;
@@ -156,8 +208,23 @@ namespace BattleLink.TeamSelect
                         BLTeamSelectTeamVM team6 = Team1;
                         flag4 = disabledTeams.Contains(team6 != null ? team6.Team : null);
                     }
-                    team3.SetIsDisabled(flag3, flag4);
+                    team1VM.SetIsDisabled(flag3, flag4);
                 }
+
+                if (Team3 != null)
+                {
+                    bool isInTeam = Team3.Team == (_missionPeer != null ? _missionPeer.Team : null);
+                    bool isDisableTeam = disabledTeams!=null && disabledTeams.Contains(Team3.Team);
+                    Team3.SetIsDisabled(isInTeam, isDisableTeam);
+                }
+
+                if (Team4 != null)
+                {
+                    bool isInTeam = Team4.Team == (_missionPeer != null ? _missionPeer.Team : null);
+                    bool isDisableTeam = disabledTeams != null && disabledTeams.Contains(Team4.Team);
+                    Team4.SetIsDisabled(isInTeam, isDisableTeam);
+                }
+
                 BLTeamSelectTeamVM team7 = Team2;
                 if (team7 == null)
                 {
@@ -182,23 +249,56 @@ namespace BattleLink.TeamSelect
             }
         }
 
-        public void RefreshPlayerAndBotCount(int playersCountOne, int playersCountTwo, int botsCountOne, int botsCountTwo)
+
+        public void RefreshPlayerAndBotCount(Team team, int playerCountForTeam, int nbBot)
         {
-            MBTextManager.SetTextVariable("PLAYER_COUNT", playersCountOne.ToString(), false);
-            Team1.DisplayedSecondary = new TextObject("{=Etjqamlh}{PLAYER_COUNT} Players", null).ToString();
-            MBTextManager.SetTextVariable("BOT_COUNT", botsCountOne.ToString(), false);
-            Team1.DisplayedSecondarySub = new TextObject("{=eCOJSSUH}({BOT_COUNT} Bots)", null).ToString();
-            MBTextManager.SetTextVariable("PLAYER_COUNT", playersCountTwo.ToString(), false);
-            Team2.DisplayedSecondary = new TextObject("{=Etjqamlh}{PLAYER_COUNT} Players", null).ToString();
-            MBTextManager.SetTextVariable("BOT_COUNT", botsCountTwo.ToString(), false);
-            Team2.DisplayedSecondarySub = new TextObject("{=eCOJSSUH}({BOT_COUNT} Bots)", null).ToString();
+            if (team == Team1.Team)
+            {
+                RefreshPlayerAndBotCount(Team1, playerCountForTeam, nbBot);
+            }
+            else if (team == Team2.Team)
+            {
+                RefreshPlayerAndBotCount(Team2, playerCountForTeam, nbBot);
+            }
+            else if (team == Team3.Team)
+            {
+                RefreshPlayerAndBotCount(Team3, playerCountForTeam, nbBot);
+            }
+            else if (team == Team4.Team)
+            {
+                RefreshPlayerAndBotCount(Team4, playerCountForTeam, nbBot);
+            }
         }
 
-        public void RefreshFriendsPerTeam(IEnumerable<MissionPeer> friendsTeamOne, IEnumerable<MissionPeer> friendsTeamTwo)
+        private static void RefreshPlayerAndBotCount(BLTeamSelectTeamVM team, int playerCountForTeam, int nbBot)
         {
-            Team1.RefreshFriends(friendsTeamOne);
-            Team2.RefreshFriends(friendsTeamTwo);
+            MBTextManager.SetTextVariable("PLAYER_COUNT", playerCountForTeam.ToString(), false);
+            team.DisplayedSecondary = new TextObject("{=Etjqamlh}{PLAYER_COUNT} Players", null).ToString();
+            MBTextManager.SetTextVariable("BOT_COUNT", nbBot.ToString(), false);
+            team.DisplayedSecondarySub = new TextObject("{=eCOJSSUH}({BOT_COUNT} Bots)", null).ToString();
         }
+
+
+        public void RefreshFriendsForTeam(Team team, IEnumerable<MissionPeer> eFriends)
+        {
+            if (team==Team1.Team)
+            {
+                Team1.RefreshFriends(eFriends);
+            }
+            else if(team == Team2.Team)
+            {
+                Team2.RefreshFriends(eFriends);
+            }
+            else if (team == Team3.Team)
+            {
+                Team3.RefreshFriends(eFriends);
+            }
+            else if (team == Team4.Team)
+            {
+                Team4.RefreshFriends(eFriends);
+            }
+        }
+
 
         [UsedImplicitly]
         public void ExecuteCancel()
@@ -217,13 +317,13 @@ namespace BattleLink.TeamSelect
         {
             get
             {
-                return _team1;
+                return _teamAttVM;
             }
             set
             {
-                if (value != _team1)
+                if (value != _teamAttVM)
                 {
-                    _team1 = value;
+                    _teamAttVM = value;
                     OnPropertyChangedWithValue(value, "Team1");
                 }
             }
@@ -234,17 +334,52 @@ namespace BattleLink.TeamSelect
         {
             get
             {
-                return _team2;
+                return _teamDefVM;
             }
             set
             {
-                if (value != _team2)
+                if (value != _teamDefVM)
                 {
-                    _team2 = value;
+                    _teamDefVM = value;
                     OnPropertyChangedWithValue(value, "Team2");
                 }
             }
         }
+
+        [DataSourceProperty]
+        public BLTeamSelectTeamVM Team3
+        {
+            get
+            {
+                return _team3;
+            }
+            set
+            {
+                if (value != _team3)
+                {
+                    _team3 = value;
+                    OnPropertyChangedWithValue(value, "Team3");
+                }
+            }
+        }
+
+        [DataSourceProperty]
+        public BLTeamSelectTeamVM Team4
+        {
+            get
+            {
+                return _team4;
+            }
+            set
+            {
+                if (value != _team4)
+                {
+                    _team4= value;
+                    OnPropertyChangedWithValue(value, "Team4");
+                }
+            }
+        }
+
 
         [DataSourceProperty]
         public BLTeamSelectTeamVM TeamSpectators
@@ -352,5 +487,39 @@ namespace BattleLink.TeamSelect
                 OnPropertyChangedWithValue(value, "IsCancelDisabled");
             }
         }
+
+        private bool _isTeam3Hidden;
+        [DataSourceProperty]
+        public bool IsTeam3Hidden
+        {
+            get
+            {
+                return _isTeam3Hidden;
+            }
+            set
+            {
+                _isTeam3Hidden = value;
+                OnPropertyChangedWithValue(value, "IsTeam3Hidden");
+            }
+        }
+
+        private bool _isTeam4Hidden;
+        [DataSourceProperty]
+        public bool IsTeam4Hidden 
+        { 
+            get
+            {
+                 return _isTeam4Hidden;
+            }
+            set
+            {
+                _isTeam4Hidden = value;
+                OnPropertyChangedWithValue(value, "IsTeam4Hidden");
+            } 
+        }
+
+
+        [DataSourceProperty]
+        public float Width = 800;
     }
 }

@@ -295,6 +295,8 @@
     <Compile Include="BattleLinkLogReader.cs" />
     <Compile Include="BattleLinkSingleplayerBehavior.cs" />
     <Compile Include="BLBattleAgentOriginSP.cs" />
+    <Compile Include="Patch\MissionStatePatch.cs" />
+    <Compile Include="Patch\AgentPatch.cs" />
     <Compile Include="SubModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Resources\SubModule.xml" />
@@ -312,6 +314,10 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Patch\Permanent\" />
+    <Folder Include="Patch\Temp\" />
   </ItemGroup>
   <!-- Post-Build -->
   <PropertyGroup>

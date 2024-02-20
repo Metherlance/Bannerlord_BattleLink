@@ -137,7 +137,15 @@ namespace BattleLink.Views
             _dataSource = new BLTeamSelectVM(Mission, new Action<Team>(OnChangeTeamTo), new Action(OnAutoassign), new Action(OnClose), Mission.Teams, strValue);
             _dataSource.RefreshDisabledTeams(_disabledTeams);
             _gauntletLayer = new GauntletLayer(ViewOrderPriority, "GauntletLayer", false);
-            _gauntletLayer.LoadMovie("MultiplayerTeamSelection", _dataSource);
+            var movie = _gauntletLayer.LoadMovie("BLMultiplayerTeamSelection", _dataSource);
+           
+            // bad but this wont works else
+            var rootW = movie.RootWidget;
+            rootW.Children[0].SuggestedWidth = _dataSource.Width;
+            rootW.Children[0].Children[6].IsHidden = _dataSource.IsTeam3Hidden;
+            rootW.Children[0].Children[7].IsHidden = _dataSource.IsTeam4Hidden;
+
+            //_gauntletLayer.LoadMovie("MultiplayerTeamSelection", _dataSource);
             _gauntletLayer.InputRestrictions.SetInputRestrictions(true, InputUsageMask.Mouse);
             MissionScreen.AddLayer(_gauntletLayer);
             MissionScreen.SetCameraLockState(true);
@@ -226,11 +234,16 @@ namespace BattleLink.Views
             {
                 return;
             }
-            IEnumerable<MissionPeer> enumerable = from x in _multiplayerTeamSelectComponent.GetFriendsForTeam(Mission.AttackerTeam)
-                                                  select x.GetComponent<MissionPeer>();
-            IEnumerable<MissionPeer> enumerable2 = from x in _multiplayerTeamSelectComponent.GetFriendsForTeam(Mission.DefenderTeam)
-                                                   select x.GetComponent<MissionPeer>();
-            _dataSource.RefreshFriendsPerTeam(enumerable, enumerable2);
+
+            foreach (var team in Mission.Teams)
+            {
+                if (team.Side!=BattleSideEnum.None)
+                {
+                    IEnumerable<MissionPeer> eFriends = from x in _multiplayerTeamSelectComponent.GetFriendsForTeam(team)
+                                                        select x.GetComponent<MissionPeer>();
+                    _dataSource.RefreshFriendsForTeam(team, eFriends);
+                }
+            }
         }
 
         private void MissionLobbyComponentOnUpdateTeams()
@@ -241,11 +254,22 @@ namespace BattleLink.Views
             }
             List<Team> disabledTeams = _multiplayerTeamSelectComponent.GetDisabledTeams();
             _dataSource.RefreshDisabledTeams(disabledTeams);
-            int playerCountForTeam = _multiplayerTeamSelectComponent.GetPlayerCountForTeam(Mission.AttackerTeam);
-            int playerCountForTeam2 = _multiplayerTeamSelectComponent.GetPlayerCountForTeam(Mission.DefenderTeam);
-            int intValue = MultiplayerOptions.OptionType.NumberOfBotsTeam1.GetIntValue(MultiplayerOptions.MultiplayerOptionsAccessMode.CurrentMapOptions);
-            int intValue2 = MultiplayerOptions.OptionType.NumberOfBotsTeam2.GetIntValue(MultiplayerOptions.MultiplayerOptionsAccessMode.CurrentMapOptions);
-            _dataSource.RefreshPlayerAndBotCount(playerCountForTeam, playerCountForTeam2, intValue, intValue2);
+
+            foreach(var team in Mission.Teams)
+            {
+                if (team.Side==BattleSideEnum.Attacker)
+                {
+                    int playerCountForTeam = _multiplayerTeamSelectComponent.GetPlayerCountForTeam(team);
+                    int nbBot = MultiplayerOptions.OptionType.NumberOfBotsTeam1.GetIntValue(MultiplayerOptions.MultiplayerOptionsAccessMode.CurrentMapOptions);
+                    _dataSource.RefreshPlayerAndBotCount(team, playerCountForTeam, nbBot);
+                }
+                else if (team.Side == BattleSideEnum.Defender)
+                {
+                    int playerCountForTeam = _multiplayerTeamSelectComponent.GetPlayerCountForTeam(team);
+                    int nbBot = MultiplayerOptions.OptionType.NumberOfBotsTeam2.GetIntValue(MultiplayerOptions.MultiplayerOptionsAccessMode.CurrentMapOptions);
+                    _dataSource.RefreshPlayerAndBotCount(team, playerCountForTeam, nbBot);
+                }
+            }
         }
 
         private void OnScoreboardToggled(bool isEnabled)

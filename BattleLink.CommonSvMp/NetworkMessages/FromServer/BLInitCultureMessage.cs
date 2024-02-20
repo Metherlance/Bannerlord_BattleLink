@@ -2,7 +2,7 @@
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.Network.Messages;
 
-namespace BattleLink.Common.Model
+namespace BattleLink.CommonSvMp.NetworkMessages.FromServer
 {
 
     /// <summary>
@@ -99,7 +99,7 @@ namespace BattleLink.Common.Model
 
         protected override string OnGetLogFormat()
         {
-            return "Sync character informations";
+            return "Sync culture informations";
         }
 
         protected override MultiplayerMessageFilter OnGetLogFilter()

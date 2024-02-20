@@ -36,6 +36,30 @@ namespace BattleLink.Common.Spawn.Warmup
                     }
                 }
             }
+
+            // for castle map (no sp_visual_XXX)
+            if (SpawnPoints.IsEmpty())
+            {
+                GameEntity entityWithTag = Mission.Current.Scene.FindEntityWithTag("sp_battle_set");
+                if (entityWithTag != null)
+                {
+                    SpawnPoints = entityWithTag.GetChildren();
+                    int index = 0;
+                    foreach (var spawn in SpawnPoints)
+                    {
+                        spawn.AddTag("sp_visual_" + index);//just for warmup round
+                        //spawn.AddTag("starting");
+                        //spawn.AddTag(index%2==0 ? "attacker" : "defender");
+
+                        index += 1;
+                        if (index > 5)
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+
         }
         public override MatrixFrame GetSpawnFrame(Team team, bool hasMount, bool isInitialSpawn)
         {

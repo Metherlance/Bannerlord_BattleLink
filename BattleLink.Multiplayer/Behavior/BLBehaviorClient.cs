@@ -1,14 +1,14 @@
-﻿using BattleLink.Common.Model;
+﻿using BattleLink.CommonSvMp.NetworkMessages.FromServer;
 using BattleLink.Handler;
 using NetworkMessages.FromServer;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 using TaleWorlds.Engine;
-using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.Network.Messages;
 using static TaleWorlds.Library.Debug;
+using static TaleWorlds.MountAndBlade.GameNetwork;
 
 namespace BattleLink.Client.Behavior
 {
@@ -27,11 +27,63 @@ namespace BattleLink.Client.Behavior
 
         //bool notInit = true;
 
-
-        //public override void OnAddTeam(Team team)
+        //public override void OnBehaviorInitialize()
         //{
-        //    MBDebug.Print("BattleLinkGameMode - OnAddTeam - ", 0, DebugColor.Green);//1
+        //    base.OnBehaviorInitialize();
         //}
+
+        //public override void OnAfterMissionCreated()
+        //{
+        //    var _missionNetworkMessageHandlerRegisterer = new GameNetwork.NetworkMessageHandlerRegistererContainer();
+        //    _missionNetworkMessageHandlerRegisterer.RegisterBaseHandler<BLMissionInitializerRecordMessage>(BLMissionInitializerRecordHandler.HandleServerEventMissionInitializerRecordMessage);
+        //    _missionNetworkMessageHandlerRegisterer.RegisterMessages();
+        //}
+
+        //public override void OnRemoveBehavior()
+        //{
+        //    base.OnRemoveBehavior();
+        //    AddRemoveMessageHandlers(NetworkMessageHandlerRegisterer.RegisterMode.Remove);
+        //}
+
+        //public void AddRemoveMessageHandlers(NetworkMessageHandlerRegisterer.RegisterMode mode)
+        //{
+        //    NetworkMessageHandlerRegisterer reg = new NetworkMessageHandlerRegisterer(mode);
+        //    //reg.Register<BLMissionInitializerRecordMessage>(BLMissionInitializerRecordHandler.HandleServerEventMissionInitializerRecordMessage);
+
+        //    reg.RegisterBaseHandler<BLMissionInitializerRecordMessage>(BLMissionInitializerRecordHandler.HandleServerEventMissionInitializerRecordMessage);
+        //}
+
+
+        public override void OnAddTeam(Team team)
+        {
+            //// reason : bs HandleServerEventAddTeam
+            //BLInitTeamMessage bLInitTeamMessage = BLInitTeamHandler.teamInfos[team.TeamIndex];
+            //if (bLInitTeamMessage!=null)
+            //{
+            //    Banner banner = new Banner(bLInitTeamMessage.FactionBannerKey);
+            //    team.Banner = banner;
+            //}
+
+            //Scene scene = Mission.Current.Scene;
+            //var a = scene.TimeOfDay;
+
+            MBDebug.Print("BattleLinkGameMode - OnAddTeam - ", 0, DebugColor.Green);//1
+        }
+
+        public override void OnRenderingStarted()
+        {
+            Scene scene = Mission.Current.Scene;
+            var a = scene.TimeOfDay;
+
+            MBDebug.Print("BattleLinkGameMode - OnRenderingStarted - ", 0, DebugColor.Green);//1
+        }
+
+        //public override void OnAfterMissionCreated()
+        //{
+        //    // no Mission.Current.Scene here
+        //    MBDebug.Print("BattleLinkGameMode - OnAfterMissionCreated - ", 0, DebugColor.Green);//1
+        //}
+
 
 
         // WTF !!!?? DElete that
@@ -70,6 +122,9 @@ namespace BattleLink.Client.Behavior
         {
             base.OnBehaviorInitialize();
 
+
+            //AddRemoveMessageHandlers(NetworkMessageHandlerRegisterer.RegisterMode.Add);
+
             {
 
                 var oDicIndexType = fieldIndexContainer.GetValue(null);
@@ -82,6 +137,22 @@ namespace BattleLink.Client.Behavior
                 listCultureHandler.Clear();
                 listCultureHandler.Add(BLInitCultureHandler.HandleServerEventInitCultureMessage);
                // InformationManager.DisplayMessage(new InformationMessage("BLInitCultureMessage Handler"));
+
+            }
+
+
+            {
+
+                var oDicIndexType = fieldIndexContainer.GetValue(null);
+                Dictionary<System.Type, int> dicIndexType = (Dictionary<System.Type, int>)oDicIndexType;
+                int indexType = dicIndexType.TryGetValue(typeof(BLInitTeamMessage), out indexType) ? indexType : -1;
+
+                var valu = fieldContainer.GetValue(null);
+                Dictionary<int, List<GameNetworkMessage.ServerMessageHandlerDelegate<GameNetworkMessage>>> value = (Dictionary<int, List<GameNetworkMessage.ServerMessageHandlerDelegate<GameNetworkMessage>>>)valu;
+                var listCultureHandler = value[indexType];
+                listCultureHandler.Clear();
+                listCultureHandler.Add(BLInitTeamHandler.HandleServerEventInitTeamMessage);
+                // InformationManager.DisplayMessage(new InformationMessage("BLInitTeamMessage Handler"));
 
             }
 
@@ -112,9 +183,46 @@ namespace BattleLink.Client.Behavior
                // InformationManager.DisplayMessage(new InformationMessage("CreateAgent Handler"));
             }
 
+
+            // come on .... mir doesnt works ... replace:
+            //CampaignSystem.GameState.IMapStateHandler.AfterTick(float dt) Ligne 1566
+            //MapScreen.TickVisuals(float realDt) Ligne 2086
+            // or
+            // sun was init by SandBoxMissions.CreateSandBoxMissionInitializerRecord(scene, sceneLevels, decalAtlasGroup: DecalAtlasGroup.Town)
+            var scene = Mission.Current.Scene;
+            if (BLMissionInitializerRecordHandler.message != null && scene.GetName().Equals(BLMissionInitializerRecordHandler.message.SceneName))
+            {
+                //scene.TimeOfDay = BLMissionInitializerRecordHandler.message.TimeOfDay;
+                //scene.SetRainDensity(BLMissionInitializerRecordHandler.message.RainInfoDensity);
+                //scene.SetSnowDensity(BLMissionInitializerRecordHandler.message.SnowInfoDensity);
+                //scene.SetSkyBrightness(BLMissionInitializerRecordHandler.message.SkyInfoBrightness);
+                //scene.SetDrynessFactor(BLMissionInitializerRecordHandler.message.TimeInfoDrynessFactor);
+                //scene.SetWinterTimeFactor(BLMissionInitializerRecordHandler.message.TimeInfoWinterTimeFactor);
+
+                ////scene.SetSun(ref BLMissionInitializerRecordHandler.message.SunInfoColor, BLMissionInitializerRecordHandler.message.SunInfoAltitude, BLMissionInitializerRecordHandler.message.SunInfoAngle, BLMissionInitializerRecordHandler.message.SunInfoRayStrength);
+                //scene.SetSunAngleAltitude(altitude: BLMissionInitializerRecordHandler.message.SunInfoAltitude, angle: BLMissionInitializerRecordHandler.message.SunInfoAngle);
+                //scene.SetSunSize(BLMissionInitializerRecordHandler.message.SunInfoSize);
+                //scene.set
+                // SunInfoRayStrength?
+
+
+                //    long season = BLMissionInitializerRecordHandler.message.TimeInfoSeason;
+
+
+                //    float timeFactorForSnow;
+                //    new DefaultMapWeatherModel().GetSeasonTimeFactorOfCampaignTime(CampaignTime.Seconds((season * 1814400L+((long)(3600f* scene.TimeOfDay)))), out timeFactorForSnow, out float _, false);
+                //    MBMapScene.SetSeasonTimeFactor(scene, timeFactorForSnow);
+
+                //MapWeatherVisualManager
+
+
+            }
+
             MBDebug.Print("RBMultiplayerWarmupComponent - OnBehaviorInitialize ", 0, DebugColor.Green);
 
 
         }
+
+       
     }
 }

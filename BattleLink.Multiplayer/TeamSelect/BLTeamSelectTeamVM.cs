@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using BattleLink.Handler;
+using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,7 +39,7 @@ namespace BattleLink.TeamSelect
         private HintViewModel _friendsExtraHint;
         private Color _cultureColor1;
         private Color _cultureColor2;
-        //private string _factionName;
+        private string _factionName;
 
         [DataSourceProperty]
         public string CultureId
@@ -344,7 +345,18 @@ namespace BattleLink.TeamSelect
                 CultureColor1 = Color.FromUint(team.Color);
                 CultureColor2 = Color.FromUint(team.Color2);
             }
-            //_factionName = team.
+
+            if (team.Side!=BattleSideEnum.None)
+            {
+                _factionName = _culture.Name.Value;
+                if (BLInitTeamHandler.teamInfos[team.TeamIndex] != null)
+                {
+                    _factionName = BLInitTeamHandler.teamInfos[team.TeamIndex].name;
+                    // can be put in OnAddTeam but need reflexion
+                    bannercode = BannerCode.CreateFrom(BLInitTeamHandler.teamInfos[team.TeamIndex].FactionBannerKey);
+                    Banner = new ImageIdentifierVM(bannercode, nineGrid: true);
+                }
+            }
 
             _friends = new List<MPPlayerVM>();
             FriendAvatars = new MBBindingList<MPPlayerVM>();
@@ -361,11 +373,11 @@ namespace BattleLink.TeamSelect
             }
             else if (Team.Side == BattleSideEnum.Attacker)
             {
-                DisplayedPrimary = new TextObject("Att: " + _culture.Name).ToString();
+                DisplayedPrimary = new TextObject("Att: " + _factionName).ToString();
             }
             else
             {
-                DisplayedPrimary = new TextObject("Def: " + _culture.Name).ToString();
+                DisplayedPrimary = new TextObject("Def: " + _factionName).ToString();
             }
         }
 

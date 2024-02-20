@@ -12,6 +12,17 @@ using TaleWorlds.MountAndBlade.Network.Messages;
 using TaleWorlds.ObjectSystem;
 using static TaleWorlds.Library.Debug;
 using Module = TaleWorlds.MountAndBlade.Module;
+using System.Runtime.Serialization;
+using BattleLink.CommonSvMp.GameComponents;
+using TaleWorlds.CampaignSystem.CharacterDevelopment;
+using TaleWorlds.CampaignSystem.GameComponents;
+using TaleWorlds.CampaignSystem;
+using static TaleWorlds.CampaignSystem.Campaign;
+using NetworkMessages.FromClient;
+using BattleLink.CommonSvMp.NetworkMessages.FromServer;
+using TaleWorlds.MountAndBlade.Multiplayer.GauntletUI.Mission;
+using TaleWorlds.MountAndBlade.Multiplayer.NetworkComponents;
+using BattleLink.Client.Behavior;
 
 
 namespace BattleLink.Multiplayer
@@ -32,12 +43,18 @@ namespace BattleLink.Multiplayer
         //    InformationManager.DisplayMessage(new InformationMessage("BattleLink - OnMissionBehaviorInitialize", green));//2
         //}
 
-        //public override void OnBeforeMissionBehaviorInitialize(Mission mission)
-        //{
-        //    InformationManager.DisplayMessage(new InformationMessage("BattleLink - OnBeforeMissionBehaviorInitialize", green)); //1
+       // public override void OnBeforeMissionBehaviorInitialize(Mission mission)
+       // {
+
+           // mission.AddMissionBehavior(new BLBehaviorClient());
+
+            //InformationManager.DisplayMessage(new InformationMessage("BattleLink - OnBeforeMissionBehaviorInitialize", green)); //1
         //}
+
         protected override void OnSubModuleLoad()
         {
+           // var a22 = FormatterServices.GetUninitializedObject(typeof(BaseNetworkComponent));
+
             base.OnSubModuleLoad();
             InformationManager.DisplayMessage(new InformationMessage("BattleLink - OnSubModuleLoad", green));
 
@@ -67,7 +84,10 @@ namespace BattleLink.Multiplayer
 
 
             // GameModelsManager part du dernier élement
-            starterObject.AddModel(new BLAgentStatCalculateModel());
+            starterObject.AddModel(new BLAgentStatCalculateModelOld());
+            starterObject.AddModel(new DefaultMapWeatherModel());
+            // MultiplayerAgentStatCalculateModel
+
 
             {
                 var xmlDocument = MBObjectManager.GetMergedXmlForManaged("CraftingPieces", false, false, "MultiplayerGame");
@@ -84,6 +104,10 @@ namespace BattleLink.Multiplayer
                 MBObjectManager.Instance.RegisterType<MBEquipmentRoster>("EquipmentRoster", "EquipmentRosters", 51U, true, false);
                 MBObjectManager.Instance.LoadXml(xmlDocument);
             }
+
+            MBObjectManager.Instance.RegisterType<PerkObject>("Perk", "Perks", 19U, true, false);
+            MBObjectManager.Instance.RegisterType<SkillObject>("Skill", "Skills", 9U, true, false);
+            MBObjectManager.Instance.RegisterType<SkillEffect>("SkillEffect", "SkillEffects", 53U, true, false);
 
             MBObjectManager.Instance.RegisterType<BLCharacterObject>("BLCharacter", "BLCharacters", 60U, true, true);
 
@@ -113,8 +137,38 @@ namespace BattleLink.Multiplayer
 
         private void addReferentialHandler()
         {
+            //var _missionNetworkMessageHandlerRegisterer = new GameNetwork.NetworkMessageHandlerRegistererContainer();
+            //_missionNetworkMessageHandlerRegisterer.RegisterBaseHandler<BLMissionInitializerRecordMessage>(BLMissionInitializerRecordHandler.HandleServerEventMissionInitializerRecordMessage);
+            //_missionNetworkMessageHandlerRegisterer.RegisterMessages();
+
             var fieldIndexContainer = typeof(GameNetwork).GetField("_gameNetworkMessageTypesFromServer", BindingFlags.NonPublic | BindingFlags.Static);
             var fieldContainer = typeof(GameNetwork).GetField("_fromServerBaseMessageHandlers", BindingFlags.NonPublic | BindingFlags.Static);
+
+            {
+                var oDicIndexType = fieldIndexContainer.GetValue(null);
+                Dictionary<System.Type, int> dicIndexType = (Dictionary<System.Type, int>)oDicIndexType;
+                int indexType = dicIndexType.TryGetValue(typeof(BLMissionInitializerRecordMessage), out indexType) ? indexType : -1;
+
+                var valu = fieldContainer.GetValue(null);
+                Dictionary<int, List<GameNetworkMessage.ServerMessageHandlerDelegate<GameNetworkMessage>>> value = (Dictionary<int, List<GameNetworkMessage.ServerMessageHandlerDelegate<GameNetworkMessage>>>)valu;
+                var listMirHandler = value[indexType];
+                listMirHandler.Clear();
+                listMirHandler.Add(BLMissionInitializerRecordHandler.HandleServerEventMissionInitializerRecordMessage);
+                // InformationManager.DisplayMessage(new InformationMessage("BLInitCultureMessage Handler"));
+            }
+
+            //{
+            //    var oDicIndexType = fieldIndexContainer.GetValue(null);
+            //    Dictionary<System.Type, int> dicIndexType = (Dictionary<System.Type, int>)oDicIndexType;
+            //    int indexType = dicIndexType.TryGetValue(typeof(BLSiegeEngineMessage), out indexType) ? indexType : -1;
+
+            //    var valu = fieldContainer.GetValue(null);
+            //    Dictionary<int, List<GameNetworkMessage.ServerMessageHandlerDelegate<GameNetworkMessage>>> value = (Dictionary<int, List<GameNetworkMessage.ServerMessageHandlerDelegate<GameNetworkMessage>>>)valu;
+            //    var listCultureHandler = value[indexType];
+            //    listCultureHandler.Clear();
+            //    listCultureHandler.Add(BLBLSiegeEnginesHandler.HandleServerEventSiegeEngineMessageMessage);
+            //    // InformationManager.DisplayMessage(new InformationMessage("BLInitCultureMessage Handler"));
+            //}
 
             {
 
@@ -158,6 +212,41 @@ namespace BattleLink.Multiplayer
                 //InformationManager.DisplayMessage(new InformationMessage("CreateAgent Handler"));
             }
         }
+
+        public override void OnGameInitializationFinished(Game game)
+        {
+            MBDebug.Print("BattleLink - OnGameInitializationFinished");
+            base.OnGameInitializationFinished(game);
+
+            Campaign campaign = new Campaign(CampaignGameMode.Campaign);
+            campaign.SetLoadingParameters(GameLoadingType.SavedCampaign);
+          
+            // Skills are load in InitializeDefaultGameObjects after InitializeGameStarter
+            //var campaign = FormatterServices.GetUninitializedObject(typeof(Campaign));
+            //FieldInfo fiCampaignCurrent = typeof(Campaign).GetField("\u003CCurrent\u003Ek__BackingField", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+            //fiCampaignCurrent.SetValue(null, campaign);
+
+            var defaultPerks = new DefaultPerks();
+            FieldInfo fiCampaignPerks = typeof(Campaign).GetField("\u003CDefaultPerks\u003Ek__BackingField", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            fiCampaignPerks.SetValue(campaign, defaultPerks);
+
+            var defaultSkillEffects = new DefaultSkillEffects();
+            FieldInfo fiCampaignSkills = typeof(Campaign).GetField("\u003CDefaultSkillEffects\u003Ek__BackingField", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            fiCampaignSkills.SetValue(campaign, defaultSkillEffects);
+
+            //
+            List<GameModel> _gameModels = new List<GameModel>()
+            {
+                new DefaultCharacterDevelopmentModel(),
+                new DefaultMapWeatherModel(),
+            };
+            GameModels GameModels = new GameModels(_gameModels);
+            FieldInfo fiCampaignModels = typeof(Campaign).GetField("_gameModels", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            fiCampaignModels.SetValue(campaign, GameModels);
+
+            MBDebug.Print("BattleLink - OnGameInitializationFinished - End");//8
+        }
+
     }
 
 }

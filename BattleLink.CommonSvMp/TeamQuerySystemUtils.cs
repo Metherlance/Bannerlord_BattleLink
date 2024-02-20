@@ -3,6 +3,8 @@ using BattleLink.Common.Utils;
 using System;
 using System.Linq;
 using System.Reflection;
+using TaleWorlds.CampaignSystem.Extensions;
+using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
@@ -24,12 +26,21 @@ namespace BattleLink.Common
             battlePowerLogic.setMission(mission);
         }
 
+        /// <summary>
+        /// do it only once
+        /// </summary>
+        /// <param name="mission"></param>
         public static void setPowerFix(Mission mission)
         {
             MBDebug.Print("TeamQuerySystemUtils - setPowerFix", 0, DebugColor.Green);
             // battlePowerLogic.Mission = mission;
-            setPower(mission.AttackerTeam, mission.DefenderTeam);
-            setPower(mission.DefenderTeam, mission.AttackerTeam);
+            foreach (var team in mission.Teams)
+            {
+                if (BattleSideEnum.None != team.Side)
+                {
+                    setPower(team, mission);
+                }
+            }
         }
 
         public static void setPowerFix(Mission mission, float dt)
@@ -38,8 +49,13 @@ namespace BattleLink.Common
             {
                 MBDebug.Print("TeamQuerySystemUtils - setPowerFix", 0, DebugColor.Green);
                 // battlePowerLogic.Mission = mission;
-                setPower(mission.AttackerTeam, mission.DefenderTeam);
-                setPower(mission.DefenderTeam, mission.AttackerTeam);
+                foreach (var team in mission.Teams)
+                {
+                    if (BattleSideEnum.None != team.Side)
+                    {
+                        setPower(team, mission);
+                    }
+                }
             }
         }
 
@@ -57,20 +73,67 @@ namespace BattleLink.Common
         // }
 
 
-        private static void setPower(Team team, Team teamEn)
+        private static void setPower(Team team, Mission mission)
         {
             QueryData<float> qdRemainingPowerRatio = new QueryData<float>((Func<float>)(() =>
             {
-                float res = (float)(((double)MathF.Max(0.0f, battlePowerLogic.GetTotalTeamPower(team) - team.FormationsIncludingSpecialAndEmpty.Sum<Formation>((Func<Formation, float>)(f => team.QuerySystem.CasualtyHandler.GetCasualtyPowerLossOfFormation(f)))) + 1.0)
-                                / ((double)MathF.Max(0.0f, battlePowerLogic.GetTotalTeamPower(teamEn) - teamEn.FormationsIncludingSpecialAndEmpty.Sum<Formation>((Func<Formation, float>)(f => team.QuerySystem.CasualtyHandler.GetCasualtyPowerLossOfFormation(f)))) + 1.0));
+                float powerAlly = 0f;
+                float powerEn = 0f;
+                foreach (Team teamInMission in mission.Teams)
+                {
+                    if (BattleSideEnum.None==teamInMission.Side)
+                    {
+                        //spec team
+                    }
+                    else if (teamInMission.IsEnemyOf(team))
+                    {
+                        powerEn += battlePowerLogic.GetTotalTeamPower(teamInMission);
+                        foreach (Formation item3 in teamInMission.FormationsIncludingSpecialAndEmpty)
+                        {
+                            powerEn -= team.QuerySystem.CasualtyHandler.GetCasualtyPowerLossOfFormation(item3);
+                        }
+                    }
+                    else
+                    {
+                        powerAlly += battlePowerLogic.GetTotalTeamPower(teamInMission);
+                        foreach (Formation item4 in teamInMission.FormationsIncludingSpecialAndEmpty)
+                        {
+                            powerAlly -= team.QuerySystem.CasualtyHandler.GetCasualtyPowerLossOfFormation(item4);
+                        }
+                    }
+                }
+
+                powerAlly = MathF.Max(0f, powerAlly);
+                powerEn = MathF.Max(0f, powerEn);
+                float res = (powerAlly + 1f) / (powerEn + 1f);
                 return res;
+
             }), 5f);
             fTeamRemainingPowerRatio.SetValue(team.QuerySystem, qdRemainingPowerRatio);
 
             QueryData<float> qdTotalPowerRatio = new QueryData<float>((Func<float>)(() =>
             {
-                float res = (float)(((double)battlePowerLogic.GetTotalTeamPower(team) + 1.0) / ((double)battlePowerLogic.GetTotalTeamPower(teamEn) + 1.0));
+                float powerAlly = 0f;
+                float powerEn = 0f;
+                foreach (Team teamInMission in mission.Teams)
+                {
+                    if (BattleSideEnum.None == teamInMission.Side)
+                    {
+                        //spec team
+                    }
+                    else if (teamInMission.IsEnemyOf(team))
+                    {
+                        powerEn += battlePowerLogic.GetTotalTeamPower(teamInMission);
+                    }
+                    else
+                    {
+                        powerAlly += battlePowerLogic.GetTotalTeamPower(teamInMission);
+                    }
+                }
+
+                float res = (powerAlly + 1f) / (powerEn + 1f);
                 return res;
+
             }), 10f);
             fTeamTotalPowerRatio.SetValue(team.QuerySystem, qdTotalPowerRatio);
         }

@@ -1,10 +1,20 @@
-﻿using BattleLink.Common.Model;
-using BattleLink.CommonSvMp.Model;
+﻿using BattleLink.Common.Behavior;
+using BattleLink.Common.Debug;
+using BattleLink.CommonSvMp.GameComponents;
 using BattleLink.Server.Api;
+using NetworkMessages.FromServer;
 using SandBox.GameComponents;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Runtime.Serialization;
+using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.CharacterDevelopment;
+using TaleWorlds.CampaignSystem.ComponentInterfaces;
+using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.MountAndBlade;
+using TaleWorlds.MountAndBlade.Multiplayer.NetworkComponents;
 using TaleWorlds.ObjectSystem;
 using static TaleWorlds.Library.Debug;
 using Module = TaleWorlds.MountAndBlade.Module;
@@ -17,6 +27,14 @@ namespace BattleLink.Server
 
         protected override void OnSubModuleLoad()
         {
+          // var campaign = FormatterServices.GetUninitializedObject(typeof(MultiplayerIntermissionMapItemAdded));
+            //var campaign = FormatterServices.GetUninitializedObject(typeof(BaseNetworkComponent));
+            //var campaign = FormatterServices.GetUninitializedObject(typeof(BehaviorAssaultWalls));
+            //  var campaign = FormatterServices.GetUninitializedObject(typeof(SiegeWeapon));
+            //var campaign = FormatterServices.GetUninitializedObject(typeof(UsableMachine));
+            //var campaign = FormatterServices.GetUninitializedObject(typeof(SiegeWeaponController));
+            // var campaign = FormatterServices.GetUninitializedObject(typeof(FormationAI));
+
             MBDebug.Print("BattleLink - OnSubModuleLoad");
             base.OnSubModuleLoad();
 
@@ -50,9 +68,20 @@ namespace BattleLink.Server
             MBDebug.Print("BattleLink - InitializeGameStarter");
             base.InitializeGameStarter(game, starterObject);
 
-            // GameModelsManager part du dernier élement
-            starterObject.AddModel(new BLAgentStatCalculateModel());
-            starterObject.AddModel(new BLBattleBannerBearersModel());
+            // DefautlPerks
+
+
+
+            // sealed BLCharacterObject... needs to duplicate everything
+            // GameModelsManager iterate from last element to first
+            starterObject.AddModel(new BLAgentStatCalculateModelOld());
+            starterObject.AddModel(new DefaultMapWeatherModel());
+            //starterObject.AddModel(new BLBattleBannerBearersModel());
+            //starterObject.AddModel(new BLAgentApplyDamageModel());
+            //starterObject.AddModel(new BLStrikeMagnitudeModel());
+            //starterObject.AddModel(new SandboxApplyWeatherEffectsModel());
+
+
 
             {
                 var xmlDocument = MBObjectManager.GetMergedXmlForManaged("CraftingPieces", false, false, "MultiplayerGame");
@@ -69,6 +98,10 @@ namespace BattleLink.Server
                 MBObjectManager.Instance.RegisterType<MBEquipmentRoster>("EquipmentRoster", "EquipmentRosters", 51U, true, false);
                 MBObjectManager.Instance.LoadXml(xmlDocument);
             }
+
+            MBObjectManager.Instance.RegisterType<PerkObject>("Perk", "Perks", 19U, true, false);
+            MBObjectManager.Instance.RegisterType<SkillObject>("Skill", "Skills", 9U, true, false);
+            MBObjectManager.Instance.RegisterType<SkillEffect>("SkillEffect", "SkillEffects", 53U, true, false);
 
             //game.GameTextManager.LoadGameTexts();
             MBDebug.Print("BattleLink - InitializeGameStarter - End", 0, DebugColor.Green);//3
@@ -187,6 +220,29 @@ namespace BattleLink.Server
             MBDebug.Print("BattleLink - OnGameInitializationFinished");
             base.OnGameInitializationFinished(game);
 
+            // Skills are load in InitializeDefaultGameObjects after InitializeGameStarter
+            var campaign = FormatterServices.GetUninitializedObject(typeof(Campaign));
+            FieldInfo fiCampaignCurrent = typeof(Campaign).GetField("\u003CCurrent\u003Ek__BackingField", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+            fiCampaignCurrent.SetValue(null, campaign);
+            
+            var defaultPerks = new DefaultPerks();
+            FieldInfo fiCampaignPerks =  typeof(Campaign).GetField("\u003CDefaultPerks\u003Ek__BackingField", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            fiCampaignPerks.SetValue(campaign, defaultPerks);
+
+            var defaultSkillEffects = new DefaultSkillEffects();
+            FieldInfo fiCampaignSkills = typeof(Campaign).GetField("\u003CDefaultSkillEffects\u003Ek__BackingField", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            fiCampaignSkills.SetValue(campaign, defaultSkillEffects);
+
+            FieldInfo fiCampaignGameMode = typeof(Campaign).GetField("\u003CGameMode\u003Ek__BackingField", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            fiCampaignGameMode.SetValue(campaign, CampaignGameMode.Campaign);
+
+            List<GameModel> _gameModels = new List<GameModel>()
+            {
+                new DefaultCharacterDevelopmentModel(),
+            };
+            GameModels GameModels = new GameModels(_gameModels);
+            FieldInfo fiCampaignModels = typeof(Campaign).GetField("_gameModels", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            fiCampaignModels.SetValue(campaign, GameModels);
 
             MBDebug.Print("BattleLink - OnGameInitializationFinished - End");//8
         }
@@ -213,6 +269,10 @@ namespace BattleLink.Server
         {
             MBDebug.Print("BattleLink - OnMissionBehaviorInitialize");
             base.OnMissionBehaviorInitialize(mission);
+         
+            //mission.AddMissionBehavior(new BLDebugMissionLogic());
+            mission.AddMissionBehavior(new BLCommonMissionEndLogic());
+
             MBDebug.Print("BattleLink - OnMissionBehaviorInitialize");
         }
 

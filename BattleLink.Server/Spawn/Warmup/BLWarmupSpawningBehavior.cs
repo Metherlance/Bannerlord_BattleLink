@@ -1,4 +1,5 @@
 ﻿using BattleLink.Common.Behavior;
+using BattleLink.Common.DtoSpSv;
 using BattleLink.Common.Model;
 using System;
 using System.Linq;
@@ -125,10 +126,9 @@ namespace BattleLink.Common.Spawn.Warmup
 
         public static BLCharacterObject getRandomCharacter(Team team)
         {
-            var sides = BLReferentialHolder.listTeam;
+            (var sideDto, var teamDto) = BLReferentialHolder.getTeamDtoBy(team);
 
-            var side = sides.FindAll(x => team.Side.ToString().Equals(x.BattleSide)).First();
-            var party = side.Parties[0];
+            var party = teamDto.Parties[MBRandom.RandomInt(teamDto.Parties.Count)];
             var troops = party.Troops;
             string stringId = troops[MBRandom.RandomInt(troops.Count)].Id;
             var character = MBObjectManager.Instance.GetObject<BLCharacterObject>(stringId);

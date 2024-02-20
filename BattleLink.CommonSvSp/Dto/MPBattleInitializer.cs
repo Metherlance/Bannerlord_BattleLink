@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Serialization;
 using TaleWorlds.Core;
@@ -11,9 +12,69 @@ public class MPBattleInitializer
 {
     public MissionInitializerRecord MissionInitializerRecord;
     public List<BLCharacter> BLCharacters;
-    public List<Team> Teams;
+    public Battle battle;
     public List<Player> Players;
 }
+
+[XmlRoot(ElementName = "Battle")]
+public class Battle
+{
+    [XmlAttribute(AttributeName = "missionName")]
+    public string missionName;
+
+    [XmlAttribute(AttributeName = "mapEventType")]
+    public string mapEventType;
+    
+    [XmlElement(ElementName = "Side")]
+    public List<SideDto> Sides;
+
+    [XmlElement(ElementName = "siege")]
+    public Siege siege;
+
+    [XmlAttribute(AttributeName = "campaignTimeTick")]
+    public long campaignTimeTick;
+
+    [XmlElement(ElementName = "partyPosLogical")]
+    public Vec3Dto partyPosLogical;
+
+    [XmlAttribute(AttributeName = "gameId")]
+    public string gameId;
+
+    public Battle()
+    {
+        //for serialization
+    }
+}
+
+public class Vec3Dto
+{
+    [XmlAttribute(AttributeName = "x")]
+    public float x;
+
+    [XmlAttribute(AttributeName = "y")]
+    public float y;
+
+    [XmlAttribute(AttributeName = "z")]
+    public float z;
+
+    public Vec3Dto()
+    {
+        //for serialization
+    }
+
+    public Vec3Dto(Vec3 vec3)
+    {
+        x=vec3.x; y=vec3.y; z=vec3.z;
+    }
+
+    public Vec3 toVec3()
+    {
+        return new Vec3(x,y,z);
+    }
+
+}
+
+
 
 [XmlRoot(ElementName = "face_key_template")]
 public class FaceKeyTemplate
@@ -286,14 +347,23 @@ public class Troop
 [XmlRoot(ElementName = "Party")]
 public class Party
 {
-    [XmlAttribute(AttributeName = "generalId")]
-    public string GeneralId;
+
 
     [XmlAttribute(AttributeName = "Id")]
     public string Id;
 
     [XmlAttribute(AttributeName = "Index")]
     public int Index;
+
+    [XmlAttribute(AttributeName = "color")]
+    public string Color;
+    [XmlAttribute(AttributeName = "color2")]
+    public string Color2;
+
+    [XmlAttribute(AttributeName = "name")]
+    public string Name;
+    [XmlAttribute(AttributeName = "faction_banner_key")]
+    public string FactionBannerKey;
 
     public List<Troop> Troops;
 
@@ -305,42 +375,47 @@ public class Party
 
 
 [XmlRoot(ElementName = "Team")]
-public class Team
+public class TeamDto
 {
     public List<Party> Parties;
 
+    [XmlAttribute(AttributeName = "generalId")]
+    public string generalId;
 
+    [XmlAttribute(AttributeName = "partyGeneralIndex")]
+    public int partyGeneralIndex;
+        
+    // in Mission.Teams
+    public int missionTeamsIndex;
+
+    public TeamDto()
+    {
+        //for serialization
+    }
+
+    public Party getPartyGeneral()
+    {
+        return Parties[partyGeneralIndex];
+    }
+}
+
+[XmlRoot(ElementName = "Side")]
+public class SideDto
+{
     [XmlAttribute(AttributeName = "battleSide")]
     public string BattleSide;
 
-    [XmlAttribute(AttributeName = "color")]
-    public string Color;
-    [XmlAttribute(AttributeName = "color2")]
-    public string Color2;
     [XmlAttribute(AttributeName = "culture")]
     public string Culture;
-    [XmlAttribute(AttributeName = "name")]
-    public string Name;
-    //[XmlElement(ElementName = "Banner")]
-    //public BannerXml Banner;
-
-    //[XmlAttribute(AttributeName = "banner_background_color1")]
-    //public uint banner_background_color1;
-    //[XmlAttribute(AttributeName = "banner_foreground_color1")]
-    //public uint banner_foreground_color1;
-    //[XmlAttribute(AttributeName = "banner_background_color2")]
-    //public uint banner_background_color2;
-    //[XmlAttribute(AttributeName = "banner_foreground_color2")]
-    //public uint banner_foreground_color2;
-    [XmlAttribute(AttributeName = "faction_banner_key")]
-    public string FactionBannerKey;
 
     [XmlAttribute(AttributeName = "isOpen")]
     public bool IsOpen = true;
     [XmlAttribute(AttributeName = "IsGeneralOpen")]
     public bool IsGeneralOpen = true;
 
-    public Team()
+    public List<TeamDto> Teams;
+
+    public SideDto()
     {
         //for serialization
     }
@@ -403,6 +478,51 @@ public class Player
     public int PartyIndex;
 
     public Player()
+    {
+        //for serialization
+    }
+}
+
+[XmlRoot(ElementName = "siege")]
+public class Siege
+{
+   // [XmlElement(ElementName = "siegeWeaponsAtt")]
+    [XmlArray("siegeWeaponsAtt")]
+    public List<SiegeWeapon> siegeWeaponsAtt;
+
+    //[XmlElement(ElementName = "")]
+    [XmlArray("siegeWeaponsDef")]
+    //[XmlArrayItem("Person")]
+    public List<SiegeWeapon> siegeWeaponsDef;
+
+    [XmlArray("wallHitPointsPercentages")]
+    [XmlArrayItem("val")]
+    public float[] wallHitPointsPercentages;
+
+    public Siege()
+    {
+        //for serialization
+    }
+}
+
+[XmlType("SiegeWeapon")]
+[XmlRoot(ElementName = "SiegeWeapon")]
+public class SiegeWeapon
+{
+    [XmlAttribute(AttributeName = "health")]
+    public float health;
+    //[XmlAttribute(AttributeName = "index")]
+    //public int index;
+    [XmlAttribute(AttributeName = "type")]
+    public string type;
+    //[XmlAttribute(AttributeName = "initialHealth")]
+    //public float initialHealth;
+    [XmlAttribute(AttributeName = "maxHealth")]
+    public float maxHealth;
+    [XmlAttribute(AttributeName = "slotIndex")]
+    public int slotIndex;
+
+    public SiegeWeapon()
     {
         //for serialization
     }

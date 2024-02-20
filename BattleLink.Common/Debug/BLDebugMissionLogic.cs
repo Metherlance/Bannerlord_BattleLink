@@ -154,6 +154,7 @@ namespace BattleLink.Common.Debug
 
         public override void OnAgentBuild(Agent agent, Banner banner)
         {
+            var s = Mission.Current.Scene;
             MBDebug.Print("RBDebugMissionLogic - OnAgentBuild", 0, DebugColor.Cyan);
         }
 
@@ -237,6 +238,12 @@ namespace BattleLink.Common.Debug
         {
             MBDebug.Print("RBDebugMissionLogic - OnEndMission", 0, DebugColor.Cyan);
         }
+
+        public override void OnEndMissionInternal()
+        {
+            MBDebug.Print("RBDebugMissionLogic - OnEndMissionInternal", 0, DebugColor.Cyan);
+        }
+
 
         public override void OnRemoveBehavior()
         {

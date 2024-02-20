@@ -31,12 +31,12 @@ namespace BattleLink.Common.Behavior
             {
                 logs.Add(new AgentCreatedLog()
                 {
-                    partyId = (short)origin.partyIndex,
+                    partyId = (short)(origin.party?.partyIndex ?? -1),
                     characterStringId = agent.Character.StringId,
+                    playerUserName = agent.MissionPeer?.Name,
                     agentId = (short)agent.Index,
                     health = agent.Health,
                     mountAgentId = (short)(agent.MountAgent != null ? agent.MountAgent.Index : -1),
-
                 });
             }
             //horse

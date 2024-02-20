@@ -290,12 +290,19 @@
     <Compile Include="Behavior\BLDeploymentMissionView.cs" />
     <Compile Include="Handler\BLCreateAgentHandler.cs" />
     <Compile Include="Handler\BLInitCharactersHandler.cs" />
+    <Compile Include="Handler\BLInitTeamHandler.cs" />
+    <Compile Include="Handler\BLSiegeEnginesHandler.cs" />
+    <Compile Include="Handler\BLMissionInitializerRecordHandler.cs" />
     <Compile Include="Handler\BLInitCultureHandler.cs" />
     <Compile Include="SubModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TeamSelect\BLTeamSelectTeamVM.cs" />
     <Compile Include="TeamSelect\BLTeamSelectView.cs" />
     <Compile Include="TeamSelect\BLTeamSelectVM.cs" />
+    <Compile Include="Views\BLMissionMultiplayerEscapeMenu.cs" />
+    <None Include="Views\BLOrderTroopPlacer.cs.old" />
+    <Compile Include="Views\BLMissionGauntletMultiplayerOrderUIHandler.cs" />
+    <Compile Include="Views\BLOrderTroopPlacer.cs" />
     <Compile Include="Widgets\BannerWidget.cs" />
     <Compile Include="Widgets\LobbyLeftBtn.cs" />
     <Compile Include="Widgets\VBox.cs" />
@@ -305,9 +312,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Views\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\BattleLink.CommonSvMp\BattleLink.CommonSvMp.csproj">
       <Project>{7f607320-285d-4a75-9879-266bc9720e0c}</Project>
