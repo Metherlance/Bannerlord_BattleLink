@@ -2,11 +2,11 @@
 using BattleLink.Common.Behavior;
 using BattleLink.Common.DtoSpSv;
 using BattleLink.Common.Utils;
-using BattleLink.CommonSvMp.Behavior;
 using NetworkMessages.FromClient;
 using NetworkMessages.FromServer;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
@@ -20,7 +20,6 @@ using TaleWorlds.ObjectSystem;
 using static TaleWorlds.CampaignSystem.MapEvents.MapEvent;
 using static TaleWorlds.Library.Debug;
 using static TaleWorlds.MountAndBlade.Mission;
-using static TaleWorlds.MountAndBlade.MovementOrder;
 using static TaleWorlds.MountAndBlade.MultiplayerOptions;
 using Team = TaleWorlds.MountAndBlade.Team;
 
@@ -29,6 +28,9 @@ namespace BattleLink.Server
     // copy of MissionMultiplayerFlagDomination
     public class BLMissionMpDomination : MissionMultiplayerGameModeBase //, IMissionBehavior, IAnalyticsFlagInfo,
     {
+        private static readonly string gamemodeDefault = new PropertiesUtils(System.IO.Path.Combine(BasePath.Name, "Modules", "BattleLink", "config.properties")).Get("gamemode.default");
+        private static readonly float riderDieMountFleeDie = float.Parse( new PropertiesUtils(System.IO.Path.Combine(BasePath.Name, "Modules", "BattleLink", "config.properties")).Get("RiderDieMountFleeDie"), CultureInfo.InvariantCulture.NumberFormat);
+        private static readonly Random rand = new Random();
 
         public BLMissionMpDomination()
         {
@@ -113,6 +115,8 @@ namespace BattleLink.Server
         //    var mission = Mission.Current;
         //    var a =1;
         //}
+
+
 
         public override void OnCreated()//mission == null ...
         {
@@ -272,8 +276,7 @@ namespace BattleLink.Server
                 BLReferentialHolder.nextBattleInitializerPending = false;
 
                 MultiplayerIntermissionVotingManager.Instance.IsCultureVoteEnabled = true;
-                MultiplayerIntermissionVotingManager.Instance.IsMapVoteEnabled = true;
-                string gamemodeDefault = new PropertiesUtils(System.IO.Path.Combine(BasePath.Name, "Modules", "BattleLink", "config.properties")).Get("gamemode.default");
+                MultiplayerIntermissionVotingManager.Instance.IsMapVoteEnabled = true;                
                 MultiplayerOptions.Instance.GetOptionFromOptionType(OptionType.GameType, MultiplayerOptionsAccessMode.NextMapOptions).UpdateValue(gamemodeDefault);
 
                 MBDebug.Print($"BLMissionMDomination - setNextBLMap no initializer, go back to {gamemodeDefault}", 0, DebugColor.DarkYellow);
@@ -1101,6 +1104,8 @@ namespace BattleLink.Server
 
             replaceGeneralIfNeeded(affectedAgent);
 
+            killMontedHorse(affectedAgent, agentState, blow);            
+
             if (this.UseGold() && affectorAgent != null && affectedAgent != null && affectedAgent.IsHuman && blow.DamageType != DamageTypes.Invalid && (agentState == AgentState.Unconscious || agentState == AgentState.Killed))
             {
                 bool isFriendly = affectorAgent.Team != null && affectedAgent.Team != null && affectorAgent.Team.Side == affectedAgent.Team.Side;
@@ -1165,6 +1170,30 @@ namespace BattleLink.Server
             int dataAndUpdateFlags1 = representative4.GetGoldGainFromKillDataAndUpdateFlags(classForCharacter1, true);
             this.ChangeCurrentGoldForPeer(assistingHitter1.HitterPeer, representative4.Gold + dataAndUpdateFlags1);
 
+        }
+
+        private void killMontedHorse(Agent affectedAgent, AgentState agentState, KillingBlow blow)
+        {
+            // horse not monted are annoying for reinforcement and performance
+            if (affectedAgent.MountAgent != null && AgentState.Killed==agentState && Mission.AllAgents.Count > 1024) 
+            {
+                if (riderDieMountFleeDie <= rand.NextFloat())
+                {
+                    affectedAgent.MountAgent.Retreat();
+                }
+                else
+                {
+                    Blow b = new Blow(affectedAgent.MountAgent.Index);
+                    b.WeaponRecord.FillAsMeleeBlow((ItemObject)null, (WeaponComponentData)null, -1, (sbyte)0);
+                    b.DamageType = DamageTypes.Blunt;
+                    b.BaseMagnitude = 10000f;
+                    b.WeaponRecord.WeaponClass = WeaponClass.Undefined;
+                    b.GlobalPosition = affectedAgent.MountAgent.Position;
+                    b.DamagedPercentage = 1f;
+
+                    affectedAgent.MountAgent.Die(b, blow.OverrideKillInfo);
+                }
+            }
         }
 
         private static void replaceGeneralIfNeeded(Agent affectedAgent)

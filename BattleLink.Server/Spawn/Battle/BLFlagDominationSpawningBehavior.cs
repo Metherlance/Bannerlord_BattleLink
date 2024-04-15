@@ -2,12 +2,17 @@
 using BattleLink.Common.DtoSpSv;
 using BattleLink.Common.Model;
 using BattleLink.Common.Spawn.Warmup;
+using BattleLink.Common.Utils;
 using BattleLink.CommonSvMp.Behavior;
 using NetworkMessages.FromServer;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices.ComTypes;
+using System.Xml.Serialization;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
@@ -38,9 +43,14 @@ namespace BattleLink.Common.Spawn.Battle
 
         private static readonly FieldInfo fieldMisDepPlanSide = typeof(MissionDeploymentPlan).GetField("_battleSideDeploymentPlans", BindingFlags.NonPublic | BindingFlags.Instance);
         private static readonly FieldInfo fieldSideDeploymentPlanInitial = typeof(BattleSideDeploymentPlan).GetField("_initialPlan", BindingFlags.NonPublic | BindingFlags.Instance);
+       
+        
+        private static readonly int realBattleSize = int.Parse(new PropertiesUtils(System.IO.Path.Combine(BasePath.Name, "Modules", "BattleLink", "config.properties")).Get("RealBattleSize"), CultureInfo.InvariantCulture.NumberFormat);
 
 
         // ****
+
+        private List<SideDto> sideTeamTroopToSpawn;
 
         private const int EnforcedSpawnTimeInSeconds = 15;
         private float _spawningTimer;
@@ -87,8 +97,35 @@ namespace BattleLink.Common.Spawn.Battle
             var mapEventType = BLReferentialHolder.battle.mapEventType;
             Enum.TryParse(mapEventType, out BattleTypes battleType);
             botSpawnWithNoHorse = Mission.Current.IsSiegeBattle; //(BattleTypes.Siege == battleType);// no horse in siege
-            
 
+            sideTeamTroopToSpawn = DeepClone(BLReferentialHolder.listTeam);
+            //XmlSerializer serializer = new XmlSerializer(typeof(List<SideDto>));
+            //using (TextWriter writer = new StreamWriter(pathInitializer))
+            //{
+            //    serializer.Serialize(writer, BLReferentialHolder.listTeam);
+            //    battleInitializer = (MPBattleInitializer)serializer.Deserialize(reader);
+            //}
+            //XmlSerializer serializer = new XmlSerializer(typeof(MPBattleInitializer));
+            //MPBattleInitializer battleInitializer = null;
+            //using (Stream reader = new FileStream(fileInfo.FullName, FileMode.Open))
+            //{
+            //    // Call the Deserialize method to restore the object's state.
+            //    battleInitializer = (MPBattleInitializer)serializer.Deserialize(reader);
+            //}
+
+
+        }
+
+        public static T DeepClone<T>(T obj)
+        {
+            using (var ms = new MemoryStream())
+            {
+                XmlSerializer xs = new XmlSerializer(typeof(T));
+                xs.Serialize(ms, obj);
+                ms.Position = 0;
+
+                return (T)xs.Deserialize(ms);
+            }
         }
 
         public override void Clear()
@@ -101,6 +138,7 @@ namespace BattleLink.Common.Spawn.Battle
             OnPeerSpawnedFromVisuals -= new Action<MissionPeer>(OnPeerSpawnedFromVisualsAction);
         }
 
+        protected bool IsReinforcementEnabled = false;
         public override void OnTick(float dt)
         {
             if (_spawningTimerTicking)
@@ -134,11 +172,19 @@ namespace BattleLink.Common.Spawn.Battle
                     IsSpawningEnabled = false;
                     _spawningTimer = 0.0f;
                     _spawningTimerTicking = false;
+                    IsReinforcementEnabled = !sideTeamTroopToSpawn.IsEmpty();
                 }
+            }
+            // reinforcement
+            if (IsReinforcementEnabled && realBattleSize-Mission.AllAgents.Count>100)
+            {
+                spawnBots();
+                IsReinforcementEnabled = !sideTeamTroopToSpawn.IsEmpty();
             }
 
             // base.OnTick(dt);// no base call
 
+            //horse remove
             int countAllAgents = Mission.Current.AllAgents.Count;
             if (countAllAgents > AgentCountThreshold && this._nextTimeToCleanUpMounts.IsPast)
             {
@@ -197,8 +243,6 @@ namespace BattleLink.Common.Spawn.Battle
             }
 
 
-            var blSides = BLReferentialHolder.listTeam;
-
             //  count all agents by formation
             foreach (Team team in Mission.Teams)
             {
@@ -216,7 +260,7 @@ namespace BattleLink.Common.Spawn.Battle
             BattleSideDeploymentPlan[] _battleSideDeploymentPlans = (BattleSideDeploymentPlan[])fieldMisDepPlanSide.GetValue(missionDeployementSide);
 
             int[] battleSizeForActivePhase = new int[2];
-            foreach (var sideDto in blSides)
+            foreach (var sideDto in sideTeamTroopToSpawn)
             {
                 int sideNumberTroop = 0;
                 BattleSideEnum side = (BattleSideEnum)Enum.Parse(typeof(BattleSideEnum), sideDto.BattleSide);
@@ -280,14 +324,12 @@ namespace BattleLink.Common.Spawn.Battle
 
             //****
 
-
-
             var playersConfig = BLReferentialHolder.listPlayer;
 
             var dicPlayersConfig = playersConfig.ToDictionary(p => p.UserName, p => p);
-            var attSide = blSides.FindAll(x => BattleSideEnum.Attacker.ToString().Equals(x.BattleSide)).First();
+            var attSide = sideTeamTroopToSpawn.FindAll(x => BattleSideEnum.Attacker.ToString().Equals(x.BattleSide)).First();
             //var dicAttTroops = attSide.Parties[0].Troops.ToDictionary(t => t.Id, t => t);
-            var defSide = blSides.FindAll(x => BattleSideEnum.Defender.ToString().Equals(x.BattleSide)).First();
+            var defSide = sideTeamTroopToSpawn.FindAll(x => BattleSideEnum.Defender.ToString().Equals(x.BattleSide)).First();
             //var dicDefTroops = defSide.Parties[0].Troops.ToDictionary(t => t.Id, t => t);
 
             // spawn player configured
@@ -311,7 +353,7 @@ namespace BattleLink.Common.Spawn.Battle
                     Team team = missionPeer.Team;
                     //var dicTeamTroops = team == Mission.AttackerTeam ? dicAttTroops : dicDefTroops;
                     
-                    (SideDto sideDto, TeamDto teamDto) = BLReferentialHolder.getTeamDtoBy(team);
+                    (SideDto sideDto, TeamDto teamDto) = getTeamDtoToSpawnBy(team);
 
                     Party partySelected = null;
                     Troop troopSelected = null;
@@ -352,8 +394,7 @@ namespace BattleLink.Common.Spawn.Battle
                 }
             }
 
-            // spawn general
-            foreach (var side in blSides)
+            foreach (var side in sideTeamTroopToSpawn)
             {
                 foreach (var team in side.Teams)
                 {
@@ -374,7 +415,7 @@ namespace BattleLink.Common.Spawn.Battle
                 // (component.ControlledAgent == null && !component.HasSpawnedAgentVisuals && component.Team != null && component.Team != Mission.SpectatorTeam && component.TeamInitialPerkInfoReady && component.SpawnTimer.Check(Mission.CurrentTime))
                 {
                     Team team = missionPeer.Team;
-                    (SideDto sideDto, TeamDto teamDto) = BLReferentialHolder.getTeamDtoBy(team);
+                    (SideDto sideDto, TeamDto teamDto) = getTeamDtoToSpawnBy(team);
 
                     if (!sideDto.IsOpen)
                     {
@@ -393,42 +434,8 @@ namespace BattleLink.Common.Spawn.Battle
                 }
             }
 
-            // spawn bots
-            foreach (var side in blSides)
-            {
-                foreach (var teamDto in side.Teams)
-                {
-                    Team team = Mission.Teams[teamDto.missionTeamsIndex];
-                    foreach (var party in teamDto.Parties)
-                    {
-                        foreach (Troop troop in party.Troops)
-                        {
-                            int nbTroopLeftToSpawn = troop.Number;
-                            for (int index = 0; index < nbTroopLeftToSpawn; index += 1)
-                            {
-                                var character = MBObjectManager.Instance.GetObject<Model.BLCharacterObject>(troop.Id);
-                                spawnTroopId(team, teamDto, party.Index, character, troop.HitPoints, null);
-                                troop.Number -= 1;
-                            }
-                        }
-                    }
-                }
-
-                //if (teamSide.TeamAI == null && teamSide.GeneralAgent == null)
-                //{
-                //    BLTeamAIGeneral teamAI = new BLTeamAIGeneral(Mission.Current, teamSide);
-                //    teamAI.AddTacticOption(new TacticDefensiveEngagement(teamSide));
-                //    teamAI.AddTacticOption(new TacticCharge(teamSide));
-                //    TeamQuerySystemUtils.setPowerFix(Mission.Current);
-                //    foreach (Formation formation in teamSide.FormationsIncludingSpecialAndEmpty)
-                //    {
-                //        teamAI.OnUnitAddedToFormationForTheFirstTime(formation);
-                //    }
-                //    teamSide.AddTeamAI(teamAI);
-                //    teamSide.SetPlayerRole(false, false);
-                //}
-
-            }
+            // spawn general
+            spawnBots();
 
             //// Set General
             // defender before attacker (important for siege, SiegeQuerySystem was init only by defender and use by the both)
@@ -488,6 +495,91 @@ namespace BattleLink.Common.Spawn.Battle
             //}
 
         }
+
+        private void spawnBots()
+        {
+            int agentSpawnMaxLeft = realBattleSize - Mission.Current.AllAgents.Count();
+
+            int[] agentBySide = new int[] { 0, 0 };
+            foreach (var team in Mission.Teams)
+            {
+                if (team.Side!=BattleSideEnum.None)
+                {
+                    agentBySide[(int)team.Side] += team.ActiveAgents.Count;
+                }
+            }
+
+
+            foreach (var side in sideTeamTroopToSpawn)
+            {
+                // check if side can spawn
+                int agentSpawnMaxLeftSide;
+                if (sideTeamTroopToSpawn.Count == 1)
+                {
+                    // no need to limit the number of agent if 1 side left
+                    agentSpawnMaxLeftSide = agentSpawnMaxLeft;
+                }
+                else
+                {
+                    Enum.TryParse<BattleSideEnum>(side.BattleSide, out var battleSide);
+                    if (agentBySide[(int)battleSide] > realBattleSize / 2)
+                    {
+                        // if too much troop on this side, other side cant spawn troop
+                        continue;
+                    }
+                    else
+                    {
+                        agentSpawnMaxLeftSide = agentSpawnMaxLeft / sideTeamTroopToSpawn.Count;
+                        agentSpawnMaxLeftSide -= agentBySide[(int)battleSide];
+                    }
+                }
+
+                foreach (var teamDto in side.Teams)
+                {
+                    int agentSpawnMaxLeftTeam = agentSpawnMaxLeftSide / side.Teams.Count;
+
+                    Team team = Mission.Teams[teamDto.missionTeamsIndex];
+                    foreach (var party in teamDto.Parties)
+                    {
+                        foreach (Troop troop in party.Troops)
+                        {
+                            int nbTroopLeftToSpawn = troop.Number;
+                            for (int index = 0; index < nbTroopLeftToSpawn; index += 1)
+                            {
+                                var character = MBObjectManager.Instance.GetObject<Model.BLCharacterObject>(troop.Id);
+                                spawnTroopId(team, teamDto, party.Index, character, troop.HitPoints, null);
+                                troop.Number -= 1;
+                                
+                                if (botSpawnWithNoHorse || !character.HasMount())
+                                {
+                                    agentSpawnMaxLeftTeam -= 1;
+                                }
+                                else
+                                {
+                                    agentSpawnMaxLeftTeam -= 2;
+                                }
+
+                                if (agentSpawnMaxLeftTeam <= 0)
+                                {
+                                    goto agentMaxTeamLabel;
+                                }
+                            }
+                        }
+
+                        agentMaxTeamLabel: { }
+
+                        party.Troops.RemoveAll(troop => troop.Number == 0);
+                    }
+                    // no troop left in party -> remove party of team
+                    teamDto.Parties.RemoveAll(party => party.Troops.IsEmpty());
+                }
+                //no party left in team remove team of side
+                side.Teams.RemoveAll(team => team.Parties.IsEmpty());
+            }
+            //no team left in side remove side
+            sideTeamTroopToSpawn.RemoveAll(side => side.Teams.IsEmpty());
+        }
+
 
         private void setFormation2General(Team team)
         {
@@ -910,6 +1002,22 @@ namespace BattleLink.Common.Spawn.Battle
             //}
 
             return troopClass;
+        }
+
+        public (SideDto sideDto, TeamDto teamDto) getTeamDtoToSpawnBy(Team team)
+        {
+            foreach (SideDto side in sideTeamTroopToSpawn)
+            {
+                foreach (var teamDto in side.Teams)
+                {
+                    var teamMis = Mission.Current.Teams[teamDto.missionTeamsIndex];
+                    if (teamMis.Equals(team))
+                    {
+                        return (side, teamDto);
+                    }
+                }
+            }
+            throw new MBNotFoundException("not found");
         }
 
     }
