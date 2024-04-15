@@ -55,7 +55,7 @@ namespace BattleLink.Singleplayer
             //var a2 = FormatterServices.GetUninitializedObject(typeof(CharacterObject));
             //new SandboxBattleBannerBearersModel();
             //new BattlePowerCalculationLogic();
-            var a = FormatterServices.GetUninitializedObject(typeof(AgentInteractionInterfaceVM));
+            var a = FormatterServices.GetUninitializedObject(typeof(BannerBearerLogic));
 
             //var a2 = (Mission)FormatterServices.GetUninitializedObject(typeof(MissionAgentSpawnLogic));
 

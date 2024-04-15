@@ -7,6 +7,7 @@ using BattleLink.Common.Spawn.Battle;
 using BattleLink.Common.Utils;
 using BattleLink.CommonSvMp.Behavior;
 using BattleLink.CommonSvMp.Behavior.Siege;
+using BattleLink.Server.Behavior;
 using NetworkMessages.FromServer;
 using System;
 using System.Collections.Generic;
@@ -307,6 +308,7 @@ namespace BattleLink.Server
                             //(MissionBehavior) new MultiplayerWarmupComponent(),
                             (MissionBehavior) new MissionMultiplayerGameModeFlagDominationClient(),
                             (MissionBehavior) new MultiplayerTimerComponent(),
+                            (MissionBehavior) new BannerBearerLogic(),
                             (MissionBehavior) new SpawnComponent(new FlagDominationSpawnFrameBehavior(), new BLFlagDominationSpawningBehavior()),
                             //(MissionBehavior) new SpawnComponent(new FlagDominationSpawnFrameBehavior(), new FlagDominationSpawningBehavior()),
                             (MissionBehavior) new MissionLobbyEquipmentNetworkComponent(),
@@ -315,6 +317,7 @@ namespace BattleLink.Server
                             (MissionBehavior) new MissionBoundaryPlacer(),
                             (MissionBehavior) new AgentVictoryLogic(),
                             (MissionBehavior) new AgentHumanAILogic(),
+                            new BLGeneralsAndCaptainsAssignmentLogic(),
                             (MissionBehavior) new MissionAgentPanicHandler(),
                             (MissionBehavior) new MissionBoundaryCrossingHandler(),
                             (MissionBehavior) new MultiplayerPollComponent(),
@@ -328,7 +331,7 @@ namespace BattleLink.Server
                             //new BLAgentLogsLogic(),
                              //new BattleAgentLogic(),
                             // new RBDebugMissionLogic(),
-                            new BannerBearerLogic(),
+                            //new BannerBearerLogic(),
                     };
 
                      if (BLReferentialHolder.battle.siege!=null)
@@ -371,6 +374,10 @@ namespace BattleLink.Server
                         listBehaviors.Add(new BLSiegeDeploymentMissionController());
 
 
+                    }
+                    else
+                    {
+                        //listBehaviors.Add(new BLDeploymentMissionController());                        
                     }
                     return listBehaviors.ToArray();
                 };
