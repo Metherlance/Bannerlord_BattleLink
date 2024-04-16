@@ -447,15 +447,16 @@ namespace BattleLink.Common.Spawn.Battle
                 }
             }
 
+
             // change for BLSiegeDeployableMissionController SetupTeams
-            //foreach (Team team in Mission.Teams)
-            //{
-            //    if (team.Side != BattleSideEnum.None)
-            //    {
-            //        //team.OnDeployed();// needs BattleDeploymentHandler in list of behavior
-            //        Mission.AutoDeployTeamUsingTeamAI(team);
-            //    }
-            //}
+            foreach (Team team in Mission.Teams)
+            {
+                if (team.Side != BattleSideEnum.None)
+                {
+                    team.OnDeployed();// needs BattleDeploymentHandler in list of behavior
+                    Mission.AutoDeployTeamUsingTeamAI(team);
+                }
+            }
 
 
             //if (team.GeneralAgent == null && teamSide.Parties[0].GeneralId == character.StringId && missionPeer != null)

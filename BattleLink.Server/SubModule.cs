@@ -27,7 +27,8 @@ namespace BattleLink.Server
 
         protected override void OnSubModuleLoad()
         {
-          // var campaign = FormatterServices.GetUninitializedObject(typeof(MultiplayerIntermissionMapItemAdded));
+            var campaign = FormatterServices.GetUninitializedObject(typeof(MultiplayerIntermissionMapItemAdded));
+            // var campaign = FormatterServices.GetUninitializedObject(typeof(MultiplayerIntermissionMapItemAdded));
             //var campaign = FormatterServices.GetUninitializedObject(typeof(BaseNetworkComponent));
             //var campaign = FormatterServices.GetUninitializedObject(typeof(BehaviorAssaultWalls));
             //  var campaign = FormatterServices.GetUninitializedObject(typeof(SiegeWeapon));
@@ -76,7 +77,7 @@ namespace BattleLink.Server
             // GameModelsManager iterate from last element to first
             starterObject.AddModel(new BLAgentStatCalculateModelOld());
             starterObject.AddModel(new DefaultMapWeatherModel());
-            //starterObject.AddModel(new BLBattleBannerBearersModel());
+            starterObject.AddModel(new BLBattleBannerBearersModel());
             //starterObject.AddModel(new BLAgentApplyDamageModel());
             //starterObject.AddModel(new BLStrikeMagnitudeModel());
             //starterObject.AddModel(new SandboxApplyWeatherEffectsModel());

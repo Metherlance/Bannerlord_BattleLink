@@ -61,7 +61,7 @@ namespace BattleLink.Server
 
                 BLReferentialHolder.basicCharacterObjects = new List<BLCharacterObject>();
 
-               // BLMissionMpDomination.setNextBLMapForTesting();
+                BLMissionMpDomination.setNextBLMapForTesting();
 
                 // load next battle and launch default mission
                 FileInfo fileInfo;
@@ -300,6 +300,7 @@ namespace BattleLink.Server
                 InitializeMissionBehaviorsDelegate behaviors = (Mission) =>
                 {
                     var listBehaviors = new List<MissionBehavior>{
+                            BLMissionAgentSpawnLogic.newSpawnLogic(BLReferentialHolder.battle.mapEventType),
                             (MissionBehavior) MissionLobbyComponent.CreateBehavior(),
                             (MissionBehavior) new BLMissionMpDomination(),//MissionMultiplayerFlagDomination
                             //(MissionBehavior) new MissionMultiplayerFlagDomination(MultiplayerGameType.Captain),//MissionMultiplayerFlagDomination

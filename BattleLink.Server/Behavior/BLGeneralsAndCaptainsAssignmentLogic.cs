@@ -31,18 +31,18 @@ namespace BattleLink.Server.Behavior
         public override void OnTeamDeployed(Team team)
         {
             this.SetGeneralAgentOfTeam(team);
-            if (team.IsPlayerTeam)
-            {
-                if (MissionGameModels.Current.BattleInitializationModel.CanPlayerSideDeployWithOrderOfBattle())
-                    return;
-                if (this.CanTeamHaveGeneralsFormation(team))
-                {
-                    this.CreateGeneralFormationForTeam(team);
-                    this._isPlayerTeamGeneralFormationSet = true;
-                }
-                this.AssignBestCaptainsForTeam(team);
-            }
-            else
+            //if (team.IsPlayerTeam)
+            //{
+            //    if (MissionGameModels.Current.BattleInitializationModel.CanPlayerSideDeployWithOrderOfBattle())
+            //        return;
+            //    if (this.CanTeamHaveGeneralsFormation(team))
+            //    {
+            //        this.CreateGeneralFormationForTeam(team);
+            //        this._isPlayerTeamGeneralFormationSet = true;
+            //    }
+            //    this.AssignBestCaptainsForTeam(team);
+            //}
+            //else
             {
                 if (this.CanTeamHaveGeneralsFormation(team))
                     this.CreateGeneralFormationForTeam(team);
@@ -67,7 +67,9 @@ namespace BattleLink.Server.Behavior
             //formation.QuerySystem.Expire();
         }
 
-        protected virtual void SortCaptainsByPriority(Team team, ref List<Agent> captains) => captains = captains.OrderByDescending<Agent, float>((Func<Agent, float>)(captain => team.GeneralAgent != captain ? captain.Character.GetPower() : float.MaxValue)).ToList<Agent>();
+        protected virtual void SortCaptainsByPriority(Team team, ref List<Agent> captains) => captains = captains
+            .OrderByDescending<Agent, float>((Func<Agent, float>)(captain => team.GeneralAgent != captain ? captain.Character.GetPower() : float.MaxValue))
+            .ToList<Agent>();
 
         protected virtual Formation PickBestRegularFormationToLead(
           Agent agent,
@@ -100,12 +102,12 @@ namespace BattleLink.Server.Behavior
 
         private void AssignBestCaptainsForTeam(Team team)
         {
-            List<Agent> list1 = team.ActiveAgents.Where<Agent>((Func<Agent, bool>)(agent => agent.IsHero)).ToList<Agent>();
-            this.SortCaptainsByPriority(team, ref list1);
+            List<Agent> heroNotCaptain = team.ActiveAgents.Where<Agent>((Func<Agent, bool>)(agent => agent.IsHero)).ToList<Agent>();
+            this.SortCaptainsByPriority(team, ref heroNotCaptain);
             int numRegularFormations = 8;
-            List<Formation> list2 = team.FormationsIncludingEmpty.WhereQ<Formation>((Func<Formation, bool>)(f => f.CountOfUnits > 0 && f.FormationIndex < (FormationClass)numRegularFormations)).ToList<Formation>();
+            List<Formation> formationsWithoutCaptain = team.FormationsIncludingEmpty.WhereQ<Formation>((Func<Formation, bool>)(f => f.CountOfUnits > 0 && f.FormationIndex < (FormationClass)numRegularFormations)).ToList<Formation>();
             List<Agent> agentList = new List<Agent>();
-            foreach (Agent agent in list1)
+            foreach (Agent agent in heroNotCaptain)
             {
                 Formation formation = (Formation)null;
                 BattleBannerBearersModel bannerBearersModel = MissionGameModels.Current.BattleBannerBearersModel;
@@ -113,9 +115,9 @@ namespace BattleLink.Server.Behavior
                     formation = team.BodyGuardFormation;
                 if (formation == null)
                 {
-                    formation = this.PickBestRegularFormationToLead(agent, list2);
+                    formation = this.PickBestRegularFormationToLead(agent, formationsWithoutCaptain);
                     if (formation != null)
-                        list2.Remove(formation);
+                        formationsWithoutCaptain.Remove(formation);
                 }
                 if (formation != null)
                 {
@@ -124,17 +126,17 @@ namespace BattleLink.Server.Behavior
                 }
             }
             foreach (Agent agent in agentList)
-                list1.Remove(agent);
-            foreach (Agent agent in list1)
+                heroNotCaptain.Remove(agent);
+            foreach (Agent agent in heroNotCaptain)
             {
                 Agent candidate = agent;
-                if (list2.IsEmpty<Formation>())
+                if (formationsWithoutCaptain.IsEmpty<Formation>())
                     break;
-                Formation formation = list2.FirstOrDefault<Formation>((Func<Formation, bool>)(f => f.CalculateHasSignificantNumberOfMounted == candidate.HasMount));
+                Formation formation = formationsWithoutCaptain.FirstOrDefault<Formation>((Func<Formation, bool>)(f => f.CalculateHasSignificantNumberOfMounted == candidate.HasMount));
                 if (formation != null)
                 {
                     this.OnCaptainAssignedToFormation(candidate, formation);
-                    list2.Remove(formation);
+                    formationsWithoutCaptain.Remove(formation);
                 }
             }
         }
@@ -148,7 +150,7 @@ namespace BattleLink.Server.Behavior
             (_, var teamDto) = BLReferentialHolder.getTeamDtoBy(team);
             string generalId = teamDto.generalId;
 
-            if (generalId != null && list.Count<IFormationUnit>((Func<IFormationUnit, bool>)(ta => ((Agent)ta).Character != null && ((Agent)ta).Character.GetName().Equals(generalId))) >= 1)
+            if (generalId != null && list.Count<IFormationUnit>((Func<IFormationUnit, bool>)(ta => ((Agent)ta).Character != null && ((Agent)ta).Character.StringId.Equals(generalId))) >= 1)
             {
                 agent = (Agent)list.First<IFormationUnit>((Func<IFormationUnit, bool>)(ta => ((Agent)ta).Character != null && ((Agent)ta)
                 .Character.StringId.Equals(generalId)));
