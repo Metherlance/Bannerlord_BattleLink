@@ -211,6 +211,21 @@ namespace BattleLink.Multiplayer
                 listCreateAgentHandler.Add(BLCreateAgentHandler.HandleServerEventCreateAgent);
                 //InformationManager.DisplayMessage(new InformationMessage("CreateAgent Handler"));
             }
+
+            {
+
+                var oDicIndexType = fieldIndexContainer.GetValue(null);
+                Dictionary<System.Type, int> dicIndexType = (Dictionary<System.Type, int>)oDicIndexType;
+                int indexType = dicIndexType.TryGetValue(typeof(BLAgentLabelRefreshMessage), out indexType) ? indexType : -1;
+
+                var valu = fieldContainer.GetValue(null);
+                Dictionary<int, List<GameNetworkMessage.ServerMessageHandlerDelegate<GameNetworkMessage>>> value = (Dictionary<int, List<GameNetworkMessage.ServerMessageHandlerDelegate<GameNetworkMessage>>>)valu;
+                var listAgentLabelHandler = value[indexType];
+                listAgentLabelHandler.Clear();
+                listAgentLabelHandler.Add(BLAgentLabelRefreshHandler.HandleServerEventAgentLabelRefresh);
+                //InformationManager.DisplayMessage(new InformationMessage("CreateAgent Handler"));
+            }
+
         }
 
         public override void OnGameInitializationFinished(Game game)

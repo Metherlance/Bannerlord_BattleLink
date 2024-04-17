@@ -41,6 +41,9 @@
     <Reference Include="TaleWorlds.Core">
       <HintPath>..\..\..\..\games\Steam\steamapps\common\Mount &amp; Blade II Dedicated Server\bin\Win64_Shipping_Server\TaleWorlds.Core.dll</HintPath>
     </Reference>
+    <Reference Include="TaleWorlds.DotNet">
+      <HintPath>..\..\..\..\games\Steam\steamapps\common\Mount &amp; Blade II Dedicated Server\bin\Win64_Shipping_Server\TaleWorlds.DotNet.dll</HintPath>
+    </Reference>
     <Reference Include="TaleWorlds.Engine">
       <HintPath>..\..\..\..\games\Steam\steamapps\common\Mount &amp; Blade II Dedicated Server\bin\Win64_Shipping_Server\TaleWorlds.Engine.dll</HintPath>
     </Reference>

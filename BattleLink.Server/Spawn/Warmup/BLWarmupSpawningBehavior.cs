@@ -120,6 +120,7 @@ namespace BattleLink.Common.Spawn.Warmup
                 // Note that what is sent here doesn't matter since it's ignored by the client.
                 .BodyProperties(character.GetBodyPropertiesMin());
             agentBuildData.ClothingColor1(team.Color).ClothingColor2(team.Color2).Banner(team.Banner);
+
             return agentBuildData;
         }
 

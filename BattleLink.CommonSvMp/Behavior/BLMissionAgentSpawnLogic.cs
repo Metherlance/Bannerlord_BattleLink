@@ -1,8 +1,4 @@
-﻿using BattleLink.Common.DtoSpSv;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using TaleWorlds.Core;
+﻿using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 
 namespace BattleLink.Server.Behavior
@@ -75,6 +71,13 @@ namespace BattleLink.Server.Behavior
             return false;
         }
 
+        public new void SetSpawnTroops(BattleSideEnum side, bool spawnTroops, bool enforceSpawning = false)
+        {
+            //this._missionSides[(int)side].SetSpawnTroops(spawnTroops);
+            //if (!(spawnTroops & enforceSpawning))
+            //    return;
+            //this.CheckDeployment();
+        }
 
     }
 }

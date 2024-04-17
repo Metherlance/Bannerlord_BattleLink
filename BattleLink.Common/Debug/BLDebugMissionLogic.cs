@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Reflection;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
@@ -124,8 +128,32 @@ namespace BattleLink.Common.Debug
             //BasicCharacterObject character21 = MBObjectManager.Instance.GetObject<BasicCharacterObject>("bl_character");
             //var car = MBObjectManager.Instance.GetObject<MultiplayerClassDivisions.MPHeroClass>("bl_character_class_division");
 
+            BannerBearerLogic missionBehavior = this.Mission.GetMissionBehavior<BannerBearerLogic>();
+            missionBehavior.OnBannerBearerAgentUpdated -= BannerBearerLogic_OnBannerBearerAgentUpdated;
+
+            EventExtensions.ClearEventHandlers(missionBehavior, "OnBannerBearerAgentUpdated");
+
+            //BannerBearerLogic missionBehavior = this.Mission.GetMissionBehavior<MissionAge>();
+            //missionBehavior.OnBannerBearerAgentUpdated -= BannerBearerLogic_OnBannerBearerAgentUpdated;
+
 
             MBDebug.Print("RBDebugMissionLogic - AfterStart", 0, DebugColor.Cyan);
+        }
+
+        //public static void RemoveAllListeners(this DelegateSource eventDelegate)
+        //{
+        //    if (eventDelegate != null)
+        //    {
+        //        foreach (var currentDelegate in eventDelegate.GetInvocationList())
+        //        {
+        //            eventDelegate = Delegate.Remove(eventDelegate, currentDelegate);
+        //        }
+        //    }
+        //}
+
+
+        private void BannerBearerLogic_OnBannerBearerAgentUpdated(/*Parameter with token 080002AD*/Agent agent, /*Parameter with token 080002AE*/bool isBannerBearer)
+        {
         }
 
         //public override void OnMissileHit(Agent attacker, Agent victim, bool isCanceled)
@@ -377,4 +405,99 @@ namespace BattleLink.Common.Debug
             MBDebug.Print("RBDebugMissionLogic - OnAgentShootMissile", 0, DebugColor.Cyan);
         }
     }
+
+    public static class EventExtensions
+    {
+        public static void ClearEventHandlers(this object obj, string eventName)
+        {
+            if (obj == null)
+            {
+                return;
+            }
+
+            var objType = obj.GetType();
+            var eventInfo = objType.GetEvent(eventName);
+            if (eventInfo == null)
+            {
+                return;
+            }
+
+            var isEventProperty = false;
+            var type = objType;
+            FieldInfo eventFieldInfo = null;
+            while (type != null)
+            {
+                /* Find events defined as field */
+                eventFieldInfo = type.GetField(eventName, BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                if (eventFieldInfo != null && (eventFieldInfo.FieldType == typeof(MulticastDelegate) || eventFieldInfo.FieldType.IsSubclassOf(typeof(MulticastDelegate))))
+                {
+                    break;
+                }
+
+                /* Find events defined as property { add; remove; } */
+                eventFieldInfo = type.GetField("EVENT_" + eventName.ToUpper(), BindingFlags.Static | BindingFlags.Instance | BindingFlags.NonPublic);
+                if (eventFieldInfo != null)
+                {
+                    isEventProperty = true;
+                    break;
+                }
+
+                type = type.BaseType;
+            }
+
+            if (eventFieldInfo == null)
+            {
+                return;
+            }
+
+            if (isEventProperty)
+            {
+                // Default Events Collection Type
+                RemoveHandler<EventHandlerList>(obj, eventFieldInfo);
+                // Infragistics Events Collection Type
+               // RemoveHandler<EventHandlerDictionary>(obj, eventFieldInfo);
+                return;
+            }
+
+            if (!(eventFieldInfo.GetValue(obj) is Delegate eventDelegate))
+            {
+                return;
+            }
+
+            // Remove Field based event handlers
+            foreach (var d in eventDelegate.GetInvocationList())
+            {
+                eventInfo.RemoveEventHandler(obj, d);
+            }
+        }
+
+        private static void RemoveHandler<T>(object obj, FieldInfo eventFieldInfo)
+        {
+            var objType = obj.GetType();
+            var eventPropertyValue = eventFieldInfo.GetValue(obj);
+
+            if (eventPropertyValue == null)
+            {
+                return;
+            }
+
+            var propertyInfo = objType.GetProperties(BindingFlags.NonPublic | BindingFlags.Instance)
+                                      .FirstOrDefault(p => p.Name == "Events" && p.PropertyType == typeof(T));
+            if (propertyInfo == null)
+            {
+                return;
+            }
+
+            var eventList = propertyInfo?.GetValue(obj, null);
+            switch (eventList)
+            {
+                case null:
+                    return;
+                //case EventHandlerDictionary typedEventList:
+                //    typedEventList.RemoveHandler(eventPropertyValue, typedEventList[eventPropertyValue]);
+                //    break;
+            }
+        }
+    }
+
 }

@@ -7,6 +7,7 @@ using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade.ComponentInterfaces;
 using TaleWorlds.MountAndBlade;
 using BattleLink.Common.Model;
+using BattleLink.Server.Behavior;
 
 namespace BattleLink.CommonSvMp.GameComponents
 {
@@ -99,7 +100,8 @@ namespace BattleLink.CommonSvMp.GameComponents
         public override bool CanFormationDeployBannerBearers(Formation formation)
         {
             BannerBearerLogic bannerBearerLogic = BannerBearerLogic;
-            if (bannerBearerLogic == null || formation.CountOfUnits < GetMinimumFormationTroopCountToBearBanners() || bannerBearerLogic.GetFormationBanner(formation) == null)
+            BLBannerBearerLogic blBannerBearerLogic = bannerBearerLogic as BLBannerBearerLogic;
+            if (bannerBearerLogic == null || formation.CountOfUnits < GetMinimumFormationTroopCountToBearBanners() || blBannerBearerLogic.GetFormationBanner(formation) == null)
             {
                 return false;
             }
@@ -139,7 +141,18 @@ namespace BattleLink.CommonSvMp.GameComponents
 
             //return null;
 
-            return agentCharacter.Equipment[EquipmentIndex.Weapon0].Item;
+            var equipment = agentCharacter.Equipment;
+            for (int equipementIndex = 0; equipementIndex<4; equipementIndex+=1 )
+            {
+                WeaponComponentData weaponData = equipment[equipementIndex].Item?.WeaponComponent?.PrimaryWeapon ?? null;
+                if (weaponData!=null && weaponData.IsMeleeWeapon && weaponData.IsOneHanded)
+                {
+                    return equipment[equipementIndex].Item;
+                }
+            }
+
+            // Default
+            return equipment[EquipmentIndex.Weapon0].Item;
         }
     }
 }

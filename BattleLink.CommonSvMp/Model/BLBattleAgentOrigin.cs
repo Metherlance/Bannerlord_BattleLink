@@ -7,7 +7,7 @@ using TaleWorlds.MountAndBlade;
 
 namespace BattleLink.Common.Model
 {
-    public class BLBattleAgentOrigin : BasicBattleAgentOrigin
+    public class BLBattleAgentOrigin : BasicBattleAgentOrigin, IAgentOriginBase
     {
         //public BasicCharacterObject BLTroop { get;  set; }
         //public int partyIndex; // put IBattleCombatant PartyBase instead?
@@ -17,6 +17,33 @@ namespace BattleLink.Common.Model
         //{
         //    this.partyIndex = partyIndex;
         //}
+
+        //IAgentOriginBase.FactionColor factionColor;
+
+        public Banner banner;
+        Banner IAgentOriginBase.Banner => banner;
+
+        public uint factionColor;
+        uint IAgentOriginBase.FactionColor => factionColor;
+
+        public uint factionColor2;
+        uint IAgentOriginBase.FactionColor2 => factionColor2;
+
+        //public BLBattleAgentOrigin(BasicCharacterObject? troop, BLParty party, Team team) : base(troop)
+        //{
+        //    this.party = party;
+        //}
+
+        public BLBattleAgentOrigin(BasicCharacterObject? troop, BLParty party, Team team) : base(troop)
+        {
+            this.party = party;
+            if (team!=null)
+            {
+                banner = team.Banner;
+                factionColor = team.Color;
+                factionColor2 = team.Color2;
+            }
+        }
 
         public BLBattleAgentOrigin(BasicCharacterObject? troop, BLParty party) : base(troop)
         {

@@ -16,17 +16,15 @@ namespace BattleLink.Server.Behavior
     internal class BLGeneralsAndCaptainsAssignmentLogic : MissionLogic
     {
         public int MinimumAgentCountToLeadGeneralFormation = 3;
-        private BannerBearerLogic _bannerLogic;
+        private BLBannerBearerLogic _bannerLogic;
         private readonly bool _createBodyguard;
-        private bool _isPlayerTeamGeneralFormationSet;
 
         public BLGeneralsAndCaptainsAssignmentLogic(bool createBodyguard = true)
         {
             this._createBodyguard = createBodyguard;
-            this._isPlayerTeamGeneralFormationSet = false;
         }
 
-        public override void AfterStart() => this._bannerLogic = this.Mission.GetMissionBehavior<BannerBearerLogic>();
+        public override void AfterStart() => this._bannerLogic = this.Mission.GetMissionBehavior<BLBannerBearerLogic>();
 
         public override void OnTeamDeployed(Team team)
         {
@@ -45,9 +43,45 @@ namespace BattleLink.Server.Behavior
             //else
             {
                 if (this.CanTeamHaveGeneralsFormation(team))
+                {
                     this.CreateGeneralFormationForTeam(team);
+                }
                 this.AssignBestCaptainsForTeam(team);
             }
+
+
+            //
+
+            bool generalPlayer = false;
+            bool sergentPlayer = false;
+            if (team.GeneralAgent != null)
+            { 
+                int countUnitTotalGeneral = 0;
+                foreach (Formation formation in team.FormationsIncludingSpecialAndEmpty)
+                {
+                    // sergent
+                    if (formation.PlayerOwner != null && formation.PlayerOwner != team.GeneralAgent && formation.PlayerOwner.MissionPeer != null)
+                    {
+                        sergentPlayer = true;
+                        team.AssignPlayerAsSergeantOfFormation(formation.PlayerOwner.MissionPeer, formation.FormationIndex);
+                        Mission.GetMissionBehavior<MissionMultiplayerGameModeFlagDominationClient>().OnBotsControlledChanged(formation.PlayerOwner.MissionPeer, formation.CountOfUnits, formation.CountOfUnits);
+                    }
+                    //general
+                    else if (team.GeneralAgent.MissionPeer != null)
+                    {
+                        team.AssignPlayerAsSergeantOfFormation(team.GeneralAgent.MissionPeer, formation.FormationIndex);
+                        countUnitTotalGeneral += formation.CountOfUnits;
+                    }
+                }
+                if (team.GeneralAgent.MissionPeer != null)
+                {
+                    generalPlayer = true;
+                    Mission.GetMissionBehavior<MissionMultiplayerGameModeFlagDominationClient>().OnBotsControlledChanged(team.GeneralAgent.MissionPeer, countUnitTotalGeneral, countUnitTotalGeneral);
+                }
+            }
+            //team.SetPlayerRole(generalPlayer, sergentPlayer);
+            //team.QuerySystem.Expire();
+            //team.ResetTactic();
         }
 
         public override void OnDeploymentFinished()
@@ -65,6 +99,9 @@ namespace BattleLink.Server.Behavior
             //mainAgent.Formation = formation;
             //mainAgent.Team.TriggerOnFormationsChanged(formation);
             //formation.QuerySystem.Expire();
+
+
+
         }
 
         protected virtual void SortCaptainsByPriority(Team team, ref List<Agent> captains) => captains = captains
@@ -193,24 +230,24 @@ namespace BattleLink.Server.Behavior
             int count = MathF.Min((int)((double)list2.Count / 10.0), 20);
             if (count == 0)
                 return;
-            Formation formation2 = team.GetFormation(FormationClass.Bodyguard);
-            formation2.SetMovementOrder(MovementOrder.MovementOrderMove(orderWorldPosition));
-            formation2.SetControlledByAI(true);
+            Formation formationBodyguard = team.GetFormation(FormationClass.Bodyguard);
+            formationBodyguard.SetMovementOrder(MovementOrder.MovementOrderMove(orderWorldPosition));
+            formationBodyguard.SetControlledByAI(true);
             List<IFormationUnit> list3 = list2.OrderByDescending<IFormationUnit, float>((Func<IFormationUnit, float>)(u => ((Agent)u).CharacterPowerCached)).Take<IFormationUnit>(count).ToList<IFormationUnit>();
             IEnumerable<Formation> formations = list3.Select<IFormationUnit, Formation>((Func<IFormationUnit, Formation>)(bu => ((Agent)bu).Formation)).Distinct<Formation>();
             foreach (Agent agent3 in list3)
-                agent3.Formation = formation2;
+                agent3.Formation = formationBodyguard;
             foreach (Formation formation3 in formations)
             {
                 team.TriggerOnFormationsChanged(formation3);
                 formation3.QuerySystem.Expire();
             }
-            TacticComponent.SetDefaultBehaviorWeights(formation2);
-            formation2.AI.SetBehaviorWeight<BehaviorProtectGeneral>(1f);
-            formation2.PlayerOwner = (Agent)null;
-            formation2.QuerySystem.Expire();
-            team.BodyGuardFormation = formation2;
-            team.TriggerOnFormationsChanged(formation2);
+            TacticComponent.SetDefaultBehaviorWeights(formationBodyguard);
+            formationBodyguard.AI.SetBehaviorWeight<BehaviorProtectGeneral>(1f);
+            formationBodyguard.PlayerOwner = (Agent)null;
+            formationBodyguard.QuerySystem.Expire();
+            team.BodyGuardFormation = formationBodyguard;
+            team.TriggerOnFormationsChanged(formationBodyguard);
         }
 
         private void OnCaptainAssignedToFormation(Agent captain, Formation formation)

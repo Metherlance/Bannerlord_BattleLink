@@ -288,6 +288,7 @@
     <Compile Include="BattleLinkMissionView.cs" />
     <Compile Include="Behavior\BLBehaviorClient.cs" />
     <Compile Include="Behavior\BLDeploymentMissionView.cs" />
+    <Compile Include="Handler\BLAgentLabelRefreshHandler.cs" />
     <Compile Include="Handler\BLCreateAgentHandler.cs" />
     <Compile Include="Handler\BLInitCharactersHandler.cs" />
     <Compile Include="Handler\BLInitTeamHandler.cs" />

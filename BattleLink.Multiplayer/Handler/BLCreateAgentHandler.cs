@@ -58,8 +58,9 @@ namespace BattleLink.Handler
             {
                 partyIndex=-1,
             };
+            var origin = new BLBattleAgentOrigin(character, party, teamFromTeamIndex);
             AgentBuildData agentBuildData1 = new AgentBuildData(character).MissionPeer(createAgent.IsPlayerAgent ? missionPeer : (MissionPeer)null).Monster(createAgent.Monster)
-                .TroopOrigin(new BLBattleAgentOrigin(character, party))
+                .TroopOrigin(origin)
                 .Equipment(createAgent.SpawnEquipment)
                 .EquipmentSeed(createAgent.BodyPropertiesSeed);
 
@@ -108,6 +109,10 @@ namespace BattleLink.Handler
             else if (missionPeer != null)
             {
                 banner = new Banner(missionPeer.Peer.BannerCode, teamFromTeamIndex.Color, teamFromTeamIndex.Color2);
+            }
+            else
+            {
+                banner = teamFromTeamIndex.Banner;
             }
             agentBuildData1.Banner(banner);
 

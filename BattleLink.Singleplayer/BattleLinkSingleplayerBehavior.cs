@@ -3,7 +3,6 @@ using BattleLink.Common.DtoSpSv;
 using BattleLink.Common.Utils;
 using BattleLink.Singleplayer.Patch;
 using Helpers;
-using SandBox;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,32 +11,22 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
 using TaleWorlds.CampaignSystem.CharacterDevelopment;
 using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.GameMenus;
-using TaleWorlds.CampaignSystem.Map;
 using TaleWorlds.CampaignSystem.MapEvents;
 using TaleWorlds.CampaignSystem.Party;
-using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.CampaignSystem.Siege;
 using TaleWorlds.Core;
-using TaleWorlds.Engine;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
-using TaleWorlds.MountAndBlade.Source.Objects;
 using TaleWorlds.ObjectSystem;
-using TaleWorlds.SaveSystem.Load;
-using static System.Collections.Specialized.BitVector32;
 using static TaleWorlds.CampaignSystem.GameMenus.GameMenuOption;
 using static TaleWorlds.CampaignSystem.MapEvents.MapEvent;
-using static TaleWorlds.CampaignSystem.Siege.SiegeEvent;
-using static TaleWorlds.MountAndBlade.MovementOrder;
 using SiegeWeapon = BattleLink.Common.DtoSpSv.SiegeWeapon;
 using SideDto = BattleLink.Common.DtoSpSv.SideDto;
 
@@ -75,14 +64,34 @@ namespace BattleLink.Singleplayer
         {
             //for (int i = 0; i < 40; i++)
             //{
+            //starter.AddGameMenuOption("encounter", "attackMP", "{=attackMP}Attack! (MP)",
+            //    game_menu_encounter_attack_on_condition,
+            //    game_menu_encounter_attack_on_consequence,
+            //    false, 2);
+
+            MethodInfo fieldAttackCondition = typeof(EncounterGameMenuBehavior).GetMethod("game_menu_encounter_order_attack_on_condition", BindingFlags.NonPublic | BindingFlags.Instance);
+            //MethodInfo fieldConsequence2 = typeof(EncounterGameMenuBehavior).GetMethod("menu_siege_strategies_lead_assault_on_consequence", BindingFlags.NonPublic | BindingFlags.Static);
+
+            MenuCallbackArgs args = null;
+            GameMenuOption.OnConditionDelegate action = (GameMenuOption.OnConditionDelegate)Delegate.CreateDelegate(typeof(GameMenuOption.OnConditionDelegate), args, fieldAttackCondition);
+
+
+            //fieldAttackCondition.CreateDelegate(typeof(GameMenuOption.OnConditionDelegate));
+            //new GameMenuOption.OnConditionDelegate(fieldAttackCondition.);
+
+            //typeof(EncounterGameMenuBehavior).De
+
+
+            //GameMenuOption.OnConditionDelegate game_menu_encounter_order_attack_on_condition = (GameMenuOption.OnConditionDelegate)fieldAttackCondition.CreateDelegate(typeof(GameMenuOption.OnConditionDelegate));
             starter.AddGameMenuOption("encounter", "attackMP", "{=attackMP}Attack! (MP)",
-                game_menu_encounter_attack_on_condition,
-                game_menu_encounter_attack_on_consequence,
-                false, 2);
+                action,
+                game_menu_encounter_order_attack_mp_on_consequence,
+                false, 3);
+
             starter.AddGameMenuOption("encounter", "attackMPLoadResult", "{=attackMPLoadResult}Load Result! (MP)",
                 game_menu_load_result_encounter_on_condition,
                 game_menu_load_result_encounter_on_consequence,
-                false, 3);
+                false, 4);
 
             // }
 
@@ -101,7 +110,7 @@ namespace BattleLink.Singleplayer
             //GameMenuOption.OnConsequenceDelegate consequence;
 
             MethodInfo fieldCondition = typeof(SiegeEventCampaignBehavior).GetMethod("game_menu_siege_strategies_order_assault_on_condition", BindingFlags.NonPublic | BindingFlags.Static);
-            MethodInfo fieldConsequence = typeof(SiegeEventCampaignBehavior).GetMethod("menu_siege_strategies_lead_assault_on_consequence", BindingFlags.NonPublic | BindingFlags.Static);
+            //MethodInfo fieldConsequence = typeof(SiegeEventCampaignBehavior).GetMethod("menu_siege_strategies_lead_assault_on_consequence", BindingFlags.NonPublic | BindingFlags.Static);
 
             GameMenuOption.OnConditionDelegate game_menu_siege_strategies_order_assault_on_condition = (GameMenuOption.OnConditionDelegate)fieldCondition.CreateDelegate(typeof(GameMenuOption.OnConditionDelegate));
             //GameMenuOption.OnConditionDelegate condition2 = (GameMenuOption.OnConditionDelegate)Delegate.CreateDelegate(typeof(GameMenuOption.OnConditionDelegate), fieldCondition);
@@ -231,39 +240,39 @@ namespace BattleLink.Singleplayer
             return list;
         }
 
-        private static readonly TextObject _waitSiegeEquipmentsText = new TextObject("{=bCuxzp1N}You need to wait for the siege equipment to be prepared.", (Dictionary<string, object>)null);
-        private static readonly TextObject _woundedAssaultText = new TextObject("{=gzYuWR28}You are wounded, and in no condition to lead an assault.", (Dictionary<string, object>)null);
-        private static readonly TextObject _noCommandText = new TextObject("{=1Hd19nq5}You are not in command of this siege.", (Dictionary<string, object>)null);
-        private static bool game_menu_siege_strategies_lead_assault_on_condition(MenuCallbackArgs args)
-        {
-            args.optionLeaveType = GameMenuOption.LeaveType.LeadAssault;
-            if (MobileParty.MainParty.BesiegedSettlement == null)
-                return false;
-            if (Campaign.Current.Models.EncounterModel.GetLeaderOfSiegeEvent(MobileParty.MainParty.BesiegedSettlement.SiegeEvent, PlayerSiege.PlayerSide) == Hero.MainHero)
-            {
-                Settlement settlement = PlayerEncounter.EncounteredParty != null ? PlayerEncounter.EncounteredParty.Settlement : PlayerSiege.PlayerSiegeEvent.BesiegedSettlement;
-                if (PlayerSiege.PlayerSide == BattleSideEnum.Attacker && !settlement.SiegeEvent.BesiegerCamp.IsPreparationComplete)
-                {
-                    args.IsEnabled = false;
+        //private static readonly TextObject _waitSiegeEquipmentsText = new TextObject("{=bCuxzp1N}You need to wait for the siege equipment to be prepared.", (Dictionary<string, object>)null);
+        //private static readonly TextObject _woundedAssaultText = new TextObject("{=gzYuWR28}You are wounded, and in no condition to lead an assault.", (Dictionary<string, object>)null);
+        //private static readonly TextObject _noCommandText = new TextObject("{=1Hd19nq5}You are not in command of this siege.", (Dictionary<string, object>)null);
+        //private static bool game_menu_siege_strategies_lead_assault_on_condition(MenuCallbackArgs args)
+        //{
+        //    args.optionLeaveType = GameMenuOption.LeaveType.LeadAssault;
+        //    if (MobileParty.MainParty.BesiegedSettlement == null)
+        //        return false;
+        //    if (Campaign.Current.Models.EncounterModel.GetLeaderOfSiegeEvent(MobileParty.MainParty.BesiegedSettlement.SiegeEvent, PlayerSiege.PlayerSide) == Hero.MainHero)
+        //    {
+        //        Settlement settlement = PlayerEncounter.EncounteredParty != null ? PlayerEncounter.EncounteredParty.Settlement : PlayerSiege.PlayerSiegeEvent.BesiegedSettlement;
+        //        if (PlayerSiege.PlayerSide == BattleSideEnum.Attacker && !settlement.SiegeEvent.BesiegerCamp.IsPreparationComplete)
+        //        {
+        //            args.IsEnabled = false;
 
 
-                    args.Tooltip = _waitSiegeEquipmentsText;
-                }
-                else if (Hero.MainHero.IsWounded)
-                {
-                    args.IsEnabled = false;
-                    args.Tooltip = _woundedAssaultText;
-                }
-            }
-            else
-            {
-                args.IsEnabled = false;
-                args.Tooltip = _noCommandText;
-            }
-            return true;
-        }
+        //            args.Tooltip = _waitSiegeEquipmentsText;
+        //        }
+        //        else if (Hero.MainHero.IsWounded)
+        //        {
+        //            args.IsEnabled = false;
+        //            args.Tooltip = _woundedAssaultText;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        args.IsEnabled = false;
+        //        args.Tooltip = _noCommandText;
+        //    }
+        //    return true;
+        //}
 
-        private static void menu_siege_strategies_lead_assault_on_consequence(MenuCallbackArgs args)
+        private void menu_siege_strategies_lead_assault_on_consequence(MenuCallbackArgs args)
         {
             MissionStatePatch.CampaignTimeSecBattleMP = getCampainTimeSec();
 
@@ -272,156 +281,174 @@ namespace BattleLink.Singleplayer
 
             //GameMenu.SwitchToMenu("encounter"); 
             // GameMenu.SwitchToMenu("assault_town");
+
+            btnLoadResult.MenuContext.Refresh();
         }
 
-        private bool game_menu_encounter_attack_on_condition(MenuCallbackArgs args)
+        private void game_menu_encounter_order_attack_mp_on_consequence(MenuCallbackArgs args)
         {
-            this.CheckEnemyAttackableHonorably(args);
-            bool show = MenuHelper.EncounterAttackCondition(args);
-            args.optionLeaveType = LeaveType.SiegeAmbush; //(LeaveType) id++;
-            if (show)
-            {
-                if (PlayerEncounter.Current == null)
-                {
-                    return false;
-                }
+            MissionStatePatch.CampaignTimeSecBattleMP = getCampainTimeSec();
 
-                MapEvent battle = PlayerEncounter.Battle;
-                Settlement mapEventSettlement = MobileParty.MainParty.MapEvent.MapEventSettlement;
-                //if (mapEventSettlement != null && !battle.IsSallyOut && !battle.IsSiegeOutside)
-                //{
-                //    args.Tooltip = new TextObject("{=}CaravanBattleMission not implemented.");
-                //    return false;
-                //}
 
-                //if (PlayerEncounter.Current == null
-                //   || (mapEventSettlement != null && !battle.IsSallyOut && !battle.IsSiegeOutside))
-                //{
-                //    args.Tooltip = new TextObject("{=}Raid SiegeAmbush Siege Village Hideout mission not implemented.");
-                //    return false;
-                //}
+            //Campaign.Current.GameMenuManager.AddGameMenuOption()
+            EncounterGameMenuBehavior egmb = Campaign.Current.GetCampaignBehavior<EncounterGameMenuBehavior>();
+            
+            MethodInfo fieldConsequence = typeof(EncounterGameMenuBehavior).GetMethod("game_menu_encounter_attack_on_consequence", BindingFlags.NonPublic | BindingFlags.Instance);
+            //MethodInfo fieldConsequence = typeof(EncounterGameMenuBehavior).GetMethod("game_menu_encounter_order_attack_on_consequence", BindingFlags.NonPublic | BindingFlags.Instance);
+            fieldConsequence.Invoke(egmb, new object[] { args });
 
-                //bool flag = MapEvent.PlayerMapEvent.PartiesOnSide(BattleSideEnum.Defender).Any((MapEventParty involvedParty) => involvedParty.Party.IsMobile && involvedParty.Party.MobileParty.IsCaravan);
-                //bool flag2 = MapEvent.PlayerMapEvent.MapEventSettlement == null && MapEvent.PlayerMapEvent.PartiesOnSide(BattleSideEnum.Defender).Any((MapEventParty involvedParty) => involvedParty.Party.IsMobile && involvedParty.Party.MobileParty.IsVillager);
-                //if (flag || flag2)
-                //{
-                //    args.Tooltip = new TextObject("{=}CaravanBattleMission not implemented.");
-                //    return false;
-                //}
 
-            }
-
-            return show;
+            btnLoadResult.MenuContext.Refresh();
         }
+
+        //private bool game_menu_encounter_attack_on_condition(MenuCallbackArgs args)
+        //{
+        //    this.CheckEnemyAttackableHonorably(args);
+        //    bool show = MenuHelper.EncounterAttackCondition(args);
+        //    args.optionLeaveType = LeaveType.SiegeAmbush; //(LeaveType) id++;
+        //    if (show)
+        //    {
+        //        if (PlayerEncounter.Current == null)
+        //        {
+        //            return false;
+        //        }
+
+        //        MapEvent battle = PlayerEncounter.Battle;
+        //        Settlement mapEventSettlement = MobileParty.MainParty.MapEvent.MapEventSettlement;
+        //        //if (mapEventSettlement != null && !battle.IsSallyOut && !battle.IsSiegeOutside)
+        //        //{
+        //        //    args.Tooltip = new TextObject("{=}CaravanBattleMission not implemented.");
+        //        //    return false;
+        //        //}
+
+        //        //if (PlayerEncounter.Current == null
+        //        //   || (mapEventSettlement != null && !battle.IsSallyOut && !battle.IsSiegeOutside))
+        //        //{
+        //        //    args.Tooltip = new TextObject("{=}Raid SiegeAmbush Siege Village Hideout mission not implemented.");
+        //        //    return false;
+        //        //}
+
+        //        //bool flag = MapEvent.PlayerMapEvent.PartiesOnSide(BattleSideEnum.Defender).Any((MapEventParty involvedParty) => involvedParty.Party.IsMobile && involvedParty.Party.MobileParty.IsCaravan);
+        //        //bool flag2 = MapEvent.PlayerMapEvent.MapEventSettlement == null && MapEvent.PlayerMapEvent.PartiesOnSide(BattleSideEnum.Defender).Any((MapEventParty involvedParty) => involvedParty.Party.IsMobile && involvedParty.Party.MobileParty.IsVillager);
+        //        //if (flag || flag2)
+        //        //{
+        //        //    args.Tooltip = new TextObject("{=}CaravanBattleMission not implemented.");
+        //        //    return false;
+        //        //}
+
+        //    }
+
+        //    return show;
+        //}
 
         static int id = 0;
-        private async void game_menu_encounter_attack_on_consequence(MenuCallbackArgs args)
-        {
-            InformationManager.DisplayMessage(new InformationMessage("game_menu_encounter_attack_on_consequence - click"));
+        //private async void game_menu_encounter_attack_on_consequence(MenuCallbackArgs args)
+        //{
+        //    InformationManager.DisplayMessage(new InformationMessage("game_menu_encounter_attack_on_consequence - click"));
 
-            MapEvent battle = PlayerEncounter.Battle;
-            PartyBase leaderParty = battle.GetLeaderParty(PartyBase.MainParty.OpponentSide);
-            BeHostileAction.ApplyEncounterHostileAction(PartyBase.MainParty, leaderParty);
-            if (PlayerEncounter.Current == null)
-            {
-                InformationManager.DisplayMessage(new InformationMessage("Not implemented"));
-                return;
-            }
+        //    MapEvent battle = PlayerEncounter.Battle;
+        //    PartyBase leaderParty = battle.GetLeaderParty(PartyBase.MainParty.OpponentSide);
+        //    BeHostileAction.ApplyEncounterHostileAction(PartyBase.MainParty, leaderParty);
+        //    if (PlayerEncounter.Current == null)
+        //    {
+        //        InformationManager.DisplayMessage(new InformationMessage("Not implemented"));
+        //        return;
+        //    }
 
-            Settlement mapEventSettlement = MobileParty.MainParty.MapEvent.MapEventSettlement;
-            bool isSallyOut = mapEventSettlement != null && battle.IsSallyOut;
-            bool isSiege = mapEventSettlement != null && battle.IsSiegeAssault && !isSallyOut;
-            //if (mapEventSettlement != null && !battle.IsSallyOut && !battle.IsSiegeOutside)
-            //{
-            //    InformationManager.DisplayMessage(new InformationMessage("Siege Not implemented"));
-            //    return;
-            //}
+        //    Settlement mapEventSettlement = MobileParty.MainParty.MapEvent.MapEventSettlement;
+        //    bool isSallyOut = mapEventSettlement != null && battle.IsSallyOut;
+        //    bool isSiege = mapEventSettlement != null && battle.IsSiegeAssault && !isSallyOut;
+        //    //if (mapEventSettlement != null && !battle.IsSallyOut && !battle.IsSiegeOutside)
+        //    //{
+        //    //    InformationManager.DisplayMessage(new InformationMessage("Siege Not implemented"));
+        //    //    return;
+        //    //}
 
-            bool isCaravan = MapEvent.PlayerMapEvent.PartiesOnSide(BattleSideEnum.Defender).Any((MapEventParty involvedParty) => involvedParty.Party.IsMobile && involvedParty.Party.MobileParty.IsCaravan);
-            bool isVillager = MapEvent.PlayerMapEvent.MapEventSettlement == null && MapEvent.PlayerMapEvent.PartiesOnSide(BattleSideEnum.Defender).Any((MapEventParty involvedParty) => involvedParty.Party.IsMobile && involvedParty.Party.MobileParty.IsVillager);
-            //if (isCaravan || isVillager)
-            //{
-            //    InformationManager.DisplayMessage(new InformationMessage("Caravan not implemented"));
-            //    return;
-            //    //CampaignMission.OpenCaravanBattleMission(rec, flag);
-            //}
-
-
-            MapPatchData mapPatchAtPosition = Campaign.Current.MapSceneWrapper.GetMapPatchAtPosition(MobileParty.MainParty.Position2D);
-            string battleSceneForMapPatch;
-            if (isSiege || isSallyOut)
-            {
-                //string sceneLevels = Campaign.Current.Models.LocationModel.GetUpgradeLevelTag(3) + " siege";
-                //rec.SceneLevels = sceneLevels;
-                int wallLevel = mapEventSettlement.Town.GetWallLevel();
-                battleSceneForMapPatch = mapEventSettlement.LocationComplex.GetLocationWithId("center").GetSceneName(wallLevel);
-            }
-            else
-            {
-                battleSceneForMapPatch = PlayerEncounter.GetBattleSceneForMapPatch(mapPatchAtPosition);
-            }
+        //    bool isCaravan = MapEvent.PlayerMapEvent.PartiesOnSide(BattleSideEnum.Defender).Any((MapEventParty involvedParty) => involvedParty.Party.IsMobile && involvedParty.Party.MobileParty.IsCaravan);
+        //    bool isVillager = MapEvent.PlayerMapEvent.MapEventSettlement == null && MapEvent.PlayerMapEvent.PartiesOnSide(BattleSideEnum.Defender).Any((MapEventParty involvedParty) => involvedParty.Party.IsMobile && involvedParty.Party.MobileParty.IsVillager);
+        //    //if (isCaravan || isVillager)
+        //    //{
+        //    //    InformationManager.DisplayMessage(new InformationMessage("Caravan not implemented"));
+        //    //    return;
+        //    //    //CampaignMission.OpenCaravanBattleMission(rec, flag);
+        //    //}
 
 
+        //    MapPatchData mapPatchAtPosition = Campaign.Current.MapSceneWrapper.GetMapPatchAtPosition(MobileParty.MainParty.Position2D);
+        //    string battleSceneForMapPatch;
+        //    if (isSiege || isSallyOut)
+        //    {
+        //        //string sceneLevels = Campaign.Current.Models.LocationModel.GetUpgradeLevelTag(3) + " siege";
+        //        //rec.SceneLevels = sceneLevels;
+        //        int wallLevel = mapEventSettlement.Town.GetWallLevel();
+        //        battleSceneForMapPatch = mapEventSettlement.LocationComplex.GetLocationWithId("center").GetSceneName(wallLevel);
+        //    }
+        //    else
+        //    {
+        //        battleSceneForMapPatch = PlayerEncounter.GetBattleSceneForMapPatch(mapPatchAtPosition);
+        //    }
 
 
-            //MissionInitializerRecord rec = new MissionInitializerRecord(battleSceneForMapPatch);
-            //rec.TerrainType = (int)Campaign.Current.MapSceneWrapper.GetFaceTerrainType(MobileParty.MainParty.CurrentNavigationFace);
-            //rec.DamageToPlayerMultiplier = Campaign.Current.Models.DifficultyModel.GetDamageToPlayerMultiplier();
-            //rec.DamageToFriendsMultiplier = Campaign.Current.Models.DifficultyModel.GetPlayerTroopsReceivedDamageMultiplier();
-            //rec.DamageFromPlayerToFriendsMultiplier = Campaign.Current.Models.DifficultyModel.GetPlayerTroopsReceivedDamageMultiplier();
-            //rec.NeedsRandomTerrain = false;
-            //rec.PlayingInCampaignMode = true;
-            //rec.RandomTerrainSeed = MBRandom.RandomInt(10000);
-            ////rec.AtmosphereOnCampaign = Campaign.Current.Models.MapWeatherModel.GetAtmosphereModel(MobileParty.MainParty.GetLogicalPosition());
-            //rec.SceneHasMapPatch = true;
-            ////rec.DecalAtlasGroup = 2;
-            //rec.PatchCoordinates = mapPatchAtPosition.normalizedCoordinates;
-            //rec.PatchEncounterDir = (battle.AttackerSide.LeaderParty.Position2D - battle.DefenderSide.LeaderParty.Position2D).Normalized();
-            //float timeOfDay = Campaign.CurrentTime % 24f;
-            //if (Campaign.Current != null)
-            //{
-            //    rec.TimeOfDay = timeOfDay;
-            //}
-            string sceneLevels ="";
-            var decalAtlas = DecalAtlasGroup.Battle;
-            if (mapEventSettlement!=null)
-            {
-                decalAtlas = DecalAtlasGroup.Town;
-            }
-            if (isSallyOut || isSiege)
-            {
-                int wallLevel = mapEventSettlement.Town.GetWallLevel();
-                sceneLevels = Campaign.Current.Models.LocationModel.GetUpgradeLevelTag(wallLevel) + " siege";
-                //rec.SceneLevels = sceneLevels;
-                //rec.DecalAtlasGroup = (int)DecalAtlasGroup.Town;
-            }
-            MissionInitializerRecord rec = SandBoxMissions.CreateSandBoxMissionInitializerRecord(battleSceneForMapPatch, sceneLevels, decalAtlasGroup: decalAtlas);
 
-            createAndSendFile(rec);
 
-            //refresh
-            btnLoadResult.MenuContext.Refresh();
+        //    //MissionInitializerRecord rec = new MissionInitializerRecord(battleSceneForMapPatch);
+        //    //rec.TerrainType = (int)Campaign.Current.MapSceneWrapper.GetFaceTerrainType(MobileParty.MainParty.CurrentNavigationFace);
+        //    //rec.DamageToPlayerMultiplier = Campaign.Current.Models.DifficultyModel.GetDamageToPlayerMultiplier();
+        //    //rec.DamageToFriendsMultiplier = Campaign.Current.Models.DifficultyModel.GetPlayerTroopsReceivedDamageMultiplier();
+        //    //rec.DamageFromPlayerToFriendsMultiplier = Campaign.Current.Models.DifficultyModel.GetPlayerTroopsReceivedDamageMultiplier();
+        //    //rec.NeedsRandomTerrain = false;
+        //    //rec.PlayingInCampaignMode = true;
+        //    //rec.RandomTerrainSeed = MBRandom.RandomInt(10000);
+        //    ////rec.AtmosphereOnCampaign = Campaign.Current.Models.MapWeatherModel.GetAtmosphereModel(MobileParty.MainParty.GetLogicalPosition());
+        //    //rec.SceneHasMapPatch = true;
+        //    ////rec.DecalAtlasGroup = 2;
+        //    //rec.PatchCoordinates = mapPatchAtPosition.normalizedCoordinates;
+        //    //rec.PatchEncounterDir = (battle.AttackerSide.LeaderParty.Position2D - battle.DefenderSide.LeaderParty.Position2D).Normalized();
+        //    //float timeOfDay = Campaign.CurrentTime % 24f;
+        //    //if (Campaign.Current != null)
+        //    //{
+        //    //    rec.TimeOfDay = timeOfDay;
+        //    //}
+        //    string sceneLevels ="";
+        //    var decalAtlas = DecalAtlasGroup.Battle;
+        //    if (mapEventSettlement!=null)
+        //    {
+        //        decalAtlas = DecalAtlasGroup.Town;
+        //    }
+        //    if (isSallyOut || isSiege)
+        //    {
+        //        int wallLevel = mapEventSettlement.Town.GetWallLevel();
+        //        sceneLevels = Campaign.Current.Models.LocationModel.GetUpgradeLevelTag(wallLevel) + " siege";
+        //        //rec.SceneLevels = sceneLevels;
+        //        //rec.DecalAtlasGroup = (int)DecalAtlasGroup.Town;
+        //    }
+        //    MissionInitializerRecord rec = SandBoxMissions.CreateSandBoxMissionInitializerRecord(battleSceneForMapPatch, sceneLevels, decalAtlasGroup: decalAtlas);
 
-        }
+        //    createAndSendFile(rec);
+
+        //    //refresh
+        //    btnLoadResult.MenuContext.Refresh();
+
+        //}
 
         static public async void createAndSendFile(MissionInitializerRecord rec, string missionName="", InitializeMissionBehaviorsDelegate behaviorsDelegate=null)
         {
-            MapEvent battle = PlayerEncounter.Battle;
-            MapPatchData mapPatchAtPosition = Campaign.Current.MapSceneWrapper.GetMapPatchAtPosition(MobileParty.MainParty.Position2D);
-            rec.PatchCoordinates = mapPatchAtPosition.normalizedCoordinates;
-            rec.PatchEncounterDir = (battle.AttackerSide.LeaderParty.Position2D - battle.DefenderSide.LeaderParty.Position2D).Normalized();
-            rec.TimeOfDay = Campaign.CurrentTime % 24f;
+            //MapEvent battle = PlayerEncounter.Battle;
+            //MapPatchData mapPatchAtPosition = Campaign.Current.MapSceneWrapper.GetMapPatchAtPosition(MobileParty.MainParty.Position2D);
+            //rec.PatchCoordinates = mapPatchAtPosition.normalizedCoordinates;
+            //rec.PatchEncounterDir = (battle.AttackerSide.LeaderParty.Position2D - battle.DefenderSide.LeaderParty.Position2D).Normalized();
+            //rec.TimeOfDay = Campaign.CurrentTime % 24f;
 
 
 
             //"Battle"
-            MapEventSide att = MapEvent.PlayerMapEvent.GetMapEventSide(BattleSideEnum.Attacker);
+            //MapEventSide att = MapEvent.PlayerMapEvent.GetMapEventSide(BattleSideEnum.Attacker);
 
             //MobileParty.MainParty.MapEvent
             MapEvent mapEvent = MobileParty.MainParty.MapEvent;
 
-            MapEventSide mesDef = mapEvent.GetMapEventSide(BattleSideEnum.Defender);// to remove
-            MapEventSide mesAtt = mapEvent.GetMapEventSide(BattleSideEnum.Attacker);
+            //MapEventSide mesDef = mapEvent.GetMapEventSide(BattleSideEnum.Defender);// to remove
+            //MapEventSide mesAtt = mapEvent.GetMapEventSide(BattleSideEnum.Attacker);
 
 
             var players = new List<Player>();

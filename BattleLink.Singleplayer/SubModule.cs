@@ -14,6 +14,7 @@ using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.CustomBattle;
+using TaleWorlds.MountAndBlade.View.MissionViews;
 using TaleWorlds.MountAndBlade.ViewModelCollection;
 using static TaleWorlds.Library.Debug;
 
@@ -55,7 +56,9 @@ namespace BattleLink.Singleplayer
             //var a2 = FormatterServices.GetUninitializedObject(typeof(CharacterObject));
             //new SandboxBattleBannerBearersModel();
             //new BattlePowerCalculationLogic();
-            var a = FormatterServices.GetUninitializedObject(typeof(MissionAgentSpawnLogic));
+            //var a = FormatterServices.GetUninitializedObject(typeof(AgentBuildData));
+            //var a = FormatterServices.GetUninitializedObject(typeof(MissionCombatantsLogic));
+            var a = FormatterServices.GetUninitializedObject(typeof(MissionAgentLabelView));
 
             //var a2 = (Mission)FormatterServices.GetUninitializedObject(typeof(MissionAgentSpawnLogic));
 

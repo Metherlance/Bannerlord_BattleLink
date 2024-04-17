@@ -8,13 +8,14 @@ using TaleWorlds.Engine;
 using TaleWorlds.MountAndBlade.Missions.Handlers;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.Library;
+using BattleLink.Server.Behavior;
 
 namespace BattleLink.CommonSvMp.Behavior.Siege
 {
     public class BLDeploymentMissionController : MissionLogic
     {
         private BattleDeploymentHandler _battleDeploymentHandler;
-        protected MissionAgentSpawnLogic MissionAgentSpawnLogic;
+        protected BLMissionAgentSpawnLogic MissionAgentSpawnLogic;
         //private readonly bool _isPlayerAttacker;
         protected bool TeamSetupOver;
         private bool _isPlayerControllerSetToAI;
@@ -28,45 +29,46 @@ namespace BattleLink.CommonSvMp.Behavior.Siege
         {
             base.OnBehaviorInitialize();
             _battleDeploymentHandler = Mission.GetMissionBehavior<BattleDeploymentHandler>();
-            MissionAgentSpawnLogic = Mission.GetMissionBehavior<MissionAgentSpawnLogic>();
+            MissionAgentSpawnLogic = Mission.GetMissionBehavior<BLMissionAgentSpawnLogic>();
         }
 
         public override void AfterStart()
         {
             base.AfterStart();
             Mission.AllowAiTicking = false;
-            //for (int side = 0; side < 2; ++side)
-            //    this.MissionAgentSpawnLogic.SetSpawnTroops((BattleSideEnum)side, false);
-            //this.MissionAgentSpawnLogic.SetReinforcementsSpawnEnabled(false);
+            for (int side = 0; side < 2; ++side)
+                this.MissionAgentSpawnLogic.SetSpawnTroops((BattleSideEnum)side, false);
+            this.MissionAgentSpawnLogic.SetReinforcementsSpawnEnabled(false);
         }
 
         private void SetupTeams()
         {
-            Utilities.SetLoadingScreenPercentage(0.92f);
+            //Utilities.SetLoadingScreenPercentage(0.92f);
             Mission.DisableDying = true;
-            bool _isPlayerAttacker = false;
-            BattleSideEnum sideAI = _isPlayerAttacker ? BattleSideEnum.Defender : BattleSideEnum.Attacker;
-            BattleSideEnum sidePlayer = _isPlayerAttacker ? BattleSideEnum.Attacker : BattleSideEnum.Defender;
-            SetupTeamsOfSide(sideAI);
-            OnSideDeploymentFinished(sideAI);
-            if (_isPlayerAttacker)
-            {
-                foreach (Agent agent in (List<Agent>)Mission.Agents)
-                {
-                    if (agent.IsHuman && agent.Team != null && agent.Team.Side == sideAI)
-                    {
-                        agent.SetRenderCheckEnabled(false);
-                        agent.AgentVisuals.SetVisible(false);
-                        agent.MountAgent?.SetRenderCheckEnabled(false);
-                        agent.MountAgent?.AgentVisuals.SetVisible(false);
-                    }
-                }
-            }
-            SetupTeamsOfSide(sidePlayer);
+            //bool _isPlayerAttacker = false;
+            //BattleSideEnum sideAI = _isPlayerAttacker ? BattleSideEnum.Defender : BattleSideEnum.Attacker;
+            //BattleSideEnum sidePlayer = _isPlayerAttacker ? BattleSideEnum.Attacker : BattleSideEnum.Defender;
+            SetupTeamsOfSide(BattleSideEnum.Attacker);
+            OnSideDeploymentFinished(BattleSideEnum.Attacker);
+            //if (_isPlayerAttacker)
+            //{
+            //    foreach (Agent agent in (List<Agent>)Mission.Agents)
+            //    {
+            //        if (agent.IsHuman && agent.Team != null && agent.Team.Side == sideAI)
+            //        {
+            //            agent.SetRenderCheckEnabled(false);
+            //            agent.AgentVisuals.SetVisible(false);
+            //            agent.MountAgent?.SetRenderCheckEnabled(false);
+            //            agent.MountAgent?.AgentVisuals.SetVisible(false);
+            //        }
+            //    }
+            //}
+            SetupTeamsOfSide(BattleSideEnum.Defender);
+            OnSideDeploymentFinished(BattleSideEnum.Defender);
             Mission.IsTeleportingAgents = true;
-            Utilities.SetLoadingScreenPercentage(0.96f);
-            if (MissionGameModels.Current.BattleInitializationModel.CanPlayerSideDeployWithOrderOfBattle())
-                return;
+            //Utilities.SetLoadingScreenPercentage(0.96f);
+            //if (MissionGameModels.Current.BattleInitializationModel.CanPlayerSideDeployWithOrderOfBattle())
+            //    return;
             FinishDeployment();
         }
 
@@ -82,12 +84,19 @@ namespace BattleLink.CommonSvMp.Behavior.Siege
 
         public override void OnMissionTick(float dt)
         {
-            base.OnMissionTick(dt);
-            if (TeamSetupOver || !(Mission.Scene != null))
-                return;
+            //base.OnMissionTick(dt);
+            //if (TeamSetupOver || !(Mission.Scene != null))
+            //    return;
+            //SetupTeams();
+            //TeamSetupOver = true;
+        }
+
+        public void BLOnMissionTickSetupTeams()
+        {
             SetupTeams();
             TeamSetupOver = true;
         }
+
 
         //[Conditional("DEBUG")]
         //private void DebugTick()
@@ -131,12 +140,12 @@ namespace BattleLink.CommonSvMp.Behavior.Siege
                 }
             }
             // null here for now
-            //this.MissionAgentSpawnLogic.OnBattleSideDeployed(team1.Side);
+            this.MissionAgentSpawnLogic.OnBattleSideDeployed(team1.Side);
         }
 
         protected virtual void SetupTeamsOfSide(BattleSideEnum side)
         {
-            // this.MissionAgentSpawnLogic.SetSpawnTroops(side, true, true);
+            this.MissionAgentSpawnLogic.SetSpawnTroops(side, true, true);
             SetupTeamsOfSideAux(side);
         }
 
@@ -179,16 +188,16 @@ namespace BattleLink.CommonSvMp.Behavior.Siege
             OnBeforeDeploymentFinished();
             //if (_isPlayerAttacker)
             //{
-                foreach (Agent agent in (List<Agent>)Mission.Agents)
-                {
-                    if (agent.IsHuman && agent.Team != null && agent.Team.Side == BattleSideEnum.Defender)
-                    {
-                        agent.SetRenderCheckEnabled(true);
-                        agent.AgentVisuals.SetVisible(true);
-                        agent.MountAgent?.SetRenderCheckEnabled(true);
-                        agent.MountAgent?.AgentVisuals.SetVisible(true);
-                    }
-                }
+                //foreach (Agent agent in (List<Agent>)Mission.Agents)
+                //{
+                //    if (agent.IsHuman && agent.Team != null && agent.Team.Side == BattleSideEnum.Defender)
+                //    {
+                //        agent.SetRenderCheckEnabled(true);
+                //        agent.AgentVisuals.SetVisible(true);
+                //        agent.MountAgent?.SetRenderCheckEnabled(true);
+                //        agent.MountAgent?.AgentVisuals.SetVisible(true);
+                //    }
+                //}
             //}
             Mission.IsTeleportingAgents = false;
             Mission.Current.OnDeploymentFinished();
@@ -211,13 +220,17 @@ namespace BattleLink.CommonSvMp.Behavior.Siege
             }
             Mission.AllowAiTicking = true;
             Mission.DisableDying = false;
-            //this.MissionAgentSpawnLogic.SetReinforcementsSpawnEnabled(true);
+            this.MissionAgentSpawnLogic.SetReinforcementsSpawnEnabled(true);
             OnAfterDeploymentFinished();
             Mission.RemoveMissionBehavior(this);
         }
 
         public virtual void OnBeforeDeploymentFinished() => OnSideDeploymentFinished(Mission.AttackerTeam.Side);
 
-        public virtual void OnAfterDeploymentFinished() => Mission.RemoveMissionBehavior(_battleDeploymentHandler);
+        public virtual void OnAfterDeploymentFinished()
+        {
+            // null here for now
+            //Mission.RemoveMissionBehavior(_battleDeploymentHandler);
+        }
     }
 }

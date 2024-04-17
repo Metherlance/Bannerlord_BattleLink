@@ -309,7 +309,7 @@ namespace BattleLink.Server
                             //(MissionBehavior) new MultiplayerWarmupComponent(),
                             (MissionBehavior) new MissionMultiplayerGameModeFlagDominationClient(),
                             (MissionBehavior) new MultiplayerTimerComponent(),
-                            (MissionBehavior) new BannerBearerLogic(),
+                            (MissionBehavior) new BLBannerBearerLogic(),
                             (MissionBehavior) new SpawnComponent(new FlagDominationSpawnFrameBehavior(), new BLFlagDominationSpawningBehavior()),
                             //(MissionBehavior) new SpawnComponent(new FlagDominationSpawnFrameBehavior(), new FlagDominationSpawningBehavior()),
                             (MissionBehavior) new MissionLobbyEquipmentNetworkComponent(),
@@ -378,7 +378,7 @@ namespace BattleLink.Server
                     }
                     else
                     {
-                        //listBehaviors.Add(new BLDeploymentMissionController());                        
+                        listBehaviors.Add(new BLDeploymentMissionController());                        
                     }
                     return listBehaviors.ToArray();
                 };

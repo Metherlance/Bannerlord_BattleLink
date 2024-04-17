@@ -27,7 +27,8 @@ namespace BattleLink.Server
 
         protected override void OnSubModuleLoad()
         {
-            var campaign = FormatterServices.GetUninitializedObject(typeof(MultiplayerIntermissionMapItemAdded));
+            //var campaign = FormatterServices.GetUninitializedObject(typeof(Mission));
+            // new Mission(new MissionInitializerRecord(),null);
             // var campaign = FormatterServices.GetUninitializedObject(typeof(MultiplayerIntermissionMapItemAdded));
             //var campaign = FormatterServices.GetUninitializedObject(typeof(BaseNetworkComponent));
             //var campaign = FormatterServices.GetUninitializedObject(typeof(BehaviorAssaultWalls));

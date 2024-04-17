@@ -4,6 +4,7 @@ using BattleLink.Common.Model;
 using BattleLink.Common.Spawn.Warmup;
 using BattleLink.Common.Utils;
 using BattleLink.CommonSvMp.Behavior;
+using BattleLink.CommonSvMp.Behavior.Siege;
 using NetworkMessages.FromServer;
 using System;
 using System.Collections.Generic;
@@ -238,7 +239,7 @@ namespace BattleLink.Common.Spawn.Battle
         {
             if (Mission.DefenderTeam.TeamAI==null)
             {
-                TeamQuerySystemUtils.setPowerFix(Mission.Current);
+                TeamQuerySystemUtils.setPowerFix(Mission);
                 BLTeamAiUtils.addAIGeneral(Mission);
             }
 
@@ -439,24 +440,28 @@ namespace BattleLink.Common.Spawn.Battle
 
             //// Set General
             // defender before attacker (important for siege, SiegeQuerySystem was init only by defender and use by the both)
-            foreach (var team in Mission.Teams)
-            {
-                if (team.Side!=BattleSideEnum.None)
-                {
-                    setFormation2General(team);
-                }
-            }
+            //foreach (var team in Mission.Teams)
+            //{
+            //    if (team.Side!=BattleSideEnum.None)
+            //    {
+            //        setFormation2General(team);
+            //    }
+            //}
 
+
+            var deploymentBehavior = Mission.GetMissionBehavior<BLDeploymentMissionController>();
+            deploymentBehavior.BLOnMissionTickSetupTeams();
 
             // change for BLSiegeDeployableMissionController SetupTeams
-            foreach (Team team in Mission.Teams)
-            {
-                if (team.Side != BattleSideEnum.None)
-                {
-                    team.OnDeployed();// needs BattleDeploymentHandler in list of behavior
-                    Mission.AutoDeployTeamUsingTeamAI(team);
-                }
-            }
+            //foreach (Team team in Mission.Teams)
+            //{
+            //    if (team.Side != BattleSideEnum.None)
+            //    {
+            //        //call from DeployementMissionController.OnMissionTick SetupTeamOfSide -> MissionAgentSpawnLogic.OnBattleSideDeployed
+            //        team.OnDeployed();// needs BattleDeploymentHandler in list of behavior
+            //        //Mission.AutoDeployTeamUsingTeamAI(team);
+            //    }
+            //}
 
 
             //if (team.GeneralAgent == null && teamSide.Parties[0].GeneralId == character.StringId && missionPeer != null)
@@ -653,7 +658,7 @@ namespace BattleLink.Common.Spawn.Battle
                 }
                 if (troopGeneral == null)
                 {
-                    MBDebug.Print("No general not normal " + team.Side, 0, DebugColor.Red);
+                    MBDebug.Print("No general or already spawned" + team.Side, 0, DebugColor.Red);
                     return;
                 }
 
@@ -738,10 +743,18 @@ namespace BattleLink.Common.Spawn.Battle
             ItemObject bannerItem = character.Equipment[EquipmentIndex.ExtraWeaponSlot].Item;//controllerFromFormation.BannerItem;
             if (bannerItem != null)
             {
+
+                //character.Equipment[EquipmentIndex.Weapon0] = new EquipmentElement(bannerItem);
+                for (int index = 1; index < 4; ++index)
+                    character.Equipment[index] = new EquipmentElement();
+                //equipmentForAgent[EquipmentIndex.ExtraWeaponSlot] = new EquipmentElement(bannerItem, null, agent.Banner);
+                //character.Equipment[EquipmentIndex.ExtraWeaponSlot] = new EquipmentElement(bannerItem);
+
                 if (bannerItem.IsBannerItem && bannerItem.BannerComponent != null)
                 {
                     agentBuildData.BannerItem(bannerItem);
                     ItemObject replacementWeapon = MissionGameModels.Current.BattleBannerBearersModel.GetBannerBearerReplacementWeapon(character);
+                    //replacementWeapon = character.Equipment[1].Item;
                     agentBuildData.BannerReplacementWeaponItem(replacementWeapon);
                 }
             }
@@ -780,11 +793,11 @@ namespace BattleLink.Common.Spawn.Battle
             //}
 
             //// Set General
-            if (team.GeneralAgent == null && teamSide.generalId == character.StringId && missionPeer != null)
-            {
-                team.SetPlayerRole(true, false);
-                team.GeneralAgent = agent;
-            }
+            //if (team.GeneralAgent == null && teamSide.generalId == character.StringId && missionPeer != null)
+            //{
+            //    team.SetPlayerRole(true, false);
+            //    team.GeneralAgent = agent;
+            //}
 
             //if (team.GeneralAgent == null && teamSide.Parties[0].GeneralId == character.StringId && missionPeer != null)
             //{
