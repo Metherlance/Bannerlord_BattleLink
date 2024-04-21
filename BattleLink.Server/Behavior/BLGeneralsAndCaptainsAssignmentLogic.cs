@@ -79,7 +79,15 @@ namespace BattleLink.Server.Behavior
                     Mission.GetMissionBehavior<MissionMultiplayerGameModeFlagDominationClient>().OnBotsControlledChanged(team.GeneralAgent.MissionPeer, countUnitTotalGeneral, countUnitTotalGeneral);
                 }
             }
-            //team.SetPlayerRole(generalPlayer, sergentPlayer);
+
+           // needs it or AI will split formation in Formation.IsAIOwned
+            team.SetPlayerRole(generalPlayer, sergentPlayer);
+            //overide SetPlayerRole we have multiple playerTeam //this != this.Mission.PlayerTeam
+            foreach (Formation formation in (List<Formation>)team.FormationsIncludingSpecialAndEmpty)
+            {
+                formation.SetControlledByAI(!generalPlayer && formation.PlayerOwner==null);//this != this.Mission.PlayerTeam 
+            }
+
             //team.QuerySystem.Expire();
             //team.ResetTactic();
         }

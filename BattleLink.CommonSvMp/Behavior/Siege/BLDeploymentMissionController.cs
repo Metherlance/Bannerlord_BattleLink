@@ -48,8 +48,10 @@ namespace BattleLink.CommonSvMp.Behavior.Siege
             //bool _isPlayerAttacker = false;
             //BattleSideEnum sideAI = _isPlayerAttacker ? BattleSideEnum.Defender : BattleSideEnum.Attacker;
             //BattleSideEnum sidePlayer = _isPlayerAttacker ? BattleSideEnum.Attacker : BattleSideEnum.Defender;
-            SetupTeamsOfSide(BattleSideEnum.Attacker);
-            OnSideDeploymentFinished(BattleSideEnum.Attacker);
+           
+            SetupTeamsOfSide(BattleSideEnum.Attacker);            
+            //OnSideDeploymentFinished(BattleSideEnum.Attacker);// only for AI
+
             //if (_isPlayerAttacker)
             //{
             //    foreach (Agent agent in (List<Agent>)Mission.Agents)
@@ -63,8 +65,10 @@ namespace BattleLink.CommonSvMp.Behavior.Siege
             //        }
             //    }
             //}
+           
             SetupTeamsOfSide(BattleSideEnum.Defender);
-            OnSideDeploymentFinished(BattleSideEnum.Defender);
+            //OnSideDeploymentFinished(BattleSideEnum.Defender);// only for AI
+
             Mission.IsTeleportingAgents = true;
             //Utilities.SetLoadingScreenPercentage(0.96f);
             //if (MissionGameModels.Current.BattleInitializationModel.CanPlayerSideDeployWithOrderOfBattle())

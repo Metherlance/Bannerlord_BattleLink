@@ -58,7 +58,7 @@ namespace BattleLink.Singleplayer
             //new BattlePowerCalculationLogic();
             //var a = FormatterServices.GetUninitializedObject(typeof(AgentBuildData));
             //var a = FormatterServices.GetUninitializedObject(typeof(MissionCombatantsLogic));
-            var a = FormatterServices.GetUninitializedObject(typeof(MissionAgentLabelView));
+            //var a = FormatterServices.GetUninitializedObject(typeof(TacticComponent));
 
             //var a2 = (Mission)FormatterServices.GetUninitializedObject(typeof(MissionAgentSpawnLogic));
 
