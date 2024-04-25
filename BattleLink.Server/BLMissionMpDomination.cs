@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Xml.Serialization;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
@@ -1093,6 +1094,29 @@ namespace BattleLink.Server
         //}
 
         //public Team GetFlagOwnerTeam(FlagCapturePoint flag) => flag == null ? (Team)null : this._capturePointOwners[flag.FlagIndex];
+
+
+        //public override void OnAgentFleeing(Agent affectedAgent)
+        //{
+        //    base.OnAgentFleeing(affectedAgent);
+        //    //affectedAgent.SetAutomaticTargetSelection(false);
+        //    //affectedAgent.SetTargetAgent(null
+        //    //affectedAgent.Retreat();
+        //    //affectedAgent.EventControlFlags |= Agent.EventControlFlag.Run;
+
+
+        //    FieldInfo fMpWarmupComponentState = typeof(Agent).GetField("\u003CIsRunningAway\u003Ek__BackingField", BindingFlags.NonPublic | BindingFlags.Instance);
+        //    fMpWarmupComponentState.SetValue(affectedAgent, true);
+        //    affectedAgent.SetTargetAgent(null);
+        //    var worldPosition = Mission.GetClosestFleePositionForAgent(affectedAgent);
+        //    var v = new Vec2(worldPosition.X, worldPosition.Y);
+        //    affectedAgent.SetTargetPositionSynched(ref v);
+        //}
+
+        //public override void OnAgentPanicked(Agent affectedAgent)
+        //{
+        //    base.OnAgentPanicked(affectedAgent);
+        //}
 
         public override void OnAgentRemoved(
           Agent affectedAgent,

@@ -300,6 +300,7 @@
     <Compile Include="TeamSelect\BLTeamSelectTeamVM.cs" />
     <Compile Include="TeamSelect\BLTeamSelectView.cs" />
     <Compile Include="TeamSelect\BLTeamSelectVM.cs" />
+    <Compile Include="Views\BLMissionLobbyEquipementUIHandler.cs" />
     <Compile Include="Views\BLMissionMultiplayerEscapeMenu.cs" />
     <None Include="Views\BLOrderTroopPlacer.cs.old" />
     <Compile Include="Views\BLMissionGauntletMultiplayerOrderUIHandler.cs" />

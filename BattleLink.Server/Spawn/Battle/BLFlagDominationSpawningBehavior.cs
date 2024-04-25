@@ -265,7 +265,6 @@ namespace BattleLink.Common.Spawn.Battle
             {
                 int sideNumberTroop = 0;
                 BattleSideEnum side = (BattleSideEnum)Enum.Parse(typeof(BattleSideEnum), sideDto.BattleSide);
-                Team teamSide = BattleSideEnum.Attacker.ToString().Equals(sideDto.BattleSide) ? Mission.AttackerTeam : Mission.DefenderTeam;
 
                 Mission.Current.DeploymentPlan.GetFormationPlan(side, 0, DeploymentPlanType.Initial);
 
@@ -274,23 +273,20 @@ namespace BattleLink.Common.Spawn.Battle
                 deploymentPlanInitial.ClearAddedTroops();
                 deploymentPlanInitial.ClearPlan();
 
-                dicFormationTroopMax.TryGetValue(teamSide, out int[] dicFormationMaxCpt);
-
-                foreach (var team in sideDto.Teams)
+                foreach (var teamDto in sideDto.Teams)
                 {
-                    foreach (var party in team.Parties)
-                    {
-                        dicParty.Add(party.Index, new BLParty()
-                        {
-                            partyId = party.Id,
-                            partyIndex = party.Index,
-                        });
+                    Team team = BLReferentialHolder.getTeamBy(teamDto);
+                    dicFormationTroopMax.TryGetValue(team, out int[] dicFormationMaxCpt);
 
+                    foreach (var party in teamDto.Parties)
+                    {
                         BLParty partyBL = new BLParty()
                         {
                             partyId = party.Id,
                             partyIndex = party.Index,
+                            team = team,
                         };
+                        dicParty.Add(party.Index, partyBL);
 
                         foreach (var troop in party.Troops)
                         {

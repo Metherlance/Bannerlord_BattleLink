@@ -27,7 +27,8 @@ namespace BattleLink.Server
 
         protected override void OnSubModuleLoad()
         {
-            //var campaign = FormatterServices.GetUninitializedObject(typeof(Mission));
+            SandboxBattleMoraleModel campaign = (SandboxBattleMoraleModel)FormatterServices.GetUninitializedObject(typeof(SandboxBattleMoraleModel));
+            //campaign.GetAverageMorale((Formation)null);
             // new Mission(new MissionInitializerRecord(),null);
             // var campaign = FormatterServices.GetUninitializedObject(typeof(MultiplayerIntermissionMapItemAdded));
             //var campaign = FormatterServices.GetUninitializedObject(typeof(BaseNetworkComponent));
@@ -79,6 +80,7 @@ namespace BattleLink.Server
             starterObject.AddModel(new BLAgentStatCalculateModelOld());
             starterObject.AddModel(new DefaultMapWeatherModel());
             starterObject.AddModel(new BLBattleBannerBearersModel());
+            starterObject.AddModel(new BLSandboxBattleMoraleModel());
             //starterObject.AddModel(new BLAgentApplyDamageModel());
             //starterObject.AddModel(new BLStrikeMagnitudeModel());
             //starterObject.AddModel(new SandboxApplyWeatherEffectsModel());

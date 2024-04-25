@@ -44,7 +44,7 @@ namespace BattleLink.Singleplayer
             //Agent a22 = (Agent)FormatterServices.GetUninitializedObject(typeof(Agent));
             //Scene a22 = (Scene)FormatterServices.GetUninitializedObject(typeof(Scene));
             //var a = a22.GetSunDirection();
-            //var a2 = FormatterServices.GetUninitializedObject(typeof(TeamAISiegeDefender));
+            var a2 = FormatterServices.GetUninitializedObject(typeof(SandboxBattleMoraleModel));
             //var a2 = FormatterServices.GetUninitializedObject(typeof(TeamAISiegeAttacker));
             //var a2 = FormatterServices.GetUninitializedObject(typeof(UsableMachine));
             //var a2 = FormatterServices.GetUninitializedObject(typeof(TacticDefendCastle));

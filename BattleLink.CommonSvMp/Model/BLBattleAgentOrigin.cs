@@ -4,6 +4,7 @@ using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
+using System;
 
 namespace BattleLink.Common.Model
 {
@@ -28,6 +29,14 @@ namespace BattleLink.Common.Model
 
         public uint factionColor2;
         uint IAgentOriginBase.FactionColor2 => factionColor2;
+
+        public BattleSideEnum Side
+        {
+            get
+            {
+                return party?.team?.Side ?? BattleSideEnum.None;
+            }
+        }
 
         //public BLBattleAgentOrigin(BasicCharacterObject? troop, BLParty party, Team team) : base(troop)
         //{
@@ -55,6 +64,11 @@ namespace BattleLink.Common.Model
             //this.partyIndex = -1;
             party = null;
         }
+
+        public int GetNumberOfHealthyMenOfTier(int tier)
+        {
+            return party?.GetNumberOfHealthyMenOfTier(tier) ?? 0;
+        }   
     }
 
     public class BLParty
@@ -68,6 +82,8 @@ namespace BattleLink.Common.Model
         public BLCharacterObject Scout;
         public BLCharacterObject Quartermaster;
         public BLCharacterObject General;
+        public Team team;
+        internal bool IsDisorganized;
 
         public bool HasPerk(PerkObject perk, bool checkSecondaryRole = false)
         {
@@ -109,6 +125,10 @@ namespace BattleLink.Common.Model
             }
         }
 
+        internal int GetNumberOfHealthyMenOfTier(int tier)
+        {
+            return 0;//TODO
+        }
     }
 
 }

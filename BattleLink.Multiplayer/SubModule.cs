@@ -53,7 +53,7 @@ namespace BattleLink.Multiplayer
 
         protected override void OnSubModuleLoad()
         {
-           // var a22 = FormatterServices.GetUninitializedObject(typeof(BaseNetworkComponent));
+             var a22 = FormatterServices.GetUninitializedObject(typeof(MissionGauntletClassLoadout));
 
             base.OnSubModuleLoad();
             InformationManager.DisplayMessage(new InformationMessage("BattleLink - OnSubModuleLoad", green));
@@ -86,6 +86,7 @@ namespace BattleLink.Multiplayer
             // GameModelsManager part du dernier élement
             starterObject.AddModel(new BLAgentStatCalculateModelOld());
             starterObject.AddModel(new DefaultMapWeatherModel());
+           // starterObject.AddModel(new BLSandboxBattleMoraleModel()); // I think we don't need to see the moral of formation
             // MultiplayerAgentStatCalculateModel
 
 

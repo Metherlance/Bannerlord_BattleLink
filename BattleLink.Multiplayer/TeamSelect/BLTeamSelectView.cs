@@ -7,6 +7,8 @@ using TaleWorlds.Engine.GauntletUI;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.Multiplayer.GauntletUI.Mission;
+using TaleWorlds.MountAndBlade.Multiplayer.View.MissionViews;
+using TaleWorlds.MountAndBlade.View;
 using TaleWorlds.MountAndBlade.View.MissionViews;
 using TaleWorlds.MountAndBlade.View.Screens;
 using TaleWorlds.ObjectSystem;
@@ -14,7 +16,7 @@ using TaleWorlds.TwoDimension;
 
 namespace BattleLink.Views
 {
-    // [OverrideView(typeof(MultiplayerTeamSelectUIHandler))]
+    [OverrideView(typeof(MultiplayerTeamSelectUIHandler))]
     public class BLTeamSelectView : MissionView
     {
         private GauntletLayer _gauntletLayer;
@@ -27,7 +29,7 @@ namespace BattleLink.Views
 
         private MissionGauntletMultiplayerScoreboard _scoreboardGauntletComponent;
 
-        private MissionGauntletClassLoadout _classLoadoutGauntletComponent;
+        private BLMissionLobbyEquipementUIHandler _classLoadoutGauntletComponent;
 
         private MissionLobbyComponent _lobbyComponent;
 
@@ -49,7 +51,7 @@ namespace BattleLink.Views
             base.OnMissionScreenInitialize();
             _missionNetworkComponent = Mission.GetMissionBehavior<MissionNetworkComponent>();
             _multiplayerTeamSelectComponent = Mission.GetMissionBehavior<MultiplayerTeamSelectComponent>();
-            _classLoadoutGauntletComponent = Mission.GetMissionBehavior<MissionGauntletClassLoadout>();
+            _classLoadoutGauntletComponent = Mission.GetMissionBehavior<BLMissionLobbyEquipementUIHandler>();
             _lobbyComponent = Mission.GetMissionBehavior<MissionLobbyComponent>();
             _missionNetworkComponent.OnMyClientSynchronized += OnMyClientSynchronized;
             _lobbyComponent.OnPostMatchEnded += OnClose;

@@ -38,5 +38,11 @@ namespace BattleLink.Common.Behavior
             throw new MBNotFoundException("not found");
         }
 
+        public static Team getTeamBy(TeamDto teamDto)
+        {
+            var teamMis = Mission.Current.Teams[teamDto.missionTeamsIndex];
+            return teamMis;
+        }
+
     }
 }

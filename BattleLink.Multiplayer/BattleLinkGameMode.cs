@@ -40,7 +40,7 @@ namespace BattleLink.Multiplayer
                           (MissionBehavior) new MultiplayerMissionAgentVisualSpawnComponent(),
                           new MissionGauntletOptionsUIHandler(),
                           //(MissionBehavior) new ConsoleMatchStartEndHandler(),
-                          (MissionBehavior) new MissionLobbyEquipmentNetworkComponent(),
+                          (MissionBehavior) new MissionLobbyEquipmentNetworkComponent(),// maybe here
                           (MissionBehavior) new MultiplayerTeamSelectComponent(),
                           (MissionBehavior) new MissionHardBorderPlacer(),
                           (MissionBehavior) new MissionBoundaryPlacer(),

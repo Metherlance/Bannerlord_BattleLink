@@ -17,7 +17,7 @@ namespace BattleLink.Multiplayer
             public static MissionView[] OpenBattleLinkMission(Mission mission)
             {
                 List<MissionView> missionViewList = new List<MissionView>();
-                missionViewList.Add(MultiplayerViewCreator.CreateLobbyEquipmentUIHandler());
+                missionViewList.Add(MultiplayerViewCreator.CreateLobbyEquipmentUIHandler());//here
                 missionViewList.Add(MultiplayerViewCreator.CreateMissionServerStatusUIHandler());
                 missionViewList.Add(MultiplayerViewCreator.CreateMultiplayerFactionBanVoteUIHandler());
                 missionViewList.Add(MultiplayerViewCreator.CreateMissionMultiplayerPreloadView(mission));

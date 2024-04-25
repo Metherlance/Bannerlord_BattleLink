@@ -320,6 +320,7 @@ namespace BattleLink.Server
                             (MissionBehavior) new AgentHumanAILogic(),
                             new BLGeneralsAndCaptainsAssignmentLogic(),
                             (MissionBehavior) new MissionAgentPanicHandler(),
+                            (MissionBehavior) new AgentMoraleInteractionLogic(),
                             (MissionBehavior) new MissionBoundaryCrossingHandler(),
                             (MissionBehavior) new MultiplayerPollComponent(),
                             (MissionBehavior) new MultiplayerAdminComponent(),
