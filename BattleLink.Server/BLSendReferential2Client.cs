@@ -5,6 +5,8 @@ using BattleLink.CommonSvMp.NetworkMessages.FromServer;
 using NetworkMessages.FromServer;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Serialization;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.MountAndBlade;
@@ -21,6 +23,7 @@ namespace BattleLink.Server
         private static List<BLInitCharactersMessage> listCharacterMessage;
         //private static List<BLInitCultureMessage> listCultureMessage;
         private static List<BLInitTeamMessage> listTeamMessage;
+        private static List<BLTeamCharactersMessage> listTeamCharacters;
 
         //static init singleton / check id already present
 
@@ -34,6 +37,8 @@ namespace BattleLink.Server
             int index = 0;
             foreach (BLCharacterObject character in characters)
             {
+                var eqRoasterNotCiv = character.AllEquipments.Where(e => !e.IsCivilian).ToList();
+
                 listCharacterMessage.Add(new BLInitCharactersMessage()
                 {
                     mbguid = character.Id.InternalValue,
@@ -59,6 +64,8 @@ namespace BattleLink.Server
                     skillAthletics = character.GetSkillValue(DefaultSkills.Athletics),
 
                     culture = character.Culture?.StringId,
+
+                    equipmentRoasters = eqRoasterNotCiv
 
                 });
                 index += 1;
@@ -97,6 +104,54 @@ namespace BattleLink.Server
 
             foreach (var teamMessage in listTeamMessage)
             {            
+                GameNetwork.BeginBroadcastModuleEvent();
+                GameNetwork.WriteMessage(teamMessage);
+                GameNetwork.EndBroadcastModuleEvent(GameNetwork.EventBroadcastFlags.IncludeUnsynchronizedClients, (NetworkCommunicator)null);
+            }
+
+        }
+
+        public static void setTeamCharactersMessage()
+        {
+            listTeamCharacters = new List<BLTeamCharactersMessage>();
+            foreach (var side in BLReferentialHolder.listTeam)
+            {
+                foreach (var team in side.Teams)
+                {
+                    Dictionary<string, int> dic = new Dictionary<string, int>();
+
+                    foreach (var party in team.Parties)
+                    {
+                        foreach (var troop in party.Troops)
+                        {
+                            if(dic.TryGetValue(troop.Id, out var nb))
+                            {
+                                dic.Add(troop.Id, nb+troop.Number);
+                            }
+                            else
+                            {
+                                dic.Add(troop.Id, troop.Number);
+                            }
+                        }
+                    }
+
+                    BLTeamCharactersMessage teamMes = new BLTeamCharactersMessage()
+                    {
+                        teamId = BLReferentialHolder.getTeamBy(team).TeamIndex,
+                        characterObjects = new List<BLCharacterObject>(),
+                    };
+                    foreach (KeyValuePair<string, int> entry in dic)
+                    {
+                        BLCharacterObject character = MBObjectManager.Instance.GetObject<BLCharacterObject>(entry.Key);
+                        teamMes.characterObjects.Add(character);
+                    }
+                    listTeamCharacters.Add(teamMes);
+
+                }
+            }
+
+            foreach (var teamMessage in listTeamCharacters)
+            {
                 GameNetwork.BeginBroadcastModuleEvent();
                 GameNetwork.WriteMessage(teamMessage);
                 GameNetwork.EndBroadcastModuleEvent(GameNetwork.EventBroadcastFlags.IncludeUnsynchronizedClients, (NetworkCommunicator)null);
@@ -242,6 +297,13 @@ namespace BattleLink.Server
                 GameNetwork.EndModuleEventAsServer();
             }
 
+            foreach (var teamCharactersMessage in listTeamCharacters)
+            {
+                GameNetwork.BeginModuleEventAsServer(networkPeer);
+                GameNetwork.WriteMessage(teamCharactersMessage);
+                GameNetwork.EndModuleEventAsServer();
+            }
+
             MBDebug.Print("BLSendReferential2Client - HandleLateNewClientAfterLoadingFinished - " + networkPeer.UserName + " - end ", 0, DebugColor.Green);
         }
 
@@ -299,6 +361,12 @@ namespace BattleLink.Server
                 GameNetwork.EndModuleEventAsServer();
             }
 
+            foreach (var teamCharactersMessage in listTeamCharacters)
+            {
+                GameNetwork.BeginModuleEventAsServer(clientConnectionInfo.NetworkPeer);
+                GameNetwork.WriteMessage(teamCharactersMessage);
+                GameNetwork.EndModuleEventAsServer();
+            }
 
             MBDebug.Print("BLSendReferential2Client - HandleNewMission - " + clientConnectionInfo.NetworkPeer.UserName + " - end ", 0, DebugColor.Green);
         }

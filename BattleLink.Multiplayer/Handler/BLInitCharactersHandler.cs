@@ -71,6 +71,53 @@ namespace BattleLink.Handler
             skills.AppendChild(createSkillValue(doc, "Athletics", message.skillAthletics));
 
 
+
+            var equipmentRoasters = doc.CreateElement("Equipments");
+            character.AppendChild(equipmentRoasters);
+
+            foreach(Equipment equip in message.equipmentRoasters)
+            {
+                var equipmentRoster = doc.CreateElement("EquipmentRoster");
+                equipmentRoasters.AppendChild(equipmentRoster);
+                equipmentRoster.SetAttribute("civilian", "false");
+
+
+
+
+                for (EquipmentIndex eqIndex = EquipmentIndex.Weapon0; eqIndex<EquipmentIndex.NumEquipmentSetSlots;eqIndex+=1)
+                {
+                    if (equip[eqIndex].Item!=null)
+                    {
+                        var equipment = doc.CreateElement("equipment");
+                        equipmentRoster.AppendChild(equipment);
+
+                        if (EquipmentIndex.Weapon0==eqIndex)
+                        {
+                            equipment.SetAttribute("slot", "Item0");
+                        }
+                        else if (EquipmentIndex.ExtraWeaponSlot == eqIndex)
+                        {
+                            equipment.SetAttribute("slot", "ExtraWeaponSlot");
+                        }
+                        else if (EquipmentIndex.Head == eqIndex)
+                        {
+                            equipment.SetAttribute("slot", "Head");
+                        }
+                        else if (EquipmentIndex.Horse == eqIndex)
+                        {
+                            equipment.SetAttribute("slot", "Horse");
+                        }
+                        else
+                        {
+                            equipment.SetAttribute("slot", eqIndex.ToString().Replace("Weapon", "Item"));
+                        }
+
+                        equipment.SetAttribute("id", "Item."+equip[eqIndex].Item.StringId);
+
+                    }
+                }
+            }
+
             //      message.bodyPropertiesValue
 
             //            < face >

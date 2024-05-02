@@ -290,6 +290,7 @@
     <Compile Include="Behavior\BLDeploymentMissionView.cs" />
     <Compile Include="Handler\BLAgentLabelRefreshHandler.cs" />
     <Compile Include="Handler\BLCreateAgentHandler.cs" />
+    <Compile Include="Handler\BLTeamCharactersHandler.cs" />
     <Compile Include="Handler\BLInitCharactersHandler.cs" />
     <Compile Include="Handler\BLInitTeamHandler.cs" />
     <Compile Include="Handler\BLSiegeEnginesHandler.cs" />
@@ -300,11 +301,12 @@
     <Compile Include="TeamSelect\BLTeamSelectTeamVM.cs" />
     <Compile Include="TeamSelect\BLTeamSelectView.cs" />
     <Compile Include="TeamSelect\BLTeamSelectVM.cs" />
-    <Compile Include="Views\BLMissionLobbyEquipementUIHandler.cs" />
+    <Compile Include="Views\Class\BLMissionLobbyEquipementUIHandler.cs" />
     <Compile Include="Views\BLMissionMultiplayerEscapeMenu.cs" />
     <None Include="Views\BLOrderTroopPlacer.cs.old" />
     <Compile Include="Views\BLMissionGauntletMultiplayerOrderUIHandler.cs" />
     <Compile Include="Views\BLOrderTroopPlacer.cs" />
+    <Compile Include="Views\Class\BLMultiplayerClassLoadoutVM.cs" />
     <Compile Include="Widgets\BannerWidget.cs" />
     <Compile Include="Widgets\LobbyLeftBtn.cs" />
     <Compile Include="Widgets\VBox.cs" />

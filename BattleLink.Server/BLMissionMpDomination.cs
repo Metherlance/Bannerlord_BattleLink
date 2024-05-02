@@ -99,6 +99,8 @@ namespace BattleLink.Server
 
             BLSendReferential2Client.setTeamMessage();
 
+            BLSendReferential2Client.setTeamCharactersMessage();
+
             MBDebug.Print("RBMissionMpGameMode - AfterStart", 0, DebugColor.Green);
             // TeamQuerySystemUtils.setPowerFix(this.Mission);
 

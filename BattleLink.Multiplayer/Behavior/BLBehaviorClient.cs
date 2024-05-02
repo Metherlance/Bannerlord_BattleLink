@@ -183,6 +183,21 @@ namespace BattleLink.Client.Behavior
                // InformationManager.DisplayMessage(new InformationMessage("CreateAgent Handler"));
             }
 
+            {
+
+                var oDicIndexType = fieldIndexContainer.GetValue(null);
+                Dictionary<System.Type, int> dicIndexType = (Dictionary<System.Type, int>)oDicIndexType;
+                int indexType = dicIndexType.TryGetValue(typeof(BLTeamCharactersMessage), out indexType) ? indexType : -1;
+
+                var valu = fieldContainer.GetValue(null);
+                Dictionary<int, List<GameNetworkMessage.ServerMessageHandlerDelegate<GameNetworkMessage>>> value = (Dictionary<int, List<GameNetworkMessage.ServerMessageHandlerDelegate<GameNetworkMessage>>>)valu;
+                var listCultureHandler = value[indexType];
+                listCultureHandler.Clear();
+                listCultureHandler.Add(BLTeamCharactersHandler.HandleServerTeamCharactersMessage);
+                // InformationManager.DisplayMessage(new InformationMessage("BLInitTeamMessage Handler"));
+
+            }
+
 
             // come on .... mir doesnt works ... replace:
             //CampaignSystem.GameState.IMapStateHandler.AfterTick(float dt) Ligne 1566

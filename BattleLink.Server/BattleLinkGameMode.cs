@@ -53,6 +53,9 @@ namespace BattleLink.Server
                 //0,256 -> -512 2048
                 CompressionMission.AgentOffsetCompressionInfo = new CompressionInfo.Integer(-512, 11);
 
+                //to remove
+                CompressionBasic.RoundPreparationTimeLimitCompressionInfo = new CompressionInfo.Integer(2, 1024, true);
+
                 MultiplayerIntermissionVotingManager.Instance.IsCultureVoteEnabled = false;
                 MultiplayerIntermissionVotingManager.Instance.IsMapVoteEnabled = false;
 

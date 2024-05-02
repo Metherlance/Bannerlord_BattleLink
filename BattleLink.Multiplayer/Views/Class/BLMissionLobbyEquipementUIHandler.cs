@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TaleWorlds.Engine.GauntletUI;
 using TaleWorlds.MountAndBlade.Multiplayer.GauntletUI.Mission;
 using TaleWorlds.MountAndBlade.Multiplayer.View.MissionViews;
@@ -10,6 +7,7 @@ using TaleWorlds.MountAndBlade.Multiplayer.ViewModelCollection.ClassLoadout;
 using TaleWorlds.MountAndBlade.View.MissionViews;
 using TaleWorlds.MountAndBlade.View;
 using TaleWorlds.MountAndBlade;
+using BattleLink.Views.Class;
 
 namespace BattleLink.Views
 {
@@ -18,7 +16,7 @@ namespace BattleLink.Views
     [OverrideView(typeof(MissionLobbyEquipmentUIHandler))]
     public class BLMissionLobbyEquipementUIHandler : MissionView
     {
-        private MultiplayerClassLoadoutVM _dataSource;
+        private BLMultiplayerClassLoadoutVM _dataSource;
 
         private GauntletLayer _gauntletLayer;
 
@@ -147,7 +145,7 @@ namespace BattleLink.Views
             _ = UIResourceManager.SpriteData;
             _ = UIResourceManager.ResourceContext;
             _ = UIResourceManager.UIResourceDepot;
-            _dataSource = new MultiplayerClassLoadoutVM(missionBehavior, OnRefreshSelection, _lastSelectedHeroClass);
+            _dataSource = new BLMultiplayerClassLoadoutVM(missionBehavior, OnRefreshSelection, _lastSelectedHeroClass);
             _gauntletLayer = new GauntletLayer(ViewOrderPriority);
             _gauntletLayer.LoadMovie("MultiplayerClassLoadout", _dataSource);
         }
@@ -199,7 +197,12 @@ namespace BattleLink.Views
         public override void OnMissionTick(float dt)
         {
             base.OnMissionTick(dt);
-            if (_tryToInitialize && GameNetwork.IsMyPeerReady && GameNetwork.MyPeer.GetComponent<MissionPeer>().HasSpawnedAgentVisuals && OnToggled(isActive: true))
+            //if (_tryToInitialize && GameNetwork.IsMyPeerReady && GameNetwork.MyPeer.GetComponent<MissionPeer>().HasSpawnedAgentVisuals && OnToggled(isActive: true))
+            // todo check if in battle
+            if (_tryToInitialize && GameNetwork.IsMyPeerReady 
+                && GameNetwork.MyPeer.GetComponent<MissionPeer>()?.Team!=null && GameNetwork.MyPeer.GetComponent<MissionPeer>().Team.Side!=TaleWorlds.Core.BattleSideEnum.None 
+                // show
+                && OnToggled(isActive: true))
             {
                 _tryToInitialize = false;
             }
