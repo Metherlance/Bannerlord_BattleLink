@@ -18,6 +18,7 @@ using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
+using TaleWorlds.MountAndBlade.Diamond;
 using TaleWorlds.ObjectSystem;
 using static TaleWorlds.CampaignSystem.MapEvents.MapEvent;
 using static TaleWorlds.Library.Debug;
@@ -697,6 +698,36 @@ namespace BattleLink.Common.Spawn.Battle
                 //bot
                 agentBuildData.NoHorses(botSpawnWithNoHorse);
             }
+
+            //face seed generator // for hero take body game, for player get config face/body
+            if (character.IsHero)
+            {
+                //agentBuildData.VisualsIndex(0);
+                agentBuildData.BodyProperties(character.GetBodyPropertiesMin());
+            }
+            else if (missionPeer!=null && missionPeer.GetNetworkPeer()!=null)
+            {
+                //player config body for non hero character
+                var playerData = missionPeer.GetNetworkPeer().PlayerConnectionInfo.GetParameter<PlayerData>("PlayerData");
+                agentBuildData.BodyProperties(playerData.BodyProperties).Race(playerData.Race).IsFemale(playerData.IsFemale);
+            }                                                                                                                                                                          
+            else
+            {
+                // CompressionMission.AgentOffsetCompressionInfo
+                //agentBuildData.VisualsIndex(1+MBRandom.RandomInt(255));
+
+                //agentBuildData.BodyProperties(BodyProperties.GetRandomBodyProperties(agentBuildData.AgentRace, agentBuildData.AgentIsFemale, character.GetBodyPropertiesMin(false), character.GetBodyPropertiesMax(), (int)agentBuildData.AgentOverridenSpawnEquipment.HairCoverType, agentBuildData.AgentEquipmentSeed, character.HairTags, character.BeardTags, character.TattooTags));
+
+                //TODO try to not set bodyProperties Overidden
+                var bodyProperties = BLWarmupSpawningBehavior.getRandomBodyProperties(character.GetBodyPropertiesMin(), character.GetBodyPropertiesMax());
+                agentBuildData.BodyProperties(bodyProperties);
+
+
+                ////CompressionBasic.RandomSeedCompressionInfo
+                //agentBuildData.EquipmentSeed(MBRandom.RandomInt(2000));
+            }
+
+
 
             //bool firstSpawn = missionPeer.SpawnCountThisRound == 0;
             //MatrixFrame spawnFrame = SpawnComponent.GetSpawnFrame(missionPeer.Team, agentBuildData.hasMount(), firstSpawn);

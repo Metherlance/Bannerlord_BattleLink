@@ -29,7 +29,7 @@ namespace BattleLink.Common.Spawn
         private MissionLobbyComponent _lobbyComponent;
         private MissionTime _currentStateStartTime;
         private WarmupStates _warmupState;
-        public new static float TotalWarmupDuration => MultiplayerOptions.OptionType.WarmupTimeLimit.GetIntValue() * 60;//10;//
+        public new static float TotalWarmupDuration => MultiplayerOptions.OptionType.WarmupTimeLimit.GetIntValue() * 20;//60//10;// TODO choice time for your equipement 
 
         public new event Action OnWarmupEnding;
 

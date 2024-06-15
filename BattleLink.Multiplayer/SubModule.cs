@@ -53,7 +53,7 @@ namespace BattleLink.Multiplayer
 
         protected override void OnSubModuleLoad()
         {
-             var a22 = FormatterServices.GetUninitializedObject(typeof(MissionGauntletClassLoadout));
+             var a22 = FormatterServices.GetUninitializedObject(typeof(RequestTroopIndexChange));
 
             base.OnSubModuleLoad();
             InformationManager.DisplayMessage(new InformationMessage("BattleLink - OnSubModuleLoad", green));

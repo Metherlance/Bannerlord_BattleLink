@@ -2,12 +2,14 @@
 using BattleLink.Common.DtoSpSv;
 using BattleLink.Common.Model;
 using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
+using TaleWorlds.MountAndBlade.Diamond;
 using TaleWorlds.ObjectSystem;
 using static TaleWorlds.Library.Debug;
 using BodyProperties = TaleWorlds.Core.BodyProperties;
@@ -72,17 +74,32 @@ namespace BattleLink.Common.Spawn.Warmup
                     || missionPeer.ControlledAgent != null
                     || missionPeer.Team == null
                     || missionPeer.Team == Mission.SpectatorTeam
-                    )//|| !missionPeer.TeamInitialPerkInfoReady || !missionPeer.SpawnTimer.Check(base.Mission.CurrentTime)
+                    || !missionPeer.TeamInitialPerkInfoReady
+                    )//|| !missionPeer.SpawnTimer.Check(base.Mission.CurrentTime)
                 {
                     continue;
                 }
 
-                Team team = missionPeer.Team;
+                int selectedTroopIndex = missionPeer.SelectedTroopIndex;
+
+                
+                Team team = missionPeer.Team;//JetBrains*45445*80
                 BLCharacterObject character = getRandomCharacter(team);
 
                 AgentBuildData agentBuildData = buidAgentData(team, character);
 
                 agentBuildData.MissionPeer(missionPeer);
+
+                if (character.IsHero)
+                {
+                    agentBuildData.BodyProperties(character.GetBodyPropertiesMin());
+                }
+                else
+                {
+                    var playerData = missionPeer.GetNetworkPeer().PlayerConnectionInfo.GetParameter<PlayerData>("PlayerData");
+                    agentBuildData.BodyProperties(playerData.BodyProperties).Race(playerData.Race).IsFemale(playerData.IsFemale);
+                }
+
 
                 bool firstSpawn = missionPeer.SpawnCountThisRound == 0;
                 MatrixFrame spawnFrame = SpawnComponent.GetSpawnFrame(missionPeer.Team, agentBuildData.hasMount(), firstSpawn);
@@ -106,24 +123,23 @@ namespace BattleLink.Common.Spawn.Warmup
 
         public static AgentBuildData buidAgentData(Team team, BLCharacterObject character)
         {
+
             // indicate too if the head agent is hide or not
-            Equipment equipment = Equipment.GetRandomEquipmentElements(character, randomEquipmentModifier: false, isCivilianEquipment: false, MBRandom.RandomInt());// 0
+            Equipment equipment = Equipment.GetRandomEquipmentElements(character, randomEquipmentModifier: false, isCivilianEquipment: false, equipmentSeed);
 
             AgentBuildData agentBuildData = new AgentBuildData(character)
                 .Team(team)
                 .VisualsIndex(0)
                 .Equipment(equipment)
-                //.IsFemale(missionPeer.Peer.IsFemale)
-                .IsFemale(character.IsFemale)
+                .IsFemale(character.IsFemale);
                 // base.GetBodyProperties uses the player-defined body properties but some body properties may have been
                 // causing crashes. So here we send the body properties from the characters.xml which we know are safe.
                 // Note that what is sent here doesn't matter since it's ignored by the client.
-                .BodyProperties(character.GetBodyPropertiesMin());
+                //.BodyProperties(character.GetBodyPropertiesMin());
             agentBuildData.ClothingColor1(team.Color).ClothingColor2(team.Color2).Banner(team.Banner);
 
             return agentBuildData;
         }
-
 
         public static BLCharacterObject getRandomCharacter(Team team)
         {
@@ -177,13 +193,17 @@ namespace BattleLink.Common.Spawn.Warmup
 
             agentBuildData.InitialPosition(in spawnFrame.origin).InitialDirection(in initialDirection);
 
+            //CompressionBasic.RandomSeedCompressionInfo
+            var equipmentSeed = MBRandom.RandomInt(2000);
+
             // indicate too if the head agent is hide or not
-            Equipment equipment = Equipment.GetRandomEquipmentElements(character, randomEquipmentModifier: false, isCivilianEquipment: false, MBRandom.RandomInt());// 0
-            agentBuildData.Equipment(equipment);
+            Equipment equipment = Equipment.GetRandomEquipmentElements(character, randomEquipmentModifier: false, isCivilianEquipment: false, equipmentSeed);// 0
+            agentBuildData.Equipment(equipment).EquipmentSeed(MBRandom.RandomInt(2000));
 
 
             // moins de bug que character.GetBodyProperties / FaceGen    mais il ya plus de tatouage...
-            var bodyProperties = getRandomBodyProperties(character.GetBodyPropertiesMin(), character.GetBodyPropertiesMax());
+            var bodyProperties = //character.GetBodyProperties(equipment, equipmentSeed);
+            getRandomBodyProperties(character.GetBodyPropertiesMin(), character.GetBodyPropertiesMax());
             agentBuildData.BodyProperties(bodyProperties);
 
 
@@ -196,7 +216,7 @@ namespace BattleLink.Common.Spawn.Warmup
             agent.AIStateFlags |= Agent.AIStateFlag.Alarmed;
         }
 
-        private BodyProperties getRandomBodyProperties(BodyProperties bodyPropertiesMin, BodyProperties bodyPropertiesMax)
+        public static BodyProperties getRandomBodyProperties(BodyProperties bodyPropertiesMin, BodyProperties bodyPropertiesMax)
         {
             float ageMin = bodyPropertiesMin.DynamicProperties.Age;
             float weightMin = bodyPropertiesMin.DynamicProperties.Weight;
@@ -229,7 +249,7 @@ namespace BattleLink.Common.Spawn.Warmup
                 RandomULong(keyPart7Min, keyPart7Max), RandomULong(keyPart8Min, keyPart8Max)));
         }
 
-        float RandomFloat(float min, float max)
+        static float RandomFloat(float min, float max)
         {
             return MBRandom.RandomFloatRanged(min, max);
         }

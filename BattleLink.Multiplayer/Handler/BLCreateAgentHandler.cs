@@ -63,6 +63,7 @@ namespace BattleLink.Handler
                 .TroopOrigin(origin)
                 .Equipment(createAgent.SpawnEquipment)
                 .EquipmentSeed(createAgent.BodyPropertiesSeed);
+            //agentBuildData1.VisualsIndex(createAgent.VisualsIndex);
 
             Vec3 position = createAgent.Position;
             ref Vec3 local1 = ref position;
@@ -86,7 +87,7 @@ namespace BattleLink.Handler
             //    //    agentBuildData3.BodyProperties(TaleWorlds.Core.BodyProperties.GetRandomBodyProperties(agentBuildData3.AgentRace, agentBuildData3.AgentIsFemale, character.GetBodyPropertiesMin(), character.GetBodyPropertiesMax(), (int)agentBuildData3.AgentOverridenSpawnEquipment.HairCoverType, agentBuildData3.AgentEquipmentSeed, character.HairTags, character.BeardTags, character.TattooTags));
             //}
             agentBuildData1.BodyProperties(createAgent.BodyPropertiesValue);
-            createAgent.Character.BodyPropertyRange.Init(createAgent.BodyPropertiesValue, createAgent.BodyPropertiesValue);
+            //createAgent.Character.BodyPropertyRange.Init(createAgent.BodyPropertiesValue, createAgent.BodyPropertiesValue);
 
             agentBuildData1.Age((int)createAgent.BodyPropertiesValue.Age);
 
