@@ -123,6 +123,8 @@ namespace BattleLink.Common.Spawn.Warmup
 
         public static AgentBuildData buidAgentData(Team team, BLCharacterObject character)
         {
+            //CompressionBasic.RandomSeedCompressionInfo
+            var equipmentSeed = MBRandom.RandomInt(2000);
 
             // indicate too if the head agent is hide or not
             Equipment equipment = Equipment.GetRandomEquipmentElements(character, randomEquipmentModifier: false, isCivilianEquipment: false, equipmentSeed);
@@ -243,10 +245,16 @@ namespace BattleLink.Common.Spawn.Warmup
             ulong keyPart8Max = bodyPropertiesMax.StaticProperties.KeyPart8;
 
             return new BodyProperties(new DynamicBodyProperties(RandomFloat(ageMin, ageMax), RandomFloat(weightMin, weightMax), RandomFloat(buildMin, buildMax)),
-                new StaticBodyProperties(RandomULong(keyPart1Min, keyPart1Max), RandomULong(keyPart2Min, keyPart2Max),
-                RandomULong(keyPart3Min, keyPart3Max), RandomULong(keyPart4Min, keyPart4Max),
-                RandomULong(keyPart5Min, keyPart5Max), RandomULong(keyPart6Min, keyPart6Max),
-                RandomULong(keyPart7Min, keyPart7Max), RandomULong(keyPart8Min, keyPart8Max)));
+                new StaticBodyProperties(
+                // 3rd short contain tatoos
+                RandomULongSplitU8(keyPart1Min, keyPart1Max),
+                RandomULongSplitU8(keyPart2Min, keyPart2Max),
+                RandomULongSplitU8(keyPart3Min, keyPart3Max),
+                RandomULongSplitU8(keyPart4Min, keyPart4Max),
+                RandomULongSplitU8(keyPart5Min, keyPart5Max),
+                RandomULongSplitU8(keyPart6Min, keyPart6Max),
+                RandomULongSplitU8(keyPart7Min, keyPart7Max),
+                RandomULongSplitU8(keyPart8Min, keyPart8Max)));
         }
 
         static float RandomFloat(float min, float max)
@@ -278,6 +286,68 @@ namespace BattleLink.Common.Spawn.Warmup
             } while (ulongRand > ulong.MaxValue - (ulong.MaxValue % uRange + 1) % uRange);
 
             return ulongRand % uRange + min;
+        }
+
+
+        public static ulong RandomULongSplitU8(ulong min, ulong max)
+        {
+            if (max <= min)
+            {
+                return min;
+            }
+
+
+            byte[] tabMin = BitConverter.GetBytes(min);
+            byte[] tabMax = BitConverter.GetBytes(max);
+            byte[] tabRes = new byte[8];
+           // ulong reconstituted = 0;
+            for (int i = 0 ; i<8; i+=1)
+            {
+                int iMin = tabMin[i] & 0xff;
+                int iMax = tabMax[i] & 0xff;
+                // fix me! search each characteristics face...
+                if (iMax <= iMin)
+                {
+                    tabRes[i] = (byte)iMin;
+                }
+                else
+                {
+                    tabRes[i] = (byte)MBRandom.RandomInt(iMin, iMax);
+                }
+                //ulong res = (ulong)MBRandom.RandomInt(iMin, iMax);
+                //reconstituted = reconstituted | (ulong)(res << (i * 8));
+            }
+
+            //return reconstituted;
+            var res= BitConverter.ToUInt64(tabRes,0);
+            return res;
+        }
+
+        public static ulong RandomULongSplitU16(ulong min, ulong max)
+        {
+            if (max <= min)
+            {
+                return min;
+            }
+
+            ushort min1Half = (ushort)(min >> 48 & 0xffff);
+            ushort min2Half = (ushort)(min >> 32 & 0xffff);
+            ushort min3Half = (ushort)(min >> 16 & 0xffff);
+            ushort min4Half = (ushort)(min & 0xffff);
+
+            ushort max1Half = (ushort)(max >> 48 & 0xffff);
+            ushort max2Half = (ushort)(max >> 32 & 0xffff);
+            ushort max3Half = (ushort)(max >> 16 & 0xffff);
+            ushort max4Half = (ushort)(max & 0xffff);
+
+            ushort firstHalf = (ushort)MBRandom.RandomInt(min1Half,max1Half);
+            ushort secondHalf = (ushort)MBRandom.RandomInt(min2Half, max2Half);
+            ushort thirdHalf = (ushort)MBRandom.RandomInt(min3Half, max3Half);
+            ushort fourthHalf = (ushort)MBRandom.RandomInt(min4Half, max4Half);
+
+
+            ulong reconstituted = (ulong)((firstHalf << 48) | (secondHalf << 32) | (thirdHalf << 16) | (fourthHalf));
+            return reconstituted;
         }
     }
 
