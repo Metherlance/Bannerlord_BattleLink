@@ -1,10 +1,13 @@
 ﻿using BattleLink.Common.Model;
+using BattleLink.CommonSvMp.NetworkMessages.FromServer;
 using BattleLink.Handler;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using TaleWorlds.Core;
+using TaleWorlds.Diamond;
+using TaleWorlds.Engine;
 using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
@@ -249,14 +252,22 @@ namespace BattleLink.Views.Class
         private void RefreshCharacter(HeroClassVM heroClass)
         {
             if (this._isInitializing)
+            {
                 return;
+            }
             foreach (HeroClassGroupVM heroClassGroupVm in (Collection<HeroClassGroupVM>)this.Classes)
             {
                 foreach (HeroClassVM subClass in (Collection<HeroClassVM>)heroClassGroupVm.SubClasses)
+                {
                     subClass.IsSelected = false;
+                }
             }
+
             heroClass.IsSelected = true;
             this.CurrentSelectedClass = heroClass;
+            
+            RequestUsage(heroClass.HeroClass);
+
             if (GameNetwork.IsMyPeerReady)
                 GameNetwork.MyPeer.GetComponent<MissionPeer>().NextSelectedTroopIndex = MultiplayerClassDivisions.GetMPHeroClasses(heroClass.HeroClass.Culture).ToList<MultiplayerClassDivisions.MPHeroClass>().IndexOf(heroClass.HeroClass);
             this.HeroInformation.RefreshWith(heroClass.HeroClass, heroClass.SelectedPerks);
@@ -273,6 +284,25 @@ namespace BattleLink.Views.Class
                 return;
             refreshSelection(heroClass.HeroClass);
         }
+
+
+        public void RequestUsage(MPHeroClass heroClass)
+        {
+            InformationManager.DisplayMessage(new InformationMessage("click on "+ heroClass.Id+" "+ heroClass.TroopName.ToString(), Colors.Cyan));
+           // Print(message, 0, GetConsoleColorForLogLevel(level));
+            //Console.WriteLine("test2");
+            Debug.Print("test3");//C:\ProgramData\Mount and Blade II Bannerlord\logs
+            MBDebug.Print("test4");
+            //Debug.PrintError("test4");
+            // Debug.WriteDebugLineOnScreen("test5");
+            Team team = GameNetwork.MyPeer.GetComponent<MissionPeer>().Team;
+
+            //Log($"Requesting usage of {character.Name}", LogLevel.Debug);
+            GameNetwork.BeginModuleEventAsClient();
+            GameNetwork.WriteMessage(new BLRequestPartyTroopUsageMessage(team.TeamIndex, heroClass));
+            GameNetwork.EndModuleEventAsClient();
+        }
+
 
         private void OnSelectPerk(HeroPerkVM heroPerk, MPPerkVM candidate)
         {

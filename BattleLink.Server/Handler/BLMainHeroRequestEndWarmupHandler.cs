@@ -11,7 +11,7 @@ namespace BattleLink.Server.Handler
     public class BLMainHeroRequestEndWarmupHandler
     {
         // ClientMessageHandlerDelegate
-        public static bool HandleClientEventMainHeroRequestEndWarmupMessage(NetworkCommunicator peer, GameNetworkMessage mes)
+        public static bool HandleClientEventMainHeroRequestEndWarmupMessage(NetworkCommunicator peer, BLMainHeroRequestEndWarmupMessage _)
         {
             //BLMainHeroRequestEndWarmupMessage message = (BLMainHeroRequestEndWarmupMessage)mes;
 

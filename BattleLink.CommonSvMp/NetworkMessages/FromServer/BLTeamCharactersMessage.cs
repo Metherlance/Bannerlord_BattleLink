@@ -32,7 +32,7 @@ namespace BattleLink.CommonSvMp.NetworkMessages.FromServer
         protected override void OnWrite()
         {
             WriteIntToPacket(teamId, CompressionMission.AgentPrefabComponentIndexCompressionInfo);//0,16
-            WriteIntToPacket(characterObjects.Count, CompressionMission.BoneIndexCompressionInfo);//0,16
+            WriteIntToPacket(characterObjects.Count, CompressionMission.BoneIndexCompressionInfo);//0,64
             foreach(BLCharacterObject characterObject in characterObjects)
             {
                 GameNetworkMessage.WriteObjectReferenceToPacket(characterObject, CompressionBasic.GUIDCompressionInfo);

@@ -247,10 +247,6 @@ namespace BattleLink.Server
                     //MBObjectManager.Instance.FindRegisteredType<BLCharacterObject>(basicCharacterObject.StringId);
                     BLReferentialHolder.basicCharacterObjects.Add(basicCharacterObject);
 
-
-                    XmlElement classDivision = BLBasicObject2Xml.createClassDivision(basicCharacterObject);
-                    var classD = MBObjectManager.Instance.CreateObjectFromXmlNode(classDivision);
-
                 }
 
                 BLSendReferential2Client.setCharacters(BLReferentialHolder.basicCharacterObjects);

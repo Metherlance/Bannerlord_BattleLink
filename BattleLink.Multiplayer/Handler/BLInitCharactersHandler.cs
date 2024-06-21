@@ -155,7 +155,7 @@ namespace BattleLink.Handler
 
             MultiplayerClassDivisions.MPHeroClass classDivisionHeroClassNew = (MultiplayerClassDivisions.MPHeroClass)MBObjectManager.Instance.CreateObjectFromXmlNode(classDivisionXml);
 
-            var list = MBObjectManager.Instance.GetObjectTypeList<MultiplayerClassDivisions.MPHeroClass>();
+            //var list = MBObjectManager.Instance.GetObjectTypeList<MultiplayerClassDivisions.MPHeroClass>();
 
         }
 

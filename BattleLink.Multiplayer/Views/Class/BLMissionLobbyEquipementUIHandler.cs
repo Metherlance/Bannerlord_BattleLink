@@ -95,7 +95,7 @@ namespace BattleLink.Views
 
         private void OnRefreshSelection(MultiplayerClassDivisions.MPHeroClass heroClass)
         {
-            _lastSelectedHeroClass = heroClass;
+            _lastSelectedHeroClass = heroClass; 
         }
 
         public override void OnMissionScreenFinalize()

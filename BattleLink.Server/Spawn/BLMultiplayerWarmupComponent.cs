@@ -151,7 +151,8 @@ namespace BattleLink.Common.Spawn
         {
             GameNetwork.NetworkMessageHandlerRegisterer reg = new NetworkMessageHandlerRegisterer(mode);
             reg.Register<BLMainHeroRequestEndWarmupMessage>(BLMainHeroRequestEndWarmupHandler.HandleClientEventMainHeroRequestEndWarmupMessage);
-           // Mission.MissionNetworkHelper
+            reg.Register<BLRequestPartyTroopUsageMessage>(BLRequestPartyTroopUsageHandler.HandleClientEventRequestPartyTroopUsageMessage);
+            // Mission.MissionNetworkHelper
         }
 
         public new bool CheckForWarmupProgressEnd() => _gameMode.CheckForWarmupEnd() || (double)_timerComponent.GetRemainingTime(false) <= 30.0;

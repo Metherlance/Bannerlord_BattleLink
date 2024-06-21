@@ -262,6 +262,7 @@ namespace BattleLink.Server
 
         public void HandleLateNewClientAfterLoadingFinished(NetworkCommunicator networkPeer)
         {
+
             GameNetwork.BeginModuleEventAsServer(networkPeer);
             GameNetwork.WriteMessage(initRecordMessage);
             GameNetwork.EndModuleEventAsServer();
