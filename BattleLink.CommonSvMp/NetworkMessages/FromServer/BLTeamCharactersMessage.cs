@@ -11,6 +11,7 @@ using TaleWorlds.MountAndBlade.Network.Messages;
 using TaleWorlds.ObjectSystem;
 using static TaleWorlds.Core.ItemObject;
 using static TaleWorlds.Library.Debug;
+using static TaleWorlds.MountAndBlade.MultiplayerClassDivisions;
 
 namespace BattleLink.CommonSvMp.NetworkMessages.FromServer
 {
@@ -22,7 +23,7 @@ namespace BattleLink.CommonSvMp.NetworkMessages.FromServer
     public sealed class BLTeamCharactersMessage : GameNetworkMessage
     {
         public int teamId;
-        public List<BLCharacterObject> characterObjects;
+        public List<MPHeroClass> characterObjects;
 
         public BLTeamCharactersMessage()
         {
@@ -33,7 +34,7 @@ namespace BattleLink.CommonSvMp.NetworkMessages.FromServer
         {
             WriteIntToPacket(teamId, CompressionMission.AgentPrefabComponentIndexCompressionInfo);//0,16
             WriteIntToPacket(characterObjects.Count, CompressionMission.BoneIndexCompressionInfo);//0,64
-            foreach(BLCharacterObject characterObject in characterObjects)
+            foreach(MPHeroClass characterObject in characterObjects)
             {
                 GameNetworkMessage.WriteObjectReferenceToPacket(characterObject, CompressionBasic.GUIDCompressionInfo);
             }
@@ -46,10 +47,10 @@ namespace BattleLink.CommonSvMp.NetworkMessages.FromServer
             teamId = ReadIntFromPacket(CompressionMission.AgentPrefabComponentIndexCompressionInfo, ref bufferReadValid);
 
             int nbCharacter = ReadIntFromPacket(CompressionMission.BoneIndexCompressionInfo, ref bufferReadValid);
-            characterObjects = new List<BLCharacterObject>(nbCharacter);
+            characterObjects = new List<MPHeroClass>(nbCharacter);
             for (int indexCharacter =0 ; indexCharacter< nbCharacter ; indexCharacter+=1)
             {
-                var character = (BLCharacterObject)GameNetworkMessage.ReadObjectReferenceFromPacket(MBObjectManager.Instance, CompressionBasic.GUIDCompressionInfo, ref bufferReadValid);
+                var character = (MPHeroClass)GameNetworkMessage.ReadObjectReferenceFromPacket(MBObjectManager.Instance, CompressionBasic.GUIDCompressionInfo, ref bufferReadValid);
                 characterObjects.Add(character);
             }
 

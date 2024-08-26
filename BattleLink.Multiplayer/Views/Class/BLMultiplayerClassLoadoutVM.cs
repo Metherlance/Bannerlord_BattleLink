@@ -175,7 +175,7 @@ namespace BattleLink.Views.Class
                 {                    
                     MPHeroClass heroClass = MBObjectManager.Instance.GetObject<MPHeroClass>(charater.StringId + "_class_division");
                     HeroClassVM heroClassVM = new HeroClassVM(new Action<HeroClassVM>(this.RefreshCharacter), new Action<HeroPerkVM, MPPerkVM>(this.OnSelectPerk), heroClass, this.UseSecondary);
-                    switch (charater.DefaultFormationClass.ToString())
+                    switch (charater.ClassGroup.ToString()) // check that old : DefaultFormationClass
                     {
                         case "Infantry":
                             heroClassGroupsVM[0].SubClasses.Add(heroClassVM);

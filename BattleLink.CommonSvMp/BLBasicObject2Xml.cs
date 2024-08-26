@@ -8,13 +8,13 @@ namespace BattleLink.Common
 {
     public class BLBasicObject2Xml
     {
-        public static XmlElement createClassDivision(BLCharacterObject basicCharacterObject)
+        public static XmlElement createClassDivision(BLCharacterObject basicCharacterObject, int partyIndex=0)
         {
             XmlDocument doc = new XmlDocument();
             XmlElement classDivision = doc.CreateElement("MPClassDivision");
 
 
-            classDivision.SetAttribute("id", basicCharacterObject.StringId + "_class_division");
+            classDivision.SetAttribute("id", basicCharacterObject.StringId +"_"+ partyIndex + "_class_division");
             classDivision.SetAttribute("hero", basicCharacterObject.StringId);
             classDivision.SetAttribute("troop", basicCharacterObject.StringId);
             // culture will be copy from hero classDivision.SetAttribute("culture", basicCharacterObject.Culture.StringId);

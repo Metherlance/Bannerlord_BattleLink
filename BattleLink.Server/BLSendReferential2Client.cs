@@ -1,4 +1,5 @@
-﻿using BattleLink.Common.Behavior;
+﻿using BattleLink.Common;
+using BattleLink.Common.Behavior;
 using BattleLink.Common.DtoSpSv;
 using BattleLink.Common.Model;
 using BattleLink.CommonSvMp.NetworkMessages.FromServer;
@@ -7,12 +8,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Xml;
+using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.Network.Messages;
 using TaleWorlds.ObjectSystem;
+using TaleWorlds.SaveSystem;
 using static TaleWorlds.Library.Debug;
+using static TaleWorlds.MountAndBlade.MultiplayerClassDivisions;
 
 namespace BattleLink.Server
 {
@@ -118,33 +123,49 @@ namespace BattleLink.Server
             {
                 foreach (var team in side.Teams)
                 {
-                    Dictionary<string, int> dic = new Dictionary<string, int>();
+                    //Dictionary<string, int> dic = new Dictionary<string, int>();
+
+                    //foreach (var party in team.Parties)
+                    //{
+                    //    foreach (var troop in party.Troops)
+                    //    {
+                    //        if(dic.TryGetValue(troop.Id, out var nb))
+                    //        {
+                    //            dic.Add(troop.Id, nb+troop.Number);
+                    //        }
+                    //        else
+                    //        {
+                    //            dic.Add(troop.Id, troop.Number);
+                    //        }
+                    //    }
+                    //}
+
+                    BLTeamCharactersMessage teamMes = new BLTeamCharactersMessage()
+                    {
+                        teamId = BLReferentialHolder.getTeamBy(team).TeamIndex,
+                        characterObjects = new List<MPHeroClass>(),
+                    };
+
+                    //foreach (KeyValuePair<string, int> entry in dic)
+                    //{
+                    //    BLCharacterObject character = MBObjectManager.Instance.GetObject<BLCharacterObject>(entry.Key);
+                    //    teamMes.characterObjects.Add(character);
+                    //}
 
                     foreach (var party in team.Parties)
                     {
                         foreach (var troop in party.Troops)
                         {
-                            if(dic.TryGetValue(troop.Id, out var nb))
-                            {
-                                dic.Add(troop.Id, nb+troop.Number);
-                            }
-                            else
-                            {
-                                dic.Add(troop.Id, troop.Number);
-                            }
+                            BLCharacterObject character = MBObjectManager.Instance.GetObject<BLCharacterObject>(troop.Id);
+                                                      
+                            XmlElement classDivision = BLBasicObject2Xml.createClassDivision(character, party.Index);
+                            MPHeroClass classD = (MPHeroClass) MBObjectManager.Instance.CreateObjectFromXmlNode(classDivision);
+
+                            teamMes.characterObjects.Add(classD);
+
                         }
                     }
 
-                    BLTeamCharactersMessage teamMes = new BLTeamCharactersMessage()
-                    {
-                        teamId = BLReferentialHolder.getTeamBy(team).TeamIndex,
-                        characterObjects = new List<BLCharacterObject>(),
-                    };
-                    foreach (KeyValuePair<string, int> entry in dic)
-                    {
-                        BLCharacterObject character = MBObjectManager.Instance.GetObject<BLCharacterObject>(entry.Key);
-                        teamMes.characterObjects.Add(character);
-                    }
                     listTeamCharacters.Add(teamMes);
 
                 }
