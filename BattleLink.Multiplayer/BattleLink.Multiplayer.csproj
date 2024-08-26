@@ -14,7 +14,7 @@
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
-    <SteamFolder>B:\games\Steam</SteamFolder>
+    <SteamFolder>$(STEAM_PATH)</SteamFolder>
   </PropertyGroup>
   <!-- Debug Configuration Properties -->
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -309,7 +309,6 @@
     <Compile Include="TeamSelect\BLTeamSelectVM.cs" />
     <Compile Include="Views\Class\BLMissionLobbyEquipementUIHandler.cs" />
     <Compile Include="Views\BLMissionMultiplayerEscapeMenu.cs" />
-    <None Include="app.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

@@ -8,18 +8,18 @@
     <Nullable>enable</Nullable>
     <ModuleId>$(MSBuildProjectName)</ModuleId>
     <ModuleName>$(MSBuildProjectName)</ModuleName>
-    <GameFolder>C:\games\Steam\steamapps\common\Mount &amp; Blade II Dedicated Server</GameFolder>
 	<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 	<CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
 	<PlatformTarget>AnyCPU</PlatformTarget>
-    <SteamFolder>B:\games\Steam</SteamFolder>
+	<SteamFolder>$(STEAM_PATH)</SteamFolder>
+    <GameFolder>$(SteamFolder)\steamapps\common\Mount &amp; Blade II Dedicated Server</GameFolder>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
-    <OutputPath>C:\games\Steam\steamapps\common\Mount &amp; Blade II Dedicated Server\Modules\BattleLink\bin\Win64_Shipping_Server</OutputPath>
+    <OutputPath>$(SteamFolder)\steamapps\common\Mount &amp; Blade II Dedicated Server\Modules\BattleLink\bin\Win64_Shipping_Server</OutputPath>
     <DefineConstants>$(DefineConstants);DEBUG;TRACE;NETSTANDARD;NETSTANDARD2_0;;DEBUG;NETSTANDARD;NETSTANDARD2_0;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>

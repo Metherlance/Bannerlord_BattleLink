@@ -13,7 +13,7 @@
     <AssemblyName>BattleLink.Singleplayer</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <SteamFolder>B:\games\Steam</SteamFolder>
+    <SteamFolder>$(STEAM_PATH)</SteamFolder>
   </PropertyGroup>
   <!-- Debug Configuration Properties -->
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
