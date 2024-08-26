@@ -3,19 +3,19 @@
         xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/BUTR/Bannerlord.XmlSchemas/master/SubModule.xsd" >
 	<Id value="BattleLink.Singleplayer" />
 	<Name value="Battle Link Singleplayer" />
-	<Version value="v1.2.9.1" />
+	<Version value="v1.2.11.0" />
 	<Official value="false" />
 	<DefaultModule value="false" />
 
 	<ModuleCategory value="Singleplayer"/>
 
 	<DependedModules>
-		<DependedModule Id="Bannerlord.Harmony" DependentVersion="v2.3.0" Optional="false"/>
-		<DependedModule Id="Native" DependentVersion="v1.2.9" Optional="false"/>
-		<DependedModule Id="SandBoxCore" DependentVersion="v1.2.9" Optional="false"/>
-		<DependedModule Id="Sandbox" DependentVersion="v1.2.9" Optional="false"/>
-		<DependedModule Id="StoryMode" DependentVersion="v1.2.9" Optional="false"/>
-		<DependedModule Id="CustomBattle" DependentVersion="v1.2.9" Optional="false"/>
+		<DependedModule Id="Bannerlord.Harmony" DependentVersion="v2.3.3" Optional="false"/>
+		<DependedModule Id="Native" DependentVersion="v1.2.11" Optional="false"/>
+		<DependedModule Id="SandBoxCore" DependentVersion="v1.2.11" Optional="false"/>
+		<DependedModule Id="Sandbox" DependentVersion="v1.2.11" Optional="false"/>
+		<DependedModule Id="StoryMode" DependentVersion="v1.2.11" Optional="false"/>
+		<DependedModule Id="CustomBattle" DependentVersion="v1.2.11" Optional="false"/>
 	</DependedModules>
 
 	<DependedModuleMetadatas>

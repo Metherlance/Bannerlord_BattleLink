@@ -2,12 +2,12 @@
 <Module>
 	<Name value = "SandBox Core MP"/>
 	<Id value = "SandBoxCoreMP"/>
-	<Version value = "v1.2.9.0"/> 
+	<Version value = "v1.2.11.0"/> 
 	<DefaultModule value="false"/>
 	<ModuleCategory value="Multiplayer"/>
 	<ModuleType value ="Community" />
 	<DependedModules>
-		<DependedModule Id="Native" DependentVersion="v1.2.9" Optional="false"/>
+		<DependedModule Id="Native" DependentVersion="v1.2.11" Optional="false"/>
 	</DependedModules>
 	<SubModules/>
 	<Xmls>

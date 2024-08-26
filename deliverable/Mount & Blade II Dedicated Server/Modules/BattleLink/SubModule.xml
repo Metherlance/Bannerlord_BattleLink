@@ -1,11 +1,11 @@
 ﻿<Module>
 	<Name value="Battle Link"/>
 	<Id value="BattleLink"/>
-	<Version value="v1.2.9.1"/>
+	<Version value="v1.2.11.0"/>
 	<ModuleCategory value="Multiplayer"/>
 	<DependedModules>
-		<DependedModule Id="Native" DependentVersion="v1.2.9" Optional="false" />
-		<DependedModule Id="SandBoxCoreMP" DependentVersion="v1.2.9.0" Optional="false" />
+		<DependedModule Id="Native" DependentVersion="v1.2.11" Optional="false" />
+		<DependedModule Id="SandBoxCoreMP" DependentVersion="v1.2.11.0" Optional="false" />
 	</DependedModules>
 	<SubModules>
 		<SubModule>
