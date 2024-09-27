@@ -173,7 +173,7 @@ namespace BattleLink.Views.Class
             {
                 foreach (var charater in teamCharacters.characterObjects)
                 {                    
-                    MPHeroClass heroClass = MBObjectManager.Instance.GetObject<MPHeroClass>(charater.StringId + "_class_division");
+                    MPHeroClass heroClass = MBObjectManager.Instance.GetObject<MPHeroClass>(charater.StringId);//+ "_class_division"
                     HeroClassVM heroClassVM = new HeroClassVM(new Action<HeroClassVM>(this.RefreshCharacter), new Action<HeroPerkVM, MPPerkVM>(this.OnSelectPerk), heroClass, this.UseSecondary);
                     switch (charater.ClassGroup.ToString()) // check that old : DefaultFormationClass
                     {

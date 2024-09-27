@@ -2,7 +2,6 @@
 using BattleLink.Common.Behavior;
 using System;
 using System.Reflection;
-using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 using static TaleWorlds.Core.SkillObject;

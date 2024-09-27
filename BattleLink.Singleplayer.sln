@@ -12,6 +12,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BattleLink.Common", "Battle
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BattleLink.CommonSvSp", "BattleLink.CommonSvSp\BattleLink.CommonSvSp.csproj", "{494965D7-6177-4F29-811B-3DB0EAB84F01}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BattleLink.Web.Common", "..\BattleLink.Web\BattleLink.Web.Common\BattleLink.Web.Common.csproj", "{7CC81D9F-F5CC-4FDD-965F-E3CB5F0C8EBD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +46,14 @@ Global
 		{494965D7-6177-4F29-811B-3DB0EAB84F01}.Release|Any CPU.Build.0 = Release|Any CPU
 		{494965D7-6177-4F29-811B-3DB0EAB84F01}.Release|x64.ActiveCfg = Release|Any CPU
 		{494965D7-6177-4F29-811B-3DB0EAB84F01}.Release|x64.Build.0 = Release|Any CPU
+		{7CC81D9F-F5CC-4FDD-965F-E3CB5F0C8EBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CC81D9F-F5CC-4FDD-965F-E3CB5F0C8EBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CC81D9F-F5CC-4FDD-965F-E3CB5F0C8EBD}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7CC81D9F-F5CC-4FDD-965F-E3CB5F0C8EBD}.Debug|x64.Build.0 = Debug|Any CPU
+		{7CC81D9F-F5CC-4FDD-965F-E3CB5F0C8EBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CC81D9F-F5CC-4FDD-965F-E3CB5F0C8EBD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7CC81D9F-F5CC-4FDD-965F-E3CB5F0C8EBD}.Release|x64.ActiveCfg = Release|Any CPU
+		{7CC81D9F-F5CC-4FDD-965F-E3CB5F0C8EBD}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

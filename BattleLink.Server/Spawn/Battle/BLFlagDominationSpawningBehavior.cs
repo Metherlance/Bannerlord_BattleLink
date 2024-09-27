@@ -14,13 +14,13 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices.ComTypes;
 using System.Xml.Serialization;
+using TaleWorlds.CampaignSystem.MapEvents;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.Diamond;
 using TaleWorlds.ObjectSystem;
-using static TaleWorlds.CampaignSystem.MapEvents.MapEvent;
 using static TaleWorlds.Library.Debug;
 using static TaleWorlds.MountAndBlade.Agent;
 using static TaleWorlds.MountAndBlade.Mission;
@@ -39,16 +39,22 @@ namespace BattleLink.Common.Spawn.Battle
         private static int AgentCountThreshold;
         private MissionTime _nextTimeToCleanUpMounts;
 
-        private static readonly FieldInfo fieldHasCalledSpawningEnded = typeof(SpawningBehaviorBase).GetField("_hasCalledSpawningEnded", BindingFlags.NonPublic | BindingFlags.Instance);
-        private static readonly FieldInfo fieldOnSpawningEnded = typeof(SpawningBehaviorBase).GetField("OnSpawningEnded", BindingFlags.NonPublic | BindingFlags.Instance);
-        private static readonly EventInfo eventOnSpawningEnded = typeof(SpawningBehaviorBase).GetEvent("OnSpawningEnded", BindingFlags.Public | BindingFlags.Instance);
+        //private static readonly FieldInfo fieldHasCalledSpawningEnded = typeof(SpawningBehaviorBase).GetField("_hasCalledSpawningEnded", BindingFlags.NonPublic | BindingFlags.Instance);
+        //private static readonly FieldInfo fieldOnSpawningEnded = typeof(SpawningBehaviorBase).GetField("OnSpawningEnded", BindingFlags.NonPublic | BindingFlags.Instance);
+        //private static readonly EventInfo eventOnSpawningEnded = typeof(SpawningBehaviorBase).GetEvent("OnSpawningEnded", BindingFlags.Public | BindingFlags.Instance);
 
-        private static readonly FieldInfo fieldMisDepPlanSide = typeof(MissionDeploymentPlan).GetField("_battleSideDeploymentPlans", BindingFlags.NonPublic | BindingFlags.Instance);
-        private static readonly FieldInfo fieldSideDeploymentPlanInitial = typeof(BattleSideDeploymentPlan).GetField("_initialPlan", BindingFlags.NonPublic | BindingFlags.Instance);
-       
-        
-        private static readonly int realBattleSize = int.Parse(new PropertiesUtils(System.IO.Path.Combine(BasePath.Name, "Modules", "BattleLink", "config.properties")).Get("RealBattleSize"), CultureInfo.InvariantCulture.NumberFormat);
+        //private static readonly FieldInfo fieldMisDepPlanSide = typeof(MissionDeploymentPlan).GetField("_battleSideDeploymentPlans", BindingFlags.NonPublic | BindingFlags.Instance);
+        //private static readonly FieldInfo fieldSideDeploymentPlanInitial = typeof(BattleSideDeploymentPlan).GetField("_initialPlan", BindingFlags.NonPublic | BindingFlags.Instance);
 
+        private static  FieldInfo fieldHasCalledSpawningEnded;
+        private static  FieldInfo fieldOnSpawningEnded;
+        private static  EventInfo eventOnSpawningEnded;
+
+        private static  FieldInfo fieldMisDepPlanSide;
+        private static  FieldInfo fieldSideDeploymentPlanInitial;
+
+
+        private static  int realBattleSize;
 
         // ****
 
@@ -73,11 +79,25 @@ namespace BattleLink.Common.Spawn.Battle
 
         public BLFlagDominationSpawningBehavior() : base()
         {
-            _enforcedSpawnTimers = new List<KeyValuePair<MissionPeer, Timer>>();
+
+                   fieldHasCalledSpawningEnded = typeof(SpawningBehaviorBase).GetField("_hasCalledSpawningEnded", BindingFlags.NonPublic | BindingFlags.Instance);
+         fieldOnSpawningEnded = typeof(SpawningBehaviorBase).GetField("OnSpawningEnded", BindingFlags.NonPublic | BindingFlags.Instance);
+        eventOnSpawningEnded = typeof(SpawningBehaviorBase).GetEvent("OnSpawningEnded", BindingFlags.Public | BindingFlags.Instance);
+
+        fieldMisDepPlanSide = typeof(MissionDeploymentPlan).GetField("_battleSideDeploymentPlans", BindingFlags.NonPublic | BindingFlags.Instance);
+         fieldSideDeploymentPlanInitial = typeof(BattleSideDeploymentPlan).GetField("_initialPlan", BindingFlags.NonPublic | BindingFlags.Instance);
+
+
+         realBattleSize = int.Parse(new PropertiesUtils(System.IO.Path.Combine(BasePath.Name, "Modules", "BattleLink", "config.properties")).Get("RealBattleSize"), CultureInfo.InvariantCulture.NumberFormat);
+
+
+        _enforcedSpawnTimers = new List<KeyValuePair<MissionPeer, Timer>>();
             AgentCountThreshold = (int)((double)MaxAgentCount * 0.899999976158142);
+
+     
         }
 
-        public override void Initialize(SpawnComponent spawnComponent)
+    public override void Initialize(SpawnComponent spawnComponent)
         {
             base.Initialize(spawnComponent);
 
@@ -97,7 +117,7 @@ namespace BattleLink.Common.Spawn.Battle
 
 
             var mapEventType = BLReferentialHolder.battle.mapEventType;
-            Enum.TryParse(mapEventType, out BattleTypes battleType);
+            Enum.TryParse(mapEventType, out MapEvent.BattleTypes battleType);
             botSpawnWithNoHorse = Mission.Current.IsSiegeBattle; //(BattleTypes.Siege == battleType);// no horse in siege
 
             sideTeamTroopToSpawn = DeepClone(BLReferentialHolder.listTeam);

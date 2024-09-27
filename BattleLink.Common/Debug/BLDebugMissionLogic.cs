@@ -129,9 +129,11 @@ namespace BattleLink.Common.Debug
             //var car = MBObjectManager.Instance.GetObject<MultiplayerClassDivisions.MPHeroClass>("bl_character_class_division");
 
             BannerBearerLogic missionBehavior = this.Mission.GetMissionBehavior<BannerBearerLogic>();
-            missionBehavior.OnBannerBearerAgentUpdated -= BannerBearerLogic_OnBannerBearerAgentUpdated;
-
-            EventExtensions.ClearEventHandlers(missionBehavior, "OnBannerBearerAgentUpdated");
+            if (missionBehavior!=null)
+            {
+                missionBehavior.OnBannerBearerAgentUpdated -= BannerBearerLogic_OnBannerBearerAgentUpdated;
+                EventExtensions.ClearEventHandlers(missionBehavior, "OnBannerBearerAgentUpdated");
+            }
 
             //BannerBearerLogic missionBehavior = this.Mission.GetMissionBehavior<MissionAge>();
             //missionBehavior.OnBannerBearerAgentUpdated -= BannerBearerLogic_OnBannerBearerAgentUpdated;
@@ -278,20 +280,20 @@ namespace BattleLink.Common.Debug
             MBDebug.Print("RBDebugMissionLogic - OnRemoveBehavior", 0, DebugColor.Cyan);
         }
 
-        //public override void OnPreMissionTick(float dt)
-        //{
-        //    MBDebug.Print("RBDebugMissionLogic - OnPreMissionTick", 0, DebugColor.Cyan);
-        //}
+        public override void OnPreMissionTick(float dt)
+        {
+            MBDebug.Print("RBDebugMissionLogic - OnPreMissionTick", 0, DebugColor.Cyan);
+        }
 
-        //public override void OnPreDisplayMissionTick(float dt)
-        //{
-        //    MBDebug.Print("RBDebugMissionLogic - OnPreDisplayMissionTick", 0, DebugColor.Cyan);
-        //}
+        public override void OnPreDisplayMissionTick(float dt)
+        {
+            MBDebug.Print("RBDebugMissionLogic - OnPreDisplayMissionTick", 0, DebugColor.Cyan);
+        }
 
-        //public override void OnMissionTick(float dt)
-        //{
-        //    MBDebug.Print("RBDebugMissionLogic - OnMissionTick", 0, DebugColor.Cyan);
-        //}
+        public override void OnMissionTick(float dt)
+        {
+            MBDebug.Print("RBDebugMissionLogic - OnMissionTick", 0, DebugColor.Cyan);
+        }
 
         public override void OnAgentMount(Agent agent)
         {

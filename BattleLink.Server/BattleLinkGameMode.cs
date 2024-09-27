@@ -18,7 +18,6 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 using System.Xml.XPath;
-using TaleWorlds.CampaignSystem.Siege;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;

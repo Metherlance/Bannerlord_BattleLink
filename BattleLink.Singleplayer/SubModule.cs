@@ -1,9 +1,12 @@
 ﻿using BattleLink.Common.Debug;
 using BattleLink.Singleplayer.Patch;
+using BattleLink.Web.Common;
 using HarmonyLib;
 using Helpers;
+using ProtoBuf;
 using SandBox.GameComponents;
 using System;
+using System.Runtime.InteropServices.ComTypes;
 using System.Runtime.Serialization;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
@@ -20,6 +23,7 @@ using static TaleWorlds.Library.Debug;
 
 namespace BattleLink.Singleplayer
 {
+    //*EditLord*
     public class SubModule : MBSubModuleBase
     {
 
@@ -39,8 +43,57 @@ namespace BattleLink.Singleplayer
         //    }
         //}
 
+        [ProtoContract]
+        public class TestMessage
+        {
+            [ProtoMember(1)]
+            public string Message { get; set; }
+        }
+
+        public static void Main()
+        {
+            try
+            {
+                //var testMessage = new TestMessage { Message = "Hello, World!" };
+                var testMessage = new InitCampaignData { Id = "Hello, World!" };
+                byte[] serializedMessage;
+
+                // Sérialisation
+                using (var memoryStream = new System.IO.MemoryStream())
+                {
+                    Serializer.Serialize(memoryStream, testMessage);
+                    serializedMessage = memoryStream.ToArray();
+                }
+
+                //var serializedMessag = new PacketSp2Sw { PacketType = PacketSp2SwType.Init, Data = serializedMessage };
+                //using (var memoryStream = new System.IO.MemoryStream())
+                //{
+
+                //    Serializer.Serialize(memoryStream, serializedMessag);
+                //    byte[] serializedMessage3 = memoryStream.ToArray();
+                //}
+
+
+                // Désérialisation
+                using (var memoryStream = new System.IO.MemoryStream(serializedMessage))
+                {
+                    var deserializedMessage = Serializer.Deserialize<TestMessage>(memoryStream);
+                    Console.WriteLine($"Deserialized Message: {deserializedMessage.Message}");
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Exception: {e}");
+            }
+        }
+
+
         protected override void OnSubModuleLoad()
         {
+            Main();
+            UdpSpSw.start();
+
+
             //Agent a22 = (Agent)FormatterServices.GetUninitializedObject(typeof(Agent));
             //Scene a22 = (Scene)FormatterServices.GetUninitializedObject(typeof(Scene));
             //var a = a22.GetSunDirection();
@@ -113,16 +166,120 @@ namespace BattleLink.Singleplayer
 
         public override void OnBeforeMissionBehaviorInitialize(Mission mission)
         {
+            MBDebug.Print("OnBeforeMissionBehaviorInitialize", 0, DebugColor.Cyan);
+            InformationManager.DisplayMessage(new InformationMessage("OnBeforeMissionBehaviorInitialize"));
+
             //var a = mission.Scene.GetSunDirection();
 
             mission.AddMissionBehavior(new BLDebugMissionLogic());
         }
 
-        //public virtual void OnCampaignStart(Game game, object starterObject)
+        public override void OnCampaignStart(Game game, object starterObject)
+        {
+            MBDebug.Print("OnCampaignStart", 0, DebugColor.Cyan);
+            InformationManager.DisplayMessage(new InformationMessage("OnCampaignStart"));
+        }
+
+
+        protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
+        {
+            MBDebug.Print("OnGameStart", 0, DebugColor.Cyan);
+            InformationManager.DisplayMessage(new InformationMessage("OnGameStart"));
+
+            if (game.GameType is Campaign)
+            {
+                ((CampaignGameStarter)gameStarterObject).AddBehavior(new CampaignSync());
+            }
+        }
+
+        protected override void OnApplicationTick(float dt)
+        {
+            MBDebug.Print("OnApplicationTick", 0, DebugColor.Cyan);
+            //InformationManager.DisplayMessage(new InformationMessage("OnApplicationTick"));
+        }
+
+        protected override void AfterAsyncTickTick(float dt)
+        {
+            MBDebug.Print("AfterAsyncTickTick", 0, DebugColor.Cyan);
+            InformationManager.DisplayMessage(new InformationMessage("AfterAsyncTickTick"));
+        }
+
+        public override void OnGameLoaded(Game game, object initializerObject)
+        {
+            MBDebug.Print("OnGameLoaded", 0, DebugColor.Cyan);
+            InformationManager.DisplayMessage(new InformationMessage("OnGameLoaded"));
+        }
+
+        public override void OnNewGameCreated(Game game, object initializerObject)
+        {
+            MBDebug.Print("OnNewGameCreated", 0, DebugColor.Cyan);
+            InformationManager.DisplayMessage(new InformationMessage("OnNewGameCreated"));
+        }
+
+        public override void BeginGameStart(Game game)
+        {
+            MBDebug.Print("BeginGameStart", 0, DebugColor.Cyan);
+            InformationManager.DisplayMessage(new InformationMessage("BeginGameStart"));
+        }
+
+        public override void RegisterSubModuleObjects(bool isSavedCampaign)
+        {
+            MBDebug.Print("RegisterSubModuleObjects", 0, DebugColor.Cyan);
+            InformationManager.DisplayMessage(new InformationMessage("RegisterSubModuleObjects"));
+        }
+
+        public override void AfterRegisterSubModuleObjects(bool isSavedCampaign)
+        {
+            MBDebug.Print("AfterRegisterSubModuleObjects", 0, DebugColor.Cyan);
+            InformationManager.DisplayMessage(new InformationMessage("AfterRegisterSubModuleObjects"));
+        }
+
+        //public override void OnMultiplayerGameStart(Game game, object starterObject)
         //{
-        //    MBDebug.Print("OnCampaignStart", 0, DebugColor.Cyan);
-        //    InformationManager.DisplayMessage(new InformationMessage("OnCampaignStart"));
+        //    MBDebug.Print("OnMultiplayerGameStart", 0, DebugColor.Cyan);
         //}
+
+        public override void OnGameInitializationFinished(Game game)
+        {
+            MBDebug.Print("OnGameInitializationFinished", 0, DebugColor.Cyan);
+            InformationManager.DisplayMessage(new InformationMessage("OnGameInitializationFinished"));
+        }
+
+        public override void OnAfterGameInitializationFinished(Game game, object starterObject)
+        {
+            MBDebug.Print("OnAfterGameInitializationFinished", 0, DebugColor.Cyan);
+            InformationManager.DisplayMessage(new InformationMessage("OnAfterGameInitializationFinished"));
+        }
+
+        public override bool DoLoading(Game game)
+        {
+            MBDebug.Print("DoLoading", 0, DebugColor.Cyan);
+            InformationManager.DisplayMessage(new InformationMessage("DoLoading"));
+            return true;
+        }
+
+        public override void OnGameEnd(Game game)
+        {
+            MBDebug.Print("OnGameEnd", 0, DebugColor.Cyan);
+            InformationManager.DisplayMessage(new InformationMessage("OnGameEnd"));
+        }
+
+        public override void OnMissionBehaviorInitialize(Mission mission)
+        {
+            MBDebug.Print("OnMissionBehaviorInitialize", 0, DebugColor.Cyan);
+            InformationManager.DisplayMessage(new InformationMessage("OnMissionBehaviorInitialize"));
+        }
+
+        public override void OnInitialState()
+        {
+            MBDebug.Print("OnInitialState", 0, DebugColor.Cyan);
+            InformationManager.DisplayMessage(new InformationMessage("OnInitialState"));
+        }
+
+        //protected override void OnNetworkTick(float dt)
+        //{
+        //}
+
     }
 
 }

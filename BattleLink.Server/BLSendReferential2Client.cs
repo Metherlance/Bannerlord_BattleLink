@@ -3,19 +3,13 @@ using BattleLink.Common.Behavior;
 using BattleLink.Common.DtoSpSv;
 using BattleLink.Common.Model;
 using BattleLink.CommonSvMp.NetworkMessages.FromServer;
-using NetworkMessages.FromServer;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Xml;
-using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.MountAndBlade;
-using TaleWorlds.MountAndBlade.Network.Messages;
 using TaleWorlds.ObjectSystem;
-using TaleWorlds.SaveSystem;
 using static TaleWorlds.Library.Debug;
 using static TaleWorlds.MountAndBlade.MultiplayerClassDivisions;
 
@@ -28,13 +22,14 @@ namespace BattleLink.Server
         private static List<BLInitCharactersMessage> listCharacterMessage;
         //private static List<BLInitCultureMessage> listCultureMessage;
         private static List<BLInitTeamMessage> listTeamMessage;
+        private static List<BLInitMPHeroClassMessage> listHeroClass;
         private static List<BLTeamCharactersMessage> listTeamCharacters;
 
         //static init singleton / check id already present
 
 
 
-        public static void setCharacters(List<BLCharacterObject> characters) 
+        public static void setCharacters(List<BLCharacterObject> characters)
         {
 
             //prepare message of character
@@ -108,7 +103,7 @@ namespace BattleLink.Server
             }
 
             foreach (var teamMessage in listTeamMessage)
-            {            
+            {
                 GameNetwork.BeginBroadcastModuleEvent();
                 GameNetwork.WriteMessage(teamMessage);
                 GameNetwork.EndBroadcastModuleEvent(GameNetwork.EventBroadcastFlags.IncludeUnsynchronizedClients, (NetworkCommunicator)null);
@@ -118,6 +113,7 @@ namespace BattleLink.Server
 
         public static void setTeamCharactersMessage()
         {
+            listHeroClass = new();
             listTeamCharacters = new List<BLTeamCharactersMessage>();
             foreach (var side in BLReferentialHolder.listTeam)
             {
@@ -157,9 +153,9 @@ namespace BattleLink.Server
                         foreach (var troop in party.Troops)
                         {
                             BLCharacterObject character = MBObjectManager.Instance.GetObject<BLCharacterObject>(troop.Id);
-                                                      
+
                             XmlElement classDivision = BLBasicObject2Xml.createClassDivision(character, party.Index);
-                            MPHeroClass classD = (MPHeroClass) MBObjectManager.Instance.CreateObjectFromXmlNode(classDivision);
+                            MPHeroClass classD = (MPHeroClass)MBObjectManager.Instance.CreateObjectFromXmlNode(classDivision);
 
                             teamMes.characterObjects.Add(classD);
 
@@ -170,6 +166,9 @@ namespace BattleLink.Server
 
                 }
             }
+
+            // TODO send MPHeroClass classD
+           // listHeroClass
 
             foreach (var teamMessage in listTeamCharacters)
             {
@@ -195,7 +194,7 @@ namespace BattleLink.Server
                 RainInfoDensity = mir.AtmosphereOnCampaign.RainInfo.Density,
                 SnowInfoDensity = mir.AtmosphereOnCampaign.SnowInfo.Density,
                 SkyInfoBrightness = mir.AtmosphereOnCampaign.SkyInfo.Brightness,
-                
+
                 TimeInfoTimeOfDay = mir.AtmosphereOnCampaign.TimeInfo.TimeOfDay,
                 TimeInfoNightTimeFactor = mir.AtmosphereOnCampaign.TimeInfo.NightTimeFactor,
                 TimeInfoDrynessFactor = mir.AtmosphereOnCampaign.TimeInfo.DrynessFactor,
@@ -233,7 +232,7 @@ namespace BattleLink.Server
 
                 campaignTimeTick = battle.campaignTimeTick,
                 gameId = battle.gameId,
-                partyPosLogicalX= battle.partyPosLogical.x,
+                partyPosLogicalX = battle.partyPosLogical.x,
                 partyPosLogicalY = battle.partyPosLogical.y,
                 partyPosLogicalZ = battle.partyPosLogical.z,
 
@@ -333,17 +332,17 @@ namespace BattleLink.Server
 
         public void HandleLateNewClientAfterSynchronized(NetworkCommunicator networkPeer)
         {
-           MBDebug.Print("BLSendReferential2Client - HandleLateNewClientAfterSynchronized - " + networkPeer.UserName + " - end ", 0, DebugColor.Green);
+            MBDebug.Print("BLSendReferential2Client - HandleLateNewClientAfterSynchronized - " + networkPeer.UserName + " - end ", 0, DebugColor.Green);
         }
 
         public void HandleNewClientAfterLoadingFinished(NetworkCommunicator networkPeer)
         {
-           MBDebug.Print("BLSendReferential2Client - HandleNewClientAfterLoadingFinished - " + networkPeer.UserName + " - end ", 0, DebugColor.Green);
+            MBDebug.Print("BLSendReferential2Client - HandleNewClientAfterLoadingFinished - " + networkPeer.UserName + " - end ", 0, DebugColor.Green);
         }
 
         public void HandleNewClientAfterSynchronized(NetworkCommunicator networkPeer)
         {
-           MBDebug.Print("BLSendReferential2Client - HandleNewClientAfterSynchronized - " + networkPeer.UserName + " - end ", 0, DebugColor.Green);
+            MBDebug.Print("BLSendReferential2Client - HandleNewClientAfterSynchronized - " + networkPeer.UserName + " - end ", 0, DebugColor.Green);
         }
 
         public void HandleNewClientConnect(PlayerConnectionInfo clientConnectionInfo)
